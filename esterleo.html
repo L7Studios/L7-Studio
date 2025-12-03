@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chá de Cozinha Ester & Leonardo</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Libre+Baskerville&display=swap');
+
+    body {
+      margin: 0;
+      font-family: 'Libre Baskerville', serif;
+      background-color: #f8f8f3;
+      background-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png');
+      color: #333;
+      line-height: 1.6;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    header {
+      text-align: center;
+      padding: 60px 20px 20px;
+      color: #4c5742;
+      position: relative;
+      z-index: 1;
+    }
+
+    header h1 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-size: 2.8em;
+      margin: 0;
+    }
+
+    header h2 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 400;
+      font-size: 1.2em;
+      letter-spacing: 2px;
+      margin-bottom: 8px;
+    }
+
+    header p {
+      margin: 4px 0;
+      font-size: 1em;
+      color: #444;
+    }
+
+    .ramo-header {
+      position: absolute;
+      top: 5;
+      width: 100px;
+      height: auto;
+      z-index: 2;
+    }
+
+    .ramo-header.esquerdo {
+      left: 0;
+      transform: rotate(0deg);
+    }
+
+    .ramo-header.direito {
+      right: 0;
+      transform: rotateY(180deg) rotate(0deg);
+    }
+
+    main {
+      max-width: 850px;
+      margin: 40px auto;
+      padding: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    h3 {
+      text-align: center;
+      font-family: 'Playfair Display', serif;
+      color: #333;
+    }
+
+    .texto {
+      text-align: center;
+      font-size: 0.95em;
+      color: #444;
+      max-width: 600px;
+      margin: 0 auto 40px;
+    }
+
+    /* Campo de confirmação */
+    #confirmacaoPresenca {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    #confirmacaoPresenca input {
+      padding: 10px;
+      border: 1px solid #94a678;
+      border-radius: 8px;
+      width: 250px;
+      font-family: 'Libre Baskerville', serif;
+    }
+
+    #confirmacaoPresenca button {
+      background-color: #94a678;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: 'Playfair Display', serif;
+      margin-left: 8px;
+    }
+
+    #confirmacaoPresenca button:hover {
+      background-color: #7a8b64;
+    }
+
+    .presentes {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 25px;
+    }
+
+    .presente {
+      border: 1.5px solid #94a678;
+      border-radius: 14px;
+      padding: 15px;
+      text-align: center;
+      background-color: #ffffff;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.04);
+      transition: transform 0.2s, opacity 0.3s;
+      position: relative;
+    }
+
+    .presente:hover { transform: scale(1.02); }
+
+    .presente img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+
+    .presente h4 {
+      margin: 8px 0;
+      font-family: 'Playfair Display', serif;
+      color: #4c5742;
+      font-size: 1em;
+    }
+
+    .botoes {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .presente button {
+      background-color: #94a678;
+      color: #fff;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85em;
+      transition: background-color 0.3s;
+    }
+
+    .presente button:hover { background-color: #7a8b64; }
+
+    .presente a {
+      background-color: #dcc7a1;
+      color: #333;
+      padding: 7px 12px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 0.8em;
+      transition: background-color 0.3s;
+    }
+
+    .presente a:hover { background-color: #cbb68d; }
+
+    .presente.indisponivel button {
+      pointer-events: none;
+      background-color: #ccc;
+      color: #666;
+    }
+
+    .presente.indisponivel::after {
+      content: "🎁 Já escolhido";
+      position: absolute;
+      top: 45%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: rgba(255,255,255,0.9);
+      padding: 6px 12px;
+      border-radius: 8px;
+      color: #ff0000;
+      font-weight: bold;
+      font-size: 0.9em;
+    }
+
+    footer {
+      text-align: center;
+      padding: 40px 0 20px;
+      font-size: 0.9em;
+      color: #777;
+    }
+
+.paleta {
+  position: fixed;
+  right: 20px;
+  bottom: 30px;
+  background: rgba(255,255,255,0.9);
+  border-radius: 10px;
+  padding: 10px 14px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  text-align: center;
+  font-size: 0.8em;
+  color: #444;
+  font-family: 'Playfair Display', serif;
+  z-index: 9999; /* 🔥 garante que fique acima de tudo */
+}
+
+
+    .cor { width: 22px; height: 22px; border-radius: 50%; display: inline-block; margin: 4px; border: 1px solid #ccc; }
+    .preto { background: #000; }
+    .cinza { background: #aaa; }
+    .branco { background: #fff; }
+    .verde { background: #94a678; }
+    .bege { background: #dcc7a1; }
+
+    #chuvaPolaroids {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 0;
+    }
+
+    .polaroid {
+      position: absolute;
+      width: 80px;
+      height: 107px;
+      background-size: cover;
+      background-position: center;
+      border: 5px solid #fff;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      border-radius: 8px;
+      opacity: 0.9;
+      animation: cair linear infinite;
+    }
+
+    @keyframes cair {
+      0% { transform: translateY(-100px) rotate(0deg); opacity: 0; }
+      20% { opacity: 1; }
+      100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div id="chuvaPolaroids"></div>
+
+  <header>
+    <img src="assets/leoester/ramo.png" class="ramo-header esquerdo" alt="">
+    <img src="assets/leoester/ramo.png" class="ramo-header direito" alt="">
+    <h2>CHÁ DE COZINHA</h2>
+    <h1>ESTER & LEONARDO</h1>
+    <p>15 DE NOVEMBRO ÀS 18 HORAS</p>
+    <p>Rua Ricardo Ninelli, 223 - Cidade Aracy, São Carlos - SP</p>
+  </header>
+
+  <main>
+    <div class="texto">
+        É com imensa alegria que convidamos você para o nosso Chá de Cozinha,<br>
+        Este será um momento especial para celebrarmos o amor, a união e o início de uma nova etapa em nossas vidas.<br><br>
+        Sua presença tornará este dia ainda mais significativo!<br><br><br>
+        “Acima de tudo, revistam-se do amor, que é o elo perfeito.” — Colossenses 3:14<br><br>
+        </div>
+            <h3>CONFIRME SUA PRESENÇA</h3>
+    <div id="confirmacaoPresenca">
+      <input type="text" id="nomePresenca" placeholder="Seu nome">
+      <button id="botaoConfirmar">Confirmar Presença</button>
+    </div>
+
+    <hr style="border: none; border-top: 1.5px solid #dcc7a1; margin: 40px auto; width: 70%;">
+
+    <h3>LISTA DE PRESENTE</h3>
+    <div class="texto">
+      ESTA LISTA É APENAS UMA SUGESTÃO PARA FACILITAR A ESCOLHA DO PRESENTE.<br>
+      FIQUE À VONTADE PARA ESCOLHER OUTRO ITEM, CASO PREFIRA.<br><br>
+      SE OPTAR POR PRESENTEAR COM ALGO DA LISTA, PEDIMOS QUE CONFIRME NO BOTÃO 
+      <span style="color: #94a678; font-weight: bold;">"ESCOLHER PRESENTE"</span>.<br><br>
+      O BOTÃO <span style="color: #dcc7a1; font-weight: bold;">"REFERÊNCIA"</span> LEVARÁ AO PRESENTE NA SHOPEE.
+    </div>
+
+    <div class="presentes" id="listaPresentes"></div>
+  </main>
+
+  <footer><p>Com carinho, Ester & Leonardo 🌿</p></footer>
+
+  <div class="paleta">
+    Paleta de cores<br>
+    <span class="cor preto"></span>
+    <span class="cor cinza"></span>
+    <span class="cor branco"></span>
+    <span class="cor verde"></span>
+    <span class="cor bege"></span>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCrdE0G59vmnI23t_1aPJizNXLcZ5MH6Lk",
+      authDomain: "chadecozinhaesterleonardo.firebaseapp.com",
+      databaseURL: "https://chadecozinhaesterleonardo-default-rtdb.firebaseio.com",
+      projectId: "chadecozinhaesterleonardo",
+      storageBucket: "chadecozinhaesterleonardo.firebasestorage.app",
+      messagingSenderId: "926086485235",
+      appId: "1:926086485235:web:923a115e3a430b0fe4d386",
+      measurementId: "G-6WE2T4VCVE"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    // --- CONFIRMAÇÃO DE PRESENÇA ---
+    document.getElementById("botaoConfirmar").addEventListener("click", async () => {
+      const nome = document.getElementById("nomePresenca").value.trim();
+      if (!nome) return alert("Por favor, digite seu nome 💐");
+      try {
+        await set(ref(db, "confirmacoesPresenca/" + Date.now()), nome);
+        alert(`Presença confirmada com sucesso! Obrigado, ${nome} 💕`);
+        document.getElementById("nomePresenca").value = "";
+      } catch (err) {
+        console.error(err);
+        alert("Erro ao confirmar presença. Tente novamente.");
+      }
+    });
+
+    // --- LISTA DE PRESENTES ---
+    const presentes = [
+        
+      { nome: "Kit Cumbuca", imagem: "https://down-br.img.susercontent.com/file/br-11134207-7r98o-mdg2wa8ijlch1c@resize_w450_nl.webp", link: "https://shopee.com.br/Kit-12-Cumbuca-Capri-400ml-Porcelana-Tigela-Sopa-Caldo-A%C3%A7ai-Porcelana-Branca-Atacado-Oferta-i.391307963.21599852121?sp_atk=26ca2f98-6b1a-4515-a995-7bd0b155e9c3&xptdk=26ca2f98-6b1a-4515-a995-7bd0b155e9c3" },
+      
+      { nome: "Tábua de Carne", imagem: "https://down-br.img.susercontent.com/file/br-11134207-7r98o-m993mxf18qwp8c@resize_w450_nl.webp", link: "https://shopee.com.br/T%C3%A1bua-de-Carne-Para-Churrasco-Grande-32x50cm-Com-Faca-e-Garfo-i.243982443.18899321979?sp_atk=38df46cd-a7b6-49c6-94b4-06bb0028912e&xptdk=38df46cd-a7b6-49c6-94b4-06bb0028912e" },
+      
+      { nome: "Kit Forma Assadeira", imagem: "https://down-br.img.susercontent.com/file/br-11134207-7r98o-mbvpgi7fz3h5f6@resize_w450_nl.webp", link: "https://shopee.com.br/Kit-Forma-Assadeira-Antiaderente-Bolo-Lasanheira-Sobremesa-Forno-i.370003517.22194224754?sp_atk=84703e13-c108-4cad-ab71-f839b11018f8&xptdk=84703e13-c108-4cad-ab71-f839b11018f8" },
+      
+      { nome: "Fouet", imagem: "https://down-br.img.susercontent.com/file/br-11134207-7qukw-lgp6v74bk51124@resize_w450_nl.webp", link: "https://shopee.com.br/OFERTA-Batedor-Fouet-Profissional-De-Ovos-E-Massas-Cabo-Refor%C3%A7ado-e-Normal-25cm-OU-29CM-Utensilio-De-Cozinha-i.403112819.10638049553?sp_atk=de260410-9a65-445c-ba96-529b16eea7e5&xptdk=de260410-9a65-445c-ba96-529b16eea7e5" },
+      
+      { nome: "Rolo de Madeira", imagem: "https://down-br.img.susercontent.com/file/sg-11134201-824jh-messm2avwyyr30@resize_w450_nl.webp", link: "https://shopee.com.br/OFERTA-Rolo-de-Madeira-para-Massas-Artesanais-Pizza-Macarr%C3%A3o-e-Panifica%C3%A7%C3%A3o-i.764762543.23094422245?sp_atk=be223562-5b71-459f-ac8b-c7949ebca858&xptdk=be223562-5b71-459f-ac8b-c7949ebca858" },
+      
+      { nome: "Kit Peneira", imagem: "https://down-br.img.susercontent.com/file/br-11134207-7qukw-lgyk6038rgza7a.webp", link: "https://shopee.com.br/Kit-3-Peneira-Coador-De-Peneiras-A%C3%A7o-Inoxid%C3%A1vel-Para-Cozinha-Peneira-De-Cozinha-i.461633669.21098519637?sp_atk=2ebb6d45-b003-4cf3-bb9d-91c41c8399fe&xptdk=2ebb6d45-b003-4cf3-bb9d-91c41c8399fe" },
+      
+      { nome: "Suporte Coador Café", imagem: "https://down-br.img.susercontent.com/file/sg-11134201-22110-y95zbdz9tbkv96@resize_w450_nl.webp", link: "https://shopee.com.br/Suporte-Filtro-Permanente-Caf%C3%A9-Acrilico-Reutiliz%C3%A1vel-Grande-Clink-i.503346089.13243552642?sp_atk=517d6337-0665-4e41-b815-097e41fd3a9c&xptdk=517d6337-0665-4e41-b815-097e41fd3a9c" },
+      
+      { nome: "Kit Colher De Bambu", imagem: "https://down-br.img.susercontent.com/file/sg-11134201-824jb-mekppxl2718n08@resize_w450_nl.webp", link: "https://shopee.com.br/Kit-Colher-De-Bambu-utens%C3%ADlios-De-Cozinha-culin%C3%A1rio-De-Madeira-Pau-Suporte-i.1552375256.22598912302?sp_atk=721f2efe-e2fe-4ba9-b4d3-bcb86d2a6435&xptdk=721f2efe-e2fe-4ba9-b4d3-bcb86d2a6435" },
+      
+      { nome: "Kit Utensilio", imagem: "https://down-br.img.susercontent.com/file/br-11134207-7r98o-mcxyw5o5jx9u9d.webp", link: "https://shopee.com.br/Kit-7-Utens%C3%ADlio-para-Cozinha-A%C3%A7o-Inox-Escumadeira-Concha-Colher-Arroz-Pegador-de-Massa-Garfo-Esp%C3%A1tula-Vazada-Fue-i.339641067.18998283193?sp_atk=aa2f63b6-d715-4472-8ac9-eac357c1420e&xptdk=aa2f63b6-d715-4472-8ac9-eac357c1420e" },
+      
+      { nome: "Pegador De Sorvete", imagem: "https://down-br.img.susercontent.com/file/br-11134207-7r98o-m1pti9xd2b4hc9@resize_w450_nl.webp", link: "https://shopee.com.br/Kit-Colher-Pegador-De-Sorvete-E-A%C3%A7a%C3%AD-Concha-Em-A%C3%A7o-Inox19cm-Refor%C3%A7ada-i.1006365068.22793485201?sp_atk=c1c70c39-dc48-46cf-8105-51a48f76ac32&xptdk=c1c70c39-dc48-46cf-8105-51a48f76ac32" },
+      
+      { nome: "Xícaras de Café", imagem: "https://down-br.img.susercontent.com/file/br-11134207-81z1k-me4qd56mcbnkee@resize_w450_nl.webp", link: "https://shopee.com.br/Jogo-4-X%C3%ADcaras-de-Caf%C3%A9-Cer%C3%A2mica-120ml-Conjunto-Elegante-Caneca-Espresso-Presente-Decorativo-i.934936859.23298541156?sp_atk=99f95274-65a2-492f-9d26-5952994641a5&xptdk=99f95274-65a2-492f-9d26-5952994641a5" },
+      
+      { nome: "Cuscuzeiro", imagem: "https://down-br.img.susercontent.com/file/sg-11134201-7rdwq-mctlv1v9j94w97@resize_w450_nl.webp", link: "https://shopee.com.br/Cuscuzeiro-Antiaderente-Tampa-de-Vidro-Teflon-14cm-Cor-Granito-i.1595320313.18498318491?sp_atk=3ff38a5e-faf5-4b6d-8aed-4796edaf33d4&xptdk=3ff38a5e-faf5-4b6d-8aed-4796edaf33d4" },
+      
+      { nome: "Cortador", imagem: "https://down-br.img.susercontent.com/file/br-11134207-81z1k-mey6loyrdclj68@resize_w450_nl.webp", link: "https://shopee.com.br/Profissional-Multiuso-Cozinha-Slicer-14-em-1-Fatiador-Cortador-Ralador-De-Legumes-Verduras-Frutas-Alimentos-i.1046776023.22194444303?sp_atk=3c9016c3-9d71-4918-9877-9731337ba03d&xptdk=3c9016c3-9d71-4918-9877-9731337ba03d" },
+      
+      { nome: "Escorredor De Arroz", imagem: "https://down-br.img.susercontent.com/file/sg-11134201-7rfgq-m3b3vkct4bz676@resize_w450_nl.webp", link: "https://shopee.com.br/Escorredor-De-Arroz-Inox-Legumes-Frutas-Multiuso-Cozinha-Al%C3%A7a-Coador-Peneira-Drenagem-Inoxid%C3%A1vel-i.698893413.23093562997?sp_atk=215baeca-94b5-4e35-83f9-0965eedd32f0&xptdk=215baeca-94b5-4e35-83f9-0965eedd32f0" },
+      
+      { nome: "Escorredor de Louça", imagem: "https://down-br.img.susercontent.com/file/br-11134207-7r98o-mdepzkozlyhd0b.webp", link: "https://shopee.com.br/Escorredor-de-Lou%C3%A7a-Suspenso-Modular-Autoportante-em-A%C3%A7o-Refor%C3%A7ado-%E2%80%93-Cozinha-Compacta-i.358018412.14127078637?sp_atk=7f004b58-b769-4364-8f64-27c721cb1520&xptdk=7f004b58-b769-4364-8f64-27c721cb1520" },
+      
+      { nome: "Porta Copos", imagem: "https://down-br.img.susercontent.com/file/969486ddc38a0bb418e805f4ea1b5cd1.webp", link: "https://shopee.com.br/Kit-4-Porta-Copos-Emborrachados-Antiderrapante-ret%C3%A9m-o-l%C3%ADquido-do-copo-Alto-Relevo-i.391769686.10753970999?sp_atk=51918be5-b3a3-4d2d-98bb-86cb70008959&xptdk=51918be5-b3a3-4d2d-98bb-86cb70008959" },
+      
+      { nome: "Xicaras Medidoras", imagem: "https://down-br.img.susercontent.com/file/br-11134207-7r98o-m5mzbrytuapef9@resize_w450_nl.webp", link: "https://shopee.com.br/Conjunto-Colher-Xicaras-Medidoras-Com-8-Pe%C3%A7as-Inox-Pr%C3%A1tico-Colher-Medidora-Cozinha-Alimentos-i.287834567.22298193813?sp_atk=d31d73ce-1a5e-406b-aa82-173715164975&xptdk=d31d73ce-1a5e-406b-aa82-173715164975" },
+      
+      { nome: "Copo Medidor", imagem: "https://down-br.img.susercontent.com/file/br-11134207-7r98o-mb330h9f12bd78@resize_w450_nl.webp", link: "https://shopee.com.br/Copo-Graduado-Medidor-de-500ml-gramas-com-Gradua%C3%A7%C3%A3o-de-X%C3%ADcara-Chocolate-Semolina-500ml-i.1402197881.23698123848?sp_atk=8c6c2d12-6414-4613-8e00-f7a0df395a7d&xptdk=8c6c2d12-6414-4613-8e00-f7a0df395a7d" },
+      
+      { nome: "Triturador de Alho", imagem: "https://down-br.img.susercontent.com/file/br-11134207-7r98o-lrf2nyqdy5ob86.webp", link: "https://shopee.com.br/Processador-de-Alimentos-Manual-Grande-900ml-5-L%C3%A2minas-i.442438082.22497334036?sp_atk=30004316-2f57-4d9c-b1ed-4eaab09be442&xptdk=30004316-2f57-4d9c-b1ed-4eaab09be442" },
+      
+      { nome: "Espremedor de Limão", imagem: "https://down-br.img.susercontent.com/file/br-11134207-7r98o-m3za65l2dcjl22@resize_w450_nl.webp", link: "https://shopee.com.br/Espremedor-De-Lim%C3%A3o-Metal-Preto-Refor%C3%A7ado-Manual-Resistente-i.363632379.21198947989?sp_atk=f4acba41-f5f5-4f93-aea3-004f5fe45d94&xptdk=f4acba41-f5f5-4f93-aea3-004f5fe45d94" },
+      
+      { nome: "Kit de Facas", imagem: "https://down-br.img.susercontent.com/file/br-11134207-7qukw-lgxsd1vmfg5170@resize_w450_nl.webp", link: "https://shopee.com.br/Conjunto-De-Facas-Inox-6-Pe%C3%A7as-Antiaderente-Com-Cabo-Refor%C3%A7ado-Descascador-E-Tesoura-Cozinha-i.296745639.21798525291?sp_atk=3f6cff49-1aaa-4506-b74d-c84145b389f5&xptdk=3f6cff49-1aaa-4506-b74d-c84145b389f5" },
+      
+      { nome: "Faca de Pão", imagem: "https://down-br.img.susercontent.com/file/sg-11134201-7reny-m8f4l8aqbxyf31@resize_w450_nl.webp", link: "https://shopee.com.br/Faca-de-P%C3%A3o-Serrilhada-100-Inox-3-Espatulas-de-Manteiga-Pat%C3%AA-Gel%C3%A9ia-para-Cozinha-Padaria-i.352998095.21098106623?sp_atk=714891b2-f9df-4ad8-ab86-ba6a1962e1b6&xptdk=714891b2-f9df-4ad8-ab86-ba6a1962e1b6" },
+      
+      { nome: "Forma para Pudim", imagem: "https://down-br.img.susercontent.com/file/sg-11134201-824hv-mf4oeowpcbuzc0.webp", link: "https://shopee.com.br/Forma-Para-Pudim-Bolo-Com-Furo-Central-Antiaderente-24cm-Envio-Imediato-i.1462021202.21899884771?sp_atk=eb577401-2061-4ed2-a0f2-ce58a633418f&xptdk=eb577401-2061-4ed2-a0f2-ce58a633418f" },
+      
+      { nome: "Canecão", imagem: "https://down-br.img.susercontent.com/file/br-11134207-7r98o-mdpeyxrby1u9fd.webp", link: "https://shopee.com.br/Canec%C3%A3o-Leiteira-n%C2%BA-16-Antiaderente-branco-marmorizado-%E2%80%93-2-3L-Confira-Tamanhos-nas-Varia%C3%A7%C3%B5es-i.436988059.23198827783?sp_atk=6a0f51a4-0a7d-4ed4-b420-8fa0ae4438d2&xptdk=6a0f51a4-0a7d-4ed4-b420-8fa0ae4438d2" },
+      
+      { nome: "Manteigueira", imagem: "https://down-br.img.susercontent.com/file/br-11134207-7r98o-m90nghvs6ayq96.webp", link: "https://shopee.com.br/Manteigueira-de-Bambu-Tampa-Acr%C3%ADlica-Porta-Manteiga-Frios-19cm-i.411617617.22393940647?sp_atk=455aa958-959c-4dfc-bff9-b4cf172b37fb&xptdk=455aa958-959c-4dfc-bff9-b4cf172b37fb" },
+      
+      { nome: "Luva Térmica", imagem: "https://down-br.img.susercontent.com/file/br-11134207-7r98o-lsefbpchr57oc4.webp", link: "https://shopee.com.br/Luva-T%C3%A9rmica-De-Forno-E-Fog%C3%A3o-Para-Cozinha-Em-Silicone-Com-Forro-i.431345065.18199213150?sp_atk=dc849570-cfef-4d18-90db-04c91798d690&xptdk=dc849570-cfef-4d18-90db-04c91798d690" },
+      
+      { nome: "Descanso Panela Quente", imagem: "https://down-br.img.susercontent.com/file/br-11134207-7r98o-ma2wegiz9t89d2@resize_w450_nl.webp", link: "https://shopee.com.br/kit-6-Descanso-Apoio-Suporte-de-Panela-quente-Prote%C3%A7%C3%A3o-Pratos-Jarras-Suco-Caf%C3%A9-Decora%C3%A7%C3%A3o-Casa-Cozinha-Mesa-Copo-Natal-i.693117941.16820332092?sp_atk=7385815d-9cc0-45bd-9119-8bbe82095e92&xptdk=7385815d-9cc0-45bd-9119-8bbe82095e92" },
+      
+      { nome: "Martelo Amaciador", imagem: "https://down-br.img.susercontent.com/file/br-11134207-7qukw-lfllbvfs2yam9f.webp", link: "https://shopee.com.br/Martelo-Amaciador-Para-Carne-Em-Alum%C3%ADnio-Cozinha-Bater-Bife-Top-Chef-A%C3%A7o-Inoxid%C3%A1vel-21cm-i.403112819.11406836733?sp_atk=1aa8cf96-260f-49cf-ad8e-50041f454536&xptdk=1aa8cf96-260f-49cf-ad8e-50041f454536" },
+      
+      { nome: "Kit Pote", imagem: "https://down-br.img.susercontent.com/file/br-11134207-7r98o-m3v6qy5esmydcc@resize_w450_nl.webp", link: "https://shopee.com.br/Kit-15-Potes-Herm%C3%A9ticos-de-Pl%C3%A1stico-com-Tampa-%E2%80%93-Empilh%C3%A1veis-e-Ultra-Resistentes-para-Alimentos-i.449434162.18298053473?sp_atk=994e80a6-01ca-411c-8df1-820eb0d85f2e&xptdk=994e80a6-01ca-411c-8df1-820eb0d85f2e" },
+      
+      { nome: "Kit Pote para Grãos", imagem: "https://down-br.img.susercontent.com/file/br-11134207-7r98o-mbmy6qdgdcvsbd.webp", link: "https://shopee.com.br/Monte-seu-Kit-Pote-Herm%C3%A9tico-para-Mantimentos-de-Cozinha-Dispensa-Arm%C3%A1rio-Pl%C3%A1stico-i.417740574.23494326535?sp_atk=c6a20807-b483-4a70-b89a-b1e2a29060d9&xptdk=c6a20807-b483-4a70-b89a-b1e2a29060d9" },
+      
+      { nome: "Pote Tempero", imagem: "https://down-br.img.susercontent.com/file/br-11134207-7r98o-mcqjfauqmkoi37.webp", link: "https://shopee.com.br/Kit-6-Potes-De-Vidro-Porta-Tempero-e-Condimentos-Suporte-Para-Temperos-A%C3%A7o-Inox-i.1252815761.22994250962?sp_atk=428ab341-8d94-49ed-9bf6-6fdb1e35be4c&xptdk=428ab341-8d94-49ed-9bf6-6fdb1e35be4c" },
+      
+      { nome: "Pote Sal/Açucar", imagem: "https://down-br.img.susercontent.com/file/br-11134207-7r98o-m9str5i7b9qa8b@resize_w450_nl.webp", link: "https://shopee.com.br/Porta-Condimento-Saleiro-A%C3%A7ucareiro-Cozinha-Premium-Kit-Com-Suporte-Cantinho-Do-Caf%C3%A9-Conjunto-3-p%C3%A7s-i.339846030.23698478846?sp_atk=3896f89c-6734-431d-a640-8c28b9e40ffd&xptdk=3896f89c-6734-431d-a640-8c28b9e40ffd" },
+      
+      { nome: "Paliteiro", imagem: "https://down-br.img.susercontent.com/file/br-11134207-7r98o-lxljexridtxb7f.webp", link: "https://shopee.com.br/Porta-Palito-de-Dente-Pato-Paliteiro-Autom%C3%A1tico-de-Mesa-Patinho-i.376567779.19397753628?sp_atk=334cd97b-becb-4b60-9ef0-5bfdb7f60985&xptdk=334cd97b-becb-4b60-9ef0-5bfdb7f60985" },
+      
+      { nome: "Saca Rolha/Abridor", imagem: "https://down-br.img.susercontent.com/file/br-11134207-7r98o-m97cum7d7pc282.webp", link: "https://shopee.com.br/Kit-6-Pe%C3%A7as-2-Abridor-Grande-Garrafa-e-Lata-2-Abridor-Saca-Rolhas-2-Abridor-Buteco-A%C3%A7o-i.1530261025.21899714501?sp_atk=5aa28f84-4c32-4ada-b9ef-1db3d0c0ad95&xptdk=5aa28f84-4c32-4ada-b9ef-1db3d0c0ad95" },
+      
+      { nome: "Queijeira", imagem: "https://down-br.img.susercontent.com/file/br-11134207-81z1k-me3lirg7qxoide@resize_w450_nl.webp", link: "https://shopee.com.br/Porta-Queijo-Bambu-com-Tampa-Acr%C3%ADlico-Para-Frios-e-Manteigueira-Queijeira-Multiuso-Conserva-i.1081506458.21798129528?sp_atk=dd2fe84a-0f54-4160-885a-94ff64d5bf0b&xptdk=dd2fe84a-0f54-4160-885a-94ff64d5bf0b" },
+      
+      { nome: "Garrafa Térmica", imagem: "https://down-br.img.susercontent.com/file/br-11134207-7r98o-m99pdv3ax6gy33.webp", link: "https://shopee.com.br/Garrafa-T%C3%A9rmica-N%C3%B3rdica-A-V%C3%A1cuo-De-Caf%C3%A9-Ch%C3%A1-1-Litro-Cabo-De-Madeira-i.984845442.18097285309?sp_atk=ebee3b6b-d95b-4601-83f6-6cec782f7839&xptdk=ebee3b6b-d95b-4601-83f6-6cec782f7839" },
+      
+      { nome: "Jarra de Vidro", imagem: "https://down-br.img.susercontent.com/file/br-11134207-7r98o-mcdtwgwffko876.webp", link: "https://shopee.com.br/Jarra-De-Vidro-Borossilicato-Com-Tampa-Bambu-1-2-Litros-Agua-Suco-i.1465442143.23794232029?sp_atk=d6fbf61a-6502-471b-9145-e1180e067766&xptdk=d6fbf61a-6502-471b-9145-e1180e067766" },
+      
+      { nome: "Porta Papel Toalha", imagem: "https://down-br.img.susercontent.com/file/sg-11134201-7rdvu-mc3uqlznab0uf4@resize_w450_nl.webp", link: "https://shopee.com.br/Porta-Papel-Toalha-e-Porta-Guardanapo-2-em-1-Organizador-%E2%80%93-Design-R%C3%BAstico-em-Madeira-Organizador-de-Madeira-i.1572633535.23394217681?sp_atk=95206a79-aee6-477d-b74a-203e2d5a5f78&xptdk=95206a79-aee6-477d-b74a-203e2d5a5f78" },
+      
+      { nome: "Kit Petisqueira", imagem: "https://down-br.img.susercontent.com/file/br-11134207-81z1k-mehaxxps2x341f.webp", link: "https://shopee.com.br/Kit-Petisqueira-Molheira-Ramekin-e-6-Garfinhos-para-Petiscos-Frios-Queijo-Churrasco-i.339641067.22394401180?sp_atk=76f74a3d-6f0e-4788-882c-39793f4e8bf9&xptdk=76f74a3d-6f0e-4788-882c-39793f4e8bf9" },
+      
+      { nome: "Lixeira", imagem: "https://down-br.img.susercontent.com/file/br-11134207-7r98o-ma32t03tj476d2.webp", link: "https://shopee.com.br/Lixeira-de-Pia-Mesa-2-5-Litros-Cesto-de-Lixo-C-Tampa-Cozinha-Banheiro-Escrit%C3%B3rio-Refor%C3%A7ada-Pl%C3%A1stico-i.644883720.23693606604?sp_atk=6304c9dd-77d3-4988-b76f-742f305fe443&xptdk=6304c9dd-77d3-4988-b76f-742f305fe443" },
+      
+      { nome: "Rodo de Pia", imagem: "https://down-br.img.susercontent.com/file/sg-11134201-7rdxy-mdmhvjabf36cb7@resize_w450_nl.webp", link: "https://shopee.com.br/Rodo-De-Pia-Dobr%C3%A1vel-Com-Cabo-de-Bambu-i.397137453.22498834380?sp_atk=d3bba6fa-3f9c-4b59-930d-941443163859&xptdk=d3bba6fa-3f9c-4b59-930d-941443163859" },
+      
+      { nome: "Jogo de Tapete", imagem: "https://down-br.img.susercontent.com/file/br-11134207-7r98o-m8kvn4u2q29d17@resize_w450_nl.webp", link: "https://shopee.com.br/Kit-Jogo-de-Tapete-Passadeira-Para-cozinha-Antiderrapante-3-P%C3%A7s-1-Passadeira-e-2-Tapetes-i.919689477.19697303123?sp_atk=d755cfa2-f6d5-4169-9750-731f8655104e&xptdk=d755cfa2-f6d5-4169-9750-731f8655104e" },
+      
+      { nome: "Puxa Saco", imagem: "https://down-br.img.susercontent.com/file/br-11134207-7r98o-m9g5dwe7zos98c@resize_w450_nl.webp", link: "https://shopee.com.br/Puxa-Saco-Porta-Sacolinhas-Plasticas-De-Cozinha-Tecido-Oxford-Liso-.-i.379509502.18298183381?sp_atk=b9cfe5a6-69b4-4e77-ad02-e704c0984c92&xptdk=b9cfe5a6-69b4-4e77-ad02-e704c0984c92" },
+      
+      { nome: "Jogo Talheres", imagem: "https://down-br.img.susercontent.com/file/br-11134207-7r98o-mae9qeihyb9rf0.webp", link: "https://shopee.com.br/Conjunto-Jogo-de-Talheres-36-pe%C3%A7as-A%C3%A7o-Inox-12-Facas-12-Garfos-e-12-Colheres-de-Mesa-Casa-Para-Restaurante-i.1552375256.23394056011?sp_atk=835d1c58-0042-4bd4-b140-b77e24b6471a&xptdk=835d1c58-0042-4bd4-b140-b77e24b6471a" },
+      
+      { nome: "Avental", imagem: "https://down-br.img.susercontent.com/file/d0fbe6e498427c6cb4a65cccac051254.webp", link: "https://shopee.com.br/Avental-Brim-Com-Bolso-Regul%C3%A1vel-Algod%C3%A3o-Uniforme-Chef-Cozinha-Restaurante-Evento-Churrasco-Preto-Perbella-Uniformes-i.284435112.4294232478?sp_atk=dac1d112-adf1-4173-9932-666c2900c10a&xptdk=dac1d112-adf1-4173-9932-666c2900c10a" },
+      
+      { nome: "Pano de Prato", imagem: "https://down-br.img.susercontent.com/file/br-11134207-7r98o-m12w9z6f61web5@resize_w450_nl.webp", link: "https://shopee.com.br/Kit-10-Panos-de-Prato-e-Copa-100-Algod%C3%A3o-Guardanapos-Sem-Estampa-i.1214598836.19399494777?sp_atk=4119eb0e-89bf-4704-8916-171039d93762&xptdk=4119eb0e-89bf-4704-8916-171039d93762" },
+      
+      { nome: "Manta para Sofa", imagem: "https://down-br.img.susercontent.com/file/br-11134207-7r98o-m3kzjwl5rmt127@resize_w450_nl.webp", link: "https://shopee.com.br/Manta-Para-Sof%C3%A1-gigante-100-Algod%C3%A3o-Promo%C3%A7%C3%A3o-Imperd%C3%ADvel-Imbativel-i.332667864.6863719305?sp_atk=2ee40b24-b2a9-4e9c-964b-3c9fdcaa2d74&xptdk=2ee40b24-b2a9-4e9c-964b-3c9fdcaa2d74" },
+      
+      { nome: "Porta Frios", imagem: "https://down-br.img.susercontent.com/file/br-11134207-7r98o-m93ksd2chdz60c@resize_w450_nl.webp", link: "https://shopee.com.br/Porta-Frios-Herm%C3%A9tico-Presunto-Queijo-Kit-Acr%C3%ADlico-Resistente-Triplo-Pote-Mantimentos-i.443675790.22398448834?sp_atk=7e8b613a-88e8-470e-9be8-017baaea5922&xptdk=7e8b613a-88e8-470e-9be8-017baaea5922" },
+      
+      { nome: "Rodo Flap Mob", imagem: "https://down-br.img.susercontent.com/file/br-11134207-7r98o-lq1i5s8xphqbec@resize_w450_nl.webp", link: "https://shopee.com.br/Rodo-Flat-Mop-2-Refis-Esfreg%C3%A3o-Com-Balde-M%C3%A1gico-Girat%C3%B3rio-Esfreg%C3%A3o-Limpeza-Lava-Seca-Tira-P%C3%B3-i.974001830.22197286720?sp_atk=feeb9e86-d3da-44e2-8967-e9bbe1f30462&xptdk=feeb9e86-d3da-44e2-8967-e9bbe1f30462" },
+      
+      { nome: "Kit Limpeza", imagem: "https://down-br.img.susercontent.com/file/br-11134207-7r98o-lt2qhh23zvxr3c.webp", link: "https://shopee.com.br/Conjunto-Rodo-40cm-Vasoura-E-P%C3%A1-Kit-Com-Cabo-i.352072825.20397658860?sp_atk=c456e011-7d53-43b2-8cb0-9b28fca5161f&xptdk=c456e011-7d53-43b2-8cb0-9b28fca5161f" },
+      
+      { nome: "Porta Detergente", imagem: "https://down-br.img.susercontent.com/file/br-11134207-7r98o-lp1m7s4uo0at01.webp", link: "https://shopee.com.br/Porta-Detergente-Dispenser-Porta-Esponja-Bucha-Com-Bico-Dosador-Coza-Cores-500-ML-i.383636521.20999079611?sp_atk=c6664390-d414-4449-9c06-98e9eb4f906f&xptdk=c6664390-d414-4449-9c06-98e9eb4f906f" },
+      
+      { nome: "Cesto Organizador", imagem: "https://down-br.img.susercontent.com/file/br-11134207-7r98o-mbozgiinjja16e@resize_w450_nl.webp", link: "https://shopee.com.br/Cesto-Organizador-Dobr%C3%A1vel-40-Litros-Roupa-Suja-Brinquedos-Lavanderia-Multiuso-Imperme%C3%A1vel-para-Banheiro-e-Quarto-i.1006790682.23993001092?sp_atk=861ae6fa-35b4-45e1-bb78-cda2a6a46152&xptdk=861ae6fa-35b4-45e1-bb78-cda2a6a46152" },
+      
+      { nome: "Prendedores", imagem: "https://down-br.img.susercontent.com/file/br-11134207-7r98o-mco1wseju03l1f@resize_w450_nl.webp", link: "https://shopee.com.br/prendedores-pregadores-roupa-madeira-artesanato-embalagem-c-12-120-240-unidades-prendedor-i.738312660.21598265623?sp_atk=f3172095-13b7-4452-9506-ff9dbca75817&xptdk=f3172095-13b7-4452-9506-ff9dbca75817" },
+      
+      { nome: "Kit Banheiro", imagem: "https://down-br.img.susercontent.com/file/br-11134207-81z1k-mfqzffaxcvlw41@resize_w450_nl.webp", link: "https://shopee.com.br/Kit-Banheiro-Bambu-6-Pe%C3%A7as-Conjunto-Lavabo-Porta-Sabonete-Escova-Dentes-e-Sanit%C3%A1ria-Lixeira-Luxo-i.214306231.21399722103?sp_atk=802938d9-9644-4c64-90ee-d29ebf8600d8&xptdk=802938d9-9644-4c64-90ee-d29ebf8600d8" },
+      
+      { nome: "Toalha de Rosto", imagem: "https://down-br.img.susercontent.com/file/br-11134207-81z1k-mfprym79nvgk19.webp", link: "https://shopee.com.br/product/1617589851/23999008426?d_id=883c1&uls_trackid=53v677ta01rt&utm_content=33RL7rEQBUPyyZpZWWqbWe2YErbH" },
+      
+      { nome: "Jogo de Prato", imagem: "https://down-br.img.susercontent.com/file/br-11134207-7r98o-m5ug6o6w8hvp5c.webp", link: "https://shopee.com.br/product/1273287514/22493689305?d_id=883c1&uls_trackid=53v6adlp00vc&utm_content=33RL7rEQBVSZpdaV6JYjyAqNAXkK" },
+      
+      { nome: "Ferro de Passar", imagem: "https://down-br.img.susercontent.com/file/br-11134207-7r98o-mbfjk9vkpbi0dd.webp", link: "https://shopee.com.br/product/445163047/20399715330?d_id=883c1&uls_trackid=53v6adst00rt&utm_content=33RL7rEQBVcjCNCU9aw7QZ8uZGbH" },
+      
+      { nome: "Jogo de Copo", imagem: "https://down-br.img.susercontent.com/file/sg-11134201-7ravj-ma4biimvp1a7cf@resize_w450_nl.webp", link: "https://shopee.com.br/product/763838521/22098545698?d_id=883c1&uls_trackid=53v6ae6700rr&utm_content=33RL7rEQBVitgmCRg6qfRUfUhaqD" },
+      
+      { nome: "Ralador", imagem: "https://down-br.img.susercontent.com/file/br-11134207-81z1k-mf7e2fhxfcw7e0.webp", link: "https://shopee.com.br/product/1600112380/23694441100?d_id=883c1&uls_trackid=53v6aee100rq&utm_content=33RL7rEQBVoXU2doophnsg5DZdNo" },
+      
+      { nome: "Jogo de Panela", imagem: "https://down-br.img.susercontent.com/file/br-11134207-7r98o-m5sikc1i0fxu7b.webp", link: "https://shopee.com.br/product/343287943/21697969779?d_id=883c1&uls_trackid=53v6aelc01rg&utm_content=33RL7rEQBVrUJU2BfDqEXF2ekAxX" },
+      
+      { nome: "Varal de Chão", imagem: "https://down-br.img.susercontent.com/file/br-11134207-7qukw-ljlgh7f5c1b7dc.webp", link: "https://shopee.com.br/product/570456386/23091877220?d_id=883c1&uls_trackid=53v6af1000rf&utm_content=33RL7rEQBWLvjNcokBPSZe8CBiwZ" },
+      
+      { nome: "Lençol", imagem: "https://down-br.img.susercontent.com/file/br-11134207-7r98o-m4q4448wvn7l8a.webp", link: "https://shopee.com.br/product/418872496/23793614115?d_id=883c1&uls_trackid=53v6af6q00r7&utm_content=33RL7rEQBWXnWHxn3Rt76CHbnm7D" },
+      
+      { nome: "Tapete Banheiro", imagem: "https://down-br.img.susercontent.com/file/br-11134207-7r98o-lp5mo1lgpwhe79.webp", link: "https://shopee.com.br/product/313984108/17925436968?d_id=883c1&uls_trackid=53v6afgh01qv&utm_content=33RL7rEQBWa7mjudGYVfaf5bx2aj" },
+      
+      { nome: "Sanduicheira", imagem: "https://down-br.img.susercontent.com/file/br-11134207-7r98o-m2wotm97jzt150.webp", link: "https://shopee.com.br/product/342086228/23998030916?d_id=883c1&uls_trackid=53v6afpa00rt&utm_content=33RL7rEQBWefip4YnamP5mnacwHZ" },
+      
+      { nome: "Kit Dispenser", imagem: "https://down-br.img.susercontent.com/file/br-11134207-7r98o-mc29iekucl9j87.webp", link: "https://shopee.com.br/product/1427428841/22498089697?d_id=883c1&uls_trackid=53v6ag8700rr&utm_content=33RL7rEQBWnruWKqPzGqLEHPU18K" },
+      
+      { nome: "Balde", imagem: "https://down-br.img.susercontent.com/file/sg-11134201-7reo7-m8gpb62ln2qxfc.webp", link: "https://shopee.com.br/product/995081105/22098421383?d_id=883c1&uls_trackid=53v6agg900rq&utm_content=33RL7rEQBWrcJG6V5hyQuWu6k5Cj" },
+      
+      { nome: "Forma de Gelo", imagem: "https://down-br.img.susercontent.com/file/br-11134207-7r98o-mdntzt6ecdyx7c.webp", link: "https://shopee.com.br/product/998773037/22093698838?d_id=883c1&uls_trackid=53v6bc3h00va&utm_content=33RL7rEQBX8KbQGu3DkTBTa3Lorw" },
+      
+      { nome: "Suporte de Copos", imagem: "https://down-br.img.susercontent.com/file/br-11134207-81z1k-mdus7i4m3uo271@resize_w450_nl.webp", link: "https://shopee.com.br/Suporte-de-Copos-Escorredor-de-Cozinha-Casa-e-Decora%C3%A7%C3%A3o-Resistente-Funcional-Organiza%C3%A7%C3%A3o-Promo%C3%A7%C3%A3o-i.524729335.20442492921?sp_atk=0d22aa2b-2c1d-416e-a3f9-a807ba9a7309&xptdk=0d22aa2b-2c1d-416e-a3f9-a807ba9a7309" },
+
+      { nome: "Pote de Vidro", imagem: "https://down-br.img.susercontent.com/file/br-11134207-7r98o-mdf3pscju18xac.webp", link: "https://shopee.com.br/product/1345719405/20999381894?d_id=883c1&uls_trackid=53v67t1500rg&utm_content=33RL7rEQBVFQUZYzeq3RBGbJpX2f" }
+  
+
+    ];
+
+    const container = document.getElementById("listaPresentes");
+    const dbRef = ref(db, "presentesEscolhidos");
+
+    onValue(dbRef, (snapshot) => {
+      const escolhidos = snapshot.val() || [];
+      renderPresentes(escolhidos);
+    });
+
+    function renderPresentes(escolhidos) {
+      container.innerHTML = "";
+      presentes.forEach((item, i) => {
+        const div = document.createElement("div");
+        div.classList.add("presente");
+        if (escolhidos.includes(i)) div.classList.add("indisponivel");
+        div.innerHTML = `
+          <img src="${item.imagem}" alt="${item.nome}">
+          <h4>${item.nome}</h4>
+          <div class="botoes">
+            <button ${escolhidos.includes(i) ? "disabled" : ""}>Escolher Presente</button>
+            <a href="${item.link}" target="_blank">Referência</a>
+          </div>
+        `;
+        div.querySelector("button").addEventListener("click", async () => {
+          if (confirm(`Deseja escolher "${item.nome}" como seu presente? 💕`)) {
+            escolhidos.push(i);
+            await set(dbRef, escolhidos);
+            alert(`Obrigada por escolher: ${item.nome}! 🌸`);
+          }
+        });
+        container.appendChild(div);
+      });
+    }
+
+    // --- CHUVA DE POLAROIDS ---
+    const imagens = [
+      "assets/leoester/pol1.png",
+      "assets/leoester/pol2.png",
+      "assets/leoester/pol3.png",
+      "assets/leoester/pol4.png",
+      "assets/leoester/pol5.png"
+    ];
+
+    function criarPolaroid() {
+      const el = document.createElement("div");
+      el.classList.add("polaroid");
+      el.style.backgroundImage = `url(${imagens[Math.floor(Math.random() * imagens.length)]})`;
+      el.style.left = Math.random() * 100 + "vw";
+      el.style.animationDuration = (40 + Math.random() * 15) + "s";
+      document.getElementById("chuvaPolaroids").appendChild(el);
+      setTimeout(() => el.remove(), 80000);
+    }
+
+    setInterval(criarPolaroid, 50000);
+  </script>
+</body>
+</html>
