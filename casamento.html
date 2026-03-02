@@ -30,6 +30,22 @@
             scroll-behavior: smooth;
         }
 
+        /* ===== CANVAS FUNDO ===== */
+        #gold-dust {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        section, .hero, .intro, .floating-countdown {
+            position: relative;
+            z-index: 1;
+        }
+
         /* INTRO */
         .intro {
             position: fixed;
@@ -197,7 +213,7 @@
 
             .spotify iframe {
                 width: 100%;
-                height: 220px;
+                height: 170px;
                 border: none;
             }
 
@@ -228,6 +244,8 @@
 
 <body>
 
+    <canvas id="gold-dust"></canvas>
+
     <div class="intro">
         <h1>Abrindo Convite...</h1>
     </div>
@@ -235,11 +253,7 @@
     <div class="hero">
         <h1>Leo & Ester</h1>
         <p>16 DE MAIO DE 2026 • 16:00</p>
-        <p>
-            <a href="#mapa">
-                Igreja Evangélica Avivamento Bíblico • São Carlos - SP
-            </a>
-        </p>
+        <p><a href="#mapa">Igreja Evangélica Avivamento Bíblico • São Carlos - SP</a></p>
     </div>
 
     <section>
@@ -256,14 +270,12 @@
     <section>
         <div class="card">
             <h2>Confirmar Presença</h2>
-
             <p class="confirmacao-texto">
                 Pedimos, por gentileza, a confirmação de presença para que possamos organizar tudo com muito carinho.
             </p>
 
             <input type="text" id="nome" placeholder="Seu nome completo">
             <input type="number" id="acompanhantes" placeholder="Número de acompanhantes">
-
             <button onclick="confirmarPresenca()">Confirmar Presença</button>
             <p id="confirmacaoMensagem"></p>
         </div>
@@ -272,7 +284,6 @@
     <section>
         <div class="card">
             <h2>Contribuições</h2>
-
             <p>
                 Neste momento especial, estamos finalizando a nossa casa.
                 Caso desejem nos presentear, ficaremos muito felizes com contribuições em dinheiro.
@@ -293,33 +304,29 @@
     <section>
         <div class="card">
             <h2>Nossa Playlist</h2>
-
             <div class="spotify">
                 <iframe src="https://open.spotify.com/embed/playlist/59o1J4N0X3Eovrv9rREuQQ?utm_source=generator"
                         allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture">
                 </iframe>
             </div>
-
         </div>
     </section>
 
     <section id="mapa">
         <div class="card mapa">
             <h2>Local da Cerimônia</h2>
-
             <p style="margin-bottom:25px;">
                 Igreja Evangélica Avivamento Bíblico<br>
                 São Carlos - SP
             </p>
 
-            <iframe src="https://www.google.com/maps?q=-22.060432,-47.898198&hl=pt-BR&z=17&output=embed">
-            </iframe>
-
+            <iframe src="https://www.google.com/maps?q=-22.060432,-47.898198&hl=pt-BR&z=17&output=embed"></iframe>
         </div>
     </section>
 
     <div class="floating-countdown" id="countdown"></div>
 
+    <!-- FIREBASE -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
         import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
@@ -342,24 +349,19 @@
             const acompanhantes = document.getElementById("acompanhantes").value;
             const mensagem = document.getElementById("confirmacaoMensagem");
 
-            if (nome.trim() === "") {
-                mensagem.innerText = "Digite seu nome.";
-                return;
-            }
+            if (nome.trim() === "") { mensagem.innerText = "Digite seu nome."; return; }
 
             push(ref(database, "confirmacoesPresenca"), {
                 nome: nome,
                 acompanhantes: acompanhantes || 0,
                 data: new Date().toLocaleString()
-            })
-                .then(() => {
-                    mensagem.innerText = "Presença confirmada com sucesso 💛";
-                    document.getElementById("nome").value = "";
-                    document.getElementById("acompanhantes").value = "";
-                })
-                .catch(() => {
-                    mensagem.innerText = "Erro ao confirmar.";
-                });
+            }).then(() => {
+                mensagem.innerText = "Presença confirmada com sucesso 💛";
+                document.getElementById("nome").value = "";
+                document.getElementById("acompanhantes").value = "";
+            }).catch(() => {
+                mensagem.innerText = "Erro ao confirmar.";
+            });
         }
     </script>
 
@@ -377,6 +379,56 @@
             const dias = Math.floor((casamento - agora) / (1000 * 60 * 60 * 24));
             document.getElementById("countdown").innerHTML = "Faltam " + dias + " dias";
         }, 1000);
+
+        /* ===== EFEITO DOURADO ORGÂNICO PREMIUM ===== */
+        const canvas = document.getElementById("gold-dust");
+        const ctx = canvas.getContext("2d");
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resize();
+        window.addEventListener("resize", resize);
+
+        let particles = [];
+        const total = 160;
+
+        class Particle {
+            constructor() { this.reset(); }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 3.5 + 0.5;
+                this.speed = Math.random() * 0.6 + 0.15;
+                this.opacity = Math.random() * 0.6 + 0.2;
+                this.drift = Math.random() * 0.4 - 0.2;
+            }
+            update() {
+                this.y += this.speed;
+                this.x += this.drift;
+                if (this.y > canvas.height) {
+                    this.y = -10;
+                    this.x = Math.random() * canvas.width;
+                }
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(212,178,106,${this.opacity})`;
+                ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < total; i++) { particles.push(new Particle()); }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animate);
+        }
+        animate();
+
     </script>
 
 </body>
