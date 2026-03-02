@@ -13,7 +13,7 @@
         :root {
             --gold: #d4b26a;
             --dark: #0f1412;
-            --glass: rgba(255,255,255,0.06);
+            --glass: rgba(255,255,255,0.05);
         }
 
         * {
@@ -30,11 +30,11 @@
             scroll-behavior: smooth;
         }
 
-        /* ABERTURA */
+        /* INTRO */
         .intro {
             position: fixed;
             inset: 0;
-            background: #000;
+            background: black;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -58,40 +58,26 @@
             justify-content: center;
             align-items: center;
             text-align: center;
-            background: linear-gradient(rgba(0,0,0,.65),rgba(0,0,0,.65)), url('https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=2070');
+            background: linear-gradient(rgba(0,0,0,.6),rgba(0,0,0,.6)), url('https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=2070');
             background-size: cover;
             background-position: center;
-            position: relative;
         }
 
             .hero h1 {
                 font-family: 'Cormorant Garamond',serif;
                 font-size: 70px;
                 color: var(--gold);
-                letter-spacing: 3px;
-                animation: slideUp 2s ease forwards;
             }
 
             .hero p {
-                margin-top: 20px;
+                margin-top: 15px;
                 letter-spacing: 3px;
-                opacity: .8;
             }
 
             .hero a {
                 color: var(--gold);
                 text-decoration: none;
-                cursor: pointer;
             }
-
-        /* PARTÍCULAS */
-        canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 0;
-            pointer-events: none;
-        }
 
         /* SEÇÕES */
         section {
@@ -149,14 +135,12 @@
                 box-shadow: 0 10px 30px rgba(212,178,106,.5);
             }
 
-        /* PIX */
         .qr-pix {
             width: 230px;
             margin: 30px 0;
             border-radius: 20px;
         }
 
-        /* MAPA */
         iframe {
             width: 100%;
             height: 350px;
@@ -175,6 +159,7 @@
             padding: 18px 28px;
             border-radius: 60px;
             z-index: 1000;
+            font-weight: bold;
         }
 
         /* ANIMAÇÕES */
@@ -192,18 +177,6 @@
             to {
                 opacity: 0;
                 visibility: hidden;
-            }
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(40px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
             }
         }
 
@@ -225,8 +198,6 @@
         <h1>Leo & Ester</h1>
     </div>
 
-    <canvas id="particles"></canvas>
-
     <div class="hero">
         <h1>Leo & Ester</h1>
         <p>16 DE MAIO DE 2026 • 16:00</p>
@@ -235,23 +206,33 @@
         </p>
     </div>
 
+    <!-- CONFIRMAÇÃO -->
     <section>
         <div class="card">
-            <h2>Confirme sua Presença</h2>
-            <p>Pedimos, por gentileza, a confirmação de presença para que possamos organizar tudo com muito carinho.</p>
-            <input type="text" placeholder="Seu nome completo">
-            <input type="number" placeholder="Número de acompanhantes">
-            <button>Confirmar Presença</button>
+            <h2>Confirmar Presença</h2>
+
+            <p>
+                Pedimos, por gentileza, a confirmação de presença para que possamos organizar tudo com muito carinho.
+            </p>
+
+            <input type="text" id="nome" placeholder="Seu nome completo">
+            <input type="number" id="acompanhantes" placeholder="Número de acompanhantes">
+
+            <button onclick="confirmarPresenca()">Confirmar Presença</button>
+
+            <p id="confirmacaoMensagem"></p>
+
         </div>
     </section>
 
+    <!-- PIX -->
     <section>
         <div class="card">
             <h2>Contribuições</h2>
+
             <p>
                 Neste momento especial, estamos finalizando a nossa casa.
-                Caso desejem nos presentear, ficaremos muito felizes com contribuições em dinheiro,
-                que nos ajudarão a construir esse novo lar.
+                Caso desejem nos presentear, ficaremos muito felizes com contribuições em dinheiro.
             </p>
 
             <img src="assets/leoester/qrcodepix.png" class="qr-pix">
@@ -262,6 +243,7 @@
         </div>
     </section>
 
+    <!-- MAPA -->
     <section id="mapa">
         <div class="card">
             <h2>Local da Cerimônia</h2>
@@ -270,6 +252,57 @@
     </section>
 
     <div class="floating-countdown" id="countdown"></div>
+
+    <!-- 🔥 FIREBASE REALTIME -->
+    <script type="module">
+
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+        import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "SUA_API_KEY",
+            authDomain: "chadecozinhaesterleonardo.firebaseapp.com",
+            databaseURL: "https://chadecozinhaesterleonardo-default-rtdb.firebaseio.com",
+            projectId: "chadecozinhaesterleonardo",
+            storageBucket: "chadecozinhaesterleonardo.appspot.com",
+            messagingSenderId: "SEU_SENDER_ID",
+            appId: "SEU_APP_ID"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+
+        window.confirmarPresenca = function () {
+
+            const nome = document.getElementById("nome").value;
+            const acompanhantes = document.getElementById("acompanhantes").value;
+            const mensagem = document.getElementById("confirmacaoMensagem");
+
+            if (nome.trim() === "") {
+                mensagem.innerText = "Digite seu nome.";
+                return;
+            }
+
+            const confirmacoesRef = ref(database, "confirmacoesPresenca");
+
+            push(confirmacoesRef, {
+                nome: nome,
+                acompanhantes: acompanhantes || 0,
+                data: new Date().toLocaleString()
+            })
+                .then(() => {
+                    mensagem.innerText = "Presença confirmada com sucesso 💛";
+                    document.getElementById("nome").value = "";
+                    document.getElementById("acompanhantes").value = "";
+                })
+                .catch((error) => {
+                    mensagem.innerText = "Erro ao confirmar.";
+                    console.error(error);
+                });
+
+        }
+
+    </script>
 
     <script>
         function copiarPix() {
@@ -286,36 +319,6 @@
             const dias = Math.floor(distancia / (1000 * 60 * 60 * 24));
             document.getElementById("countdown").innerHTML = "Faltam " + dias + " dias";
         }, 1000);
-
-        /* PARTÍCULAS */
-        const canvas = document.getElementById("particles");
-        const ctx = canvas.getContext("2d");
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-
-        let particles = [];
-        for (let i = 0; i < 60; i++) {
-            particles.push({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height,
-                r: Math.random() * 2,
-                d: Math.random() * 1
-            });
-        }
-
-        function draw() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = "rgba(212,178,106,0.6)";
-            particles.forEach(p => {
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-                ctx.fill();
-                p.y += p.d;
-                if (p.y > canvas.height) { p.y = 0; }
-            });
-            requestAnimationFrame(draw);
-        }
-        draw();
     </script>
 
 </body>
