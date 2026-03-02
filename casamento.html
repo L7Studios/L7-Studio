@@ -11,31 +11,31 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
 
     <style>
+
         body {
             margin: 0;
-            font-family: 'Montserrat', sans-serif;
-            background: linear-gradient(135deg, #f8f6f3, #ece7df);
+            font-family: 'Montserrat',sans-serif;
+            background: linear-gradient(180deg,#f6f1ea,#ebe3d8);
             color: #2c2c2c;
+            scroll-behavior: smooth;
         }
 
         header {
             text-align: center;
-            padding: 100px 20px 60px;
-            animation: fadeIn 1.5s ease;
+            padding: 120px 20px 80px;
         }
 
         h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: 56px;
+            font-family: 'Playfair Display',serif;
+            font-size: 64px;
             margin: 0;
         }
 
         .subtitulo {
-            font-size: 16px;
             letter-spacing: 4px;
             text-transform: uppercase;
             color: #b89b72;
-            margin-top: 10px;
+            margin-top: 15px;
         }
 
         #contador-lateral {
@@ -43,95 +43,91 @@
             right: 30px;
             top: 50%;
             transform: translateY(-50%);
-            background: rgba(255,255,255,0.7);
-            backdrop-filter: blur(10px);
-            padding: 25px;
-            border-radius: 18px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.08);
             text-align: center;
         }
 
             #contador-lateral span {
-                font-size: 36px;
+                font-size: 40px;
                 font-weight: bold;
                 color: #b89b72;
             }
 
         section {
-            max-width: 900px;
-            margin: 120px auto;
+            max-width: 1000px;
+            margin: 140px auto;
             padding: 0 20px;
-            text-align: center;
         }
 
         .info-box {
-            background: rgba(255,255,255,0.8);
-            backdrop-filter: blur(12px);
-            padding: 60px;
-            border-radius: 24px;
-            box-shadow: 0 25px 60px rgba(0,0,0,0.07);
-            transition: transform 0.4s ease;
+            background: white;
+            padding: 70px;
+            border-radius: 30px;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.06);
+            text-align: center;
+            transition: all .4s ease;
         }
 
             .info-box:hover {
-                transform: translateY(-8px);
+                transform: translateY(-10px);
             }
 
+        h2 {
+            font-family: 'Playfair Display',serif;
+            font-size: 34px;
+            margin-bottom: 30px;
+        }
+
         input {
-            padding: 16px;
+            padding: 18px;
             width: 80%;
             margin: 15px 0;
-            border-radius: 12px;
+            border-radius: 14px;
             border: 1px solid #ddd;
             font-size: 16px;
         }
 
         button {
-            background: linear-gradient(135deg, #b89b72, #a88a62);
+            background: #b89b72;
             color: white;
             border: none;
-            padding: 16px 40px;
+            padding: 16px 45px;
             border-radius: 14px;
             font-size: 16px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: .3s;
         }
 
             button:hover {
+                background: #a88a62;
                 transform: scale(1.05);
-                box-shadow: 0 10px 25px rgba(184,155,114,0.4);
             }
 
         iframe {
             width: 100%;
-            height: 380px;
-            border-radius: 20px;
+            height: 400px;
             border: none;
+            border-radius: 25px;
         }
 
         #qrcode {
-            margin-top: 20px;
+            margin-top: 25px;
         }
 
         @media(max-width:768px) {
             #contador-lateral {
                 position: relative;
-                right: auto;
                 top: auto;
+                right: auto;
                 transform: none;
-                margin: 30px auto;
-            }
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
+                margin: 40px auto;
             }
 
-            to {
-                opacity: 1;
-                transform: translateY(0);
+            h1 {
+                font-size: 42px;
             }
         }
     </style>
@@ -149,6 +145,15 @@
         <h1>Ester & Leo</h1>
         <div class="subtitulo">16 de Maio de 2026 • 16h</div>
     </header>
+
+    <section>
+        <div class="info-box">
+            <h2>Cerimônia</h2>
+            <p><strong>Igreja Evangélica Avivamento Bíblico</strong></p>
+            <p>R. Ricardo Ninelli, 223</p>
+            <p>São Carlos/SP</p>
+        </div>
+    </section>
 
     <section>
         <div class="info-box">
@@ -176,47 +181,16 @@
         </div>
     </section>
 
+    <section>
+        <div class="info-box">
+            <h2>Localização</h2>
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3652.950418720515!2d-47.898198!3d-22.060432!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94b877bc17876a71%3A0x42e4b84d0c0fdb16!2sIgreja%20Evang%C3%A9lica%20Avivamento%20Bibl%C3%ADco%20em%20S%C3%A3o%20Carlos!5e0!3m2!1spt-BR!2sbr"></iframe>
+        </div>
+    </section>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
-    <script type="module">
-
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
-
-        const firebaseConfig = {
-            apiKey: "SUA_API_KEY",
-            authDomain: "chadecozinhaesterleonardo.firebaseapp.com",
-            databaseURL: "https://chadecozinhaesterleonardo-default-rtdb.firebaseio.com",
-            projectId: "chadecozinhaesterleonardo",
-            storageBucket: "chadecozinhaesterleonardo.appspot.com",
-            messagingSenderId: "SEU_MESSAGING_ID",
-            appId: "SEU_APP_ID"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const database = getDatabase(app);
-
-        window.confirmarPresenca = function () {
-            const nome = document.getElementById("nome").value.trim();
-            const acompanhantes = document.getElementById("acompanhantes").value || 0;
-
-            if (nome === "") {
-                alert("Digite seu nome");
-                return;
-            }
-
-            push(ref(database, 'confirmacoesPresenca'), {
-                nome,
-                acompanhantes: Number(acompanhantes),
-                data: new Date().toISOString()
-            });
-
-            alert("Presença confirmada 💛");
-
-            document.getElementById("nome").value = "";
-            document.getElementById("acompanhantes").value = "";
-        }
-
+    <script>
         function atualizarContador() {
             const dataCasamento = new Date("May 16, 2026 16:00:00").getTime();
             const agora = new Date().getTime();
@@ -224,25 +198,16 @@
             const dias = Math.floor(diff / (1000 * 60 * 60 * 24));
             document.getElementById("dias").innerText = dias > 0 ? dias : 0;
         }
-
         atualizarContador();
         setInterval(atualizarContador, 60000);
 
-    </script>
-
-    <script>
         document.getElementById("valorPix").addEventListener("change", function () {
-            const chave = "45289314865"; // 🔥 SUA CHAVE REAL
+            const chave = "45289314865";
             const valor = this.value;
-
             if (!valor) return;
-
-            const texto = `Pagamento Pix - Ester & Leo - R$${valor} - ${chave}`;
-
             document.getElementById("qrcode").innerHTML = "";
-
             new QRCode(document.getElementById("qrcode"), {
-                text: texto,
+                text: `Pagamento Pix - Ester & Leo - R$${valor} - ${chave}`,
                 width: 220,
                 height: 220
             });
