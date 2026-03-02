@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ester & Leo - Nosso Casamento</title>
 
-    <!-- FAVICON 🍃 -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍃</text></svg>">
 
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
@@ -15,76 +14,78 @@
         body {
             margin: 0;
             font-family: 'Montserrat',sans-serif;
-            background: linear-gradient(180deg,#f6f1ea,#ebe3d8);
+            background: linear-gradient(180deg,#f5efe6,#e8dfd2);
             color: #2c2c2c;
-            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
+        /* FUNDO ANIMADO */
+        .leaf {
+            position: fixed;
+            top: -50px;
+            font-size: 24px;
+            animation: fall linear infinite;
+            opacity: .4;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(110vh) rotate(360deg);
+            }
         }
 
         header {
             text-align: center;
-            padding: 120px 20px 80px;
+            padding: 100px 20px 60px;
         }
 
         h1 {
             font-family: 'Playfair Display',serif;
-            font-size: 64px;
+            font-size: clamp(36px,8vw,64px);
             margin: 0;
         }
 
         .subtitulo {
-            letter-spacing: 4px;
+            letter-spacing: 3px;
             text-transform: uppercase;
             color: #b89b72;
             margin-top: 15px;
+            font-size: clamp(14px,3vw,18px);
         }
-
-        #contador-lateral {
-            position: fixed;
-            right: 30px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: white;
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.08);
-            text-align: center;
-        }
-
-            #contador-lateral span {
-                font-size: 40px;
-                font-weight: bold;
-                color: #b89b72;
-            }
 
         section {
             max-width: 1000px;
-            margin: 140px auto;
+            margin: 100px auto;
             padding: 0 20px;
         }
 
         .info-box {
             background: white;
-            padding: 70px;
+            padding: clamp(30px,6vw,70px);
             border-radius: 30px;
             box-shadow: 0 30px 80px rgba(0,0,0,0.06);
             text-align: center;
-            transition: all .4s ease;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 1s ease;
         }
 
-            .info-box:hover {
-                transform: translateY(-10px);
+            .info-box.show {
+                opacity: 1;
+                transform: translateY(0);
             }
 
         h2 {
             font-family: 'Playfair Display',serif;
-            font-size: 34px;
-            margin-bottom: 30px;
+            font-size: clamp(22px,5vw,34px);
+            margin-bottom: 25px;
         }
 
         input {
-            padding: 18px;
-            width: 80%;
-            margin: 15px 0;
+            padding: 16px;
+            width: 100%;
+            max-width: 400px;
+            margin: 12px 0;
             border-radius: 14px;
             border: 1px solid #ddd;
             font-size: 16px;
@@ -94,7 +95,7 @@
             background: #b89b72;
             color: white;
             border: none;
-            padding: 16px 45px;
+            padding: 16px 40px;
             border-radius: 14px;
             font-size: 16px;
             cursor: pointer;
@@ -108,26 +109,38 @@
 
         iframe {
             width: 100%;
-            height: 400px;
+            height: 350px;
             border: none;
-            border-radius: 25px;
+            border-radius: 20px;
         }
 
-        #qrcode {
-            margin-top: 25px;
+        #contador {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0,0,0,.1);
+            text-align: center;
         }
 
-        @media(max-width:768px) {
-            #contador-lateral {
-                position: relative;
-                top: auto;
-                right: auto;
-                transform: none;
-                margin: 40px auto;
+            #contador span {
+                font-size: 28px;
+                font-weight: bold;
+                color: #b89b72;
             }
 
-            h1 {
-                font-size: 42px;
+        @media(max-width:768px) {
+            section {
+                margin: 70px auto;
+            }
+
+            #contador {
+                position: relative;
+                margin: 30px auto;
+                right: auto;
+                bottom: auto;
             }
         }
     </style>
@@ -135,7 +148,7 @@
 
 <body>
 
-    <div id="contador-lateral">
+    <div id="contador">
         Faltam<br>
         <span id="dias"></span><br>
         dias
@@ -191,16 +204,40 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
     <script>
+
+        // ANIMAÇÃO AO ROLAR
+        const boxes = document.querySelectorAll(".info-box");
+        window.addEventListener("scroll", () => {
+            boxes.forEach(box => {
+                const top = box.getBoundingClientRect().top;
+                if (top < window.innerHeight - 100) {
+                    box.classList.add("show");
+                }
+            });
+        });
+
+        // FOLHAS ANIMADAS
+        for (let i = 0; i < 10; i++) {
+            let leaf = document.createElement("div");
+            leaf.classList.add("leaf");
+            leaf.innerHTML = "🍃";
+            leaf.style.left = Math.random() * 100 + "vw";
+            leaf.style.animationDuration = (5 + Math.random() * 5) + "s";
+            document.body.appendChild(leaf);
+        }
+
+        // CONTADOR
         function atualizarContador() {
-            const dataCasamento = new Date("May 16, 2026 16:00:00").getTime();
+            const data = new Date("May 16, 2026 16:00:00").getTime();
             const agora = new Date().getTime();
-            const diff = dataCasamento - agora;
+            const diff = data - agora;
             const dias = Math.floor(diff / (1000 * 60 * 60 * 24));
             document.getElementById("dias").innerText = dias > 0 ? dias : 0;
         }
         atualizarContador();
         setInterval(atualizarContador, 60000);
 
+        // QR PIX
         document.getElementById("valorPix").addEventListener("change", function () {
             const chave = "45289314865";
             const valor = this.value;
@@ -212,6 +249,7 @@
                 height: 220
             });
         });
+
     </script>
 
 </body>
