@@ -23,7 +23,6 @@
         h1 {
             font-family: 'Playfair Display', serif;
             font-size: 50px;
-            margin-bottom: 10px;
         }
 
         .subtitulo {
@@ -43,11 +42,9 @@
             border-radius: 14px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.08);
             text-align: center;
-            font-size: 14px;
         }
 
             #contador-lateral span {
-                display: block;
                 font-size: 32px;
                 font-weight: bold;
                 color: #b89b72;
@@ -58,12 +55,6 @@
             margin: 100px auto;
             padding: 0 20px;
             text-align: center;
-        }
-
-        h2 {
-            font-family: 'Playfair Display', serif;
-            font-size: 34px;
-            margin-bottom: 30px;
         }
 
         .info-box {
@@ -90,26 +81,13 @@
             border-radius: 10px;
             font-size: 16px;
             cursor: pointer;
-            transition: 0.3s;
         }
-
-            button:hover {
-                background: #9f825c;
-            }
 
         iframe {
             width: 100%;
-            height: 400px;
+            height: 380px;
             border-radius: 18px;
             border: none;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.05);
-        }
-
-        footer {
-            text-align: center;
-            padding: 60px;
-            font-size: 14px;
-            color: #777;
         }
     </style>
 </head>
@@ -117,8 +95,8 @@
 <body>
 
     <div id="contador-lateral">
-        Faltam
-        <span id="dias"></span>
+        Faltam<br>
+        <span id="dias"></span><br>
         dias
     </div>
 
@@ -128,78 +106,105 @@
     </header>
 
     <section>
-        <h2>Cerimônia Religiosa</h2>
         <div class="info-box">
-            <p><strong>Igreja Avivamento Bíblico</strong></p>
+            <h2>Cerimônia</h2>
+            <p><strong>Igreja Evangélica Avivamento Bíblico</strong></p>
             <p>R. Ricardo Ninelli, 123</p>
-            <p>Cidade Aracy – São Carlos/SP</p>
-            <p>CEP 13573-052</p>
+            <p>São Carlos/SP</p>
         </div>
     </section>
 
     <section>
-        <h2>Confirme sua Presença</h2>
         <div class="info-box">
-            <form>
-                <input type="text" placeholder="Seu nome completo" required><br>
-                <input type="number" placeholder="Número de acompanhantes" min="0"><br>
-                <button type="submit">Confirmar Presença</button>
-            </form>
+            <h2>Confirme sua Presença</h2>
+            <input type="text" id="nome" placeholder="Seu nome completo">
+            <input type="number" id="acompanhantes" placeholder="Número de acompanhantes">
+            <button onclick="confirmarPresenca()">Confirmar</button>
         </div>
     </section>
 
     <section>
-        <h2>Nos Presenteie com Amor</h2>
         <div class="info-box">
-            <p>Optamos por não fazer lista de presentes.</p>
-            <p>Se desejar nos abençoar, você pode contribuir via Pix.</p>
-            <br>
+            <h2>Contribuição via Pix</h2>
             <input type="number" id="valorPix" placeholder="Digite o valor (R$)">
-            <br><br>
             <div id="qrcode"></div>
-            <br>
             <p>Chave Pix:</p>
             <strong>SUA_CHAVE_PIX_AQUI</strong>
         </div>
     </section>
 
     <section>
+        <div class="info-box">
+            <h2>Nossa Playlist 🎵</h2>
+            <iframe src="LINK_SPOTIFY_EMBED"
+                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture">
+            </iframe>
+        </div>
+    </section>
+
+    <section>
         <h2>Localização</h2>
-        <iframe src="https://www.google.com/maps?q=-22.0610038,-47.8980091&hl=pt-BR&z=15&output=embed">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3652.950418720515!2d-47.898198!3d-22.060432!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94b877bc17876a71%3A0x42e4b84d0c0fdb16!2sIgreja%20Evang%C3%A9lica%20Avivamento%20Bibl%C3%ADco%20em%20S%C3%A3o%20Carlos!5e0!3m2!1spt-BR!2sbr">
         </iframe>
     </section>
 
-    <footer>
-        Com amor, Leo & [Nome] 💍
-    </footer>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
-    <script>
-        // CONTADOR
-        const dataCasamento = new Date("May 16, 2026 16:00:00").getTime();
-        const hoje = new Date().getTime();
-        const distancia = dataCasamento - hoje;
-        const dias = Math.floor(distancia / (1000 * 60 * 60 * 24));
-        document.getElementById("dias").innerHTML = dias;
+    <script type="module">
 
-        // QR CODE PIX
-        function gerarPix(valor) {
-            const chavePix = "SUA_CHAVE_PIX_AQUI";
-            const texto = `Pix para casamento Leo & [Nome] - Valor: R$ ${valor} - Chave: ${chavePix}`;
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-            document.getElementById("qrcode").innerHTML = "";
-            new QRCode(document.getElementById("qrcode"), {
-                text: texto,
-                width: 200,
-                height: 200
+        // 🔥 CONFIG DO SEU FIREBASE
+        const firebaseConfig = {
+            apiKey: "SUA_API_KEY",
+            authDomain: "chadecozinhaesterleonardo.firebaseapp.com",
+            databaseURL: "https://chadecozinhaesterleonardo-default-rtdb.firebaseio.com",
+            projectId: "chadecozinhaesterleonardo",
+            storageBucket: "chadecozinhaesterleonardo.appspot.com",
+            messagingSenderId: "SEU_MESSAGING_ID",
+            appId: "SEU_APP_ID"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+
+        window.confirmarPresenca = function () {
+            const nome = document.getElementById("nome").value;
+            const acompanhantes = document.getElementById("acompanhantes").value;
+
+            if (nome === "") {
+                alert("Digite seu nome");
+                return;
+            }
+
+            const confirmacoesRef = ref(database, 'confirmacoesPresenca');
+
+            push(confirmacoesRef, {
+                nome: nome,
+                acompanhantes: acompanhantes,
+                data: new Date().toISOString()
             });
+
+            alert("Presença confirmada 💛");
         }
 
+        // CONTADOR
+        const dataCasamento = new Date("May 16, 2026 16:00:00").getTime();
+        const agora = new Date().getTime();
+        const diff = dataCasamento - agora;
+        const dias = Math.floor(diff / (1000 * 60 * 60 * 24));
+        document.getElementById("dias").innerText = dias;
+
+    </script>
+
+    <script>
+        // QR CODE PIX
         document.getElementById("valorPix").addEventListener("change", function () {
-            if (this.value > 0) {
-                gerarPix(this.value);
-            }
+            const chave = "SUA_CHAVE_PIX_AQUI";
+            const texto = `PIX Leo & [Nome] - R$${this.value} - ${chave}`;
+            document.getElementById("qrcode").innerHTML = "";
+            new QRCode(document.getElementById("qrcode"), { text: texto, width: 200, height: 200 });
         });
     </script>
 
