@@ -129,7 +129,7 @@
         }
 
         .confirmacao-texto {
-            margin-bottom: 40px; /* espaço maior antes do input */
+            margin-bottom: 40px;
         }
 
         input {
@@ -159,12 +159,47 @@
                 box-shadow: 0 10px 30px rgba(212,178,106,.5);
             }
 
+        /* PIX */
         .qr-pix {
             width: 230px;
             max-width: 80%;
-            margin: 30px 0;
             border-radius: 20px;
         }
+
+        .pix-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 60px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        .pix-botao {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        @media(max-width:768px) {
+            .pix-container {
+                flex-direction: column;
+                gap: 30px;
+            }
+        }
+
+        /* SPOTIFY */
+        .spotify {
+            margin-top: 30px;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+            .spotify iframe {
+                width: 100%;
+                height: 220px;
+                border: none;
+            }
 
         /* MAPA */
         .mapa iframe {
@@ -174,19 +209,6 @@
             border-radius: 20px;
             margin-top: 30px;
         }
-
-        /* SPOTIFY AJUSTADO */
-        .spotify {
-            margin-top: 30px;
-            border-radius: 20px;
-            overflow: hidden;
-        }
-
-            .spotify iframe {
-                width: 100%;
-                height: 220px; /* ALTURA REDUZIDA AQUI */
-                border: none;
-            }
 
         /* CONTADOR */
         .floating-countdown {
@@ -220,7 +242,6 @@
         </p>
     </div>
 
-    <!-- SOBRE -->
     <section>
         <div class="card">
             <h2>Sobre o Evento</h2>
@@ -232,7 +253,6 @@
         </div>
     </section>
 
-    <!-- CONFIRMAÇÃO -->
     <section>
         <div class="card">
             <h2>Confirmar Presença</h2>
@@ -246,11 +266,9 @@
 
             <button onclick="confirmarPresenca()">Confirmar Presença</button>
             <p id="confirmacaoMensagem"></p>
-
         </div>
     </section>
 
-    <!-- CONTRIBUIÇÕES -->
     <section>
         <div class="card">
             <h2>Contribuições</h2>
@@ -260,15 +278,18 @@
                 Caso desejem nos presentear, ficaremos muito felizes com contribuições em dinheiro.
             </p>
 
-            <img src="assets/leoester/qrcodepix.png" class="qr-pix">
+            <div class="pix-container">
+                <img src="assets/leoester/qrcodepix.png" class="qr-pix">
 
-            <button onclick="copiarPix()">Copiar Código Pix</button>
-            <p id="pixFeedback"></p>
+                <div class="pix-botao">
+                    <button onclick="copiarPix()">Copiar Código Pix</button>
+                    <p id="pixFeedback" style="margin-top:15px;"></p>
+                </div>
+            </div>
 
         </div>
     </section>
 
-    <!-- PLAYLIST -->
     <section>
         <div class="card">
             <h2>Nossa Playlist</h2>
@@ -282,7 +303,6 @@
         </div>
     </section>
 
-    <!-- MAPA -->
     <section id="mapa">
         <div class="card mapa">
             <h2>Local da Cerimônia</h2>
@@ -300,7 +320,6 @@
 
     <div class="floating-countdown" id="countdown"></div>
 
-    <!-- FIREBASE -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
         import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
@@ -338,9 +357,8 @@
                     document.getElementById("nome").value = "";
                     document.getElementById("acompanhantes").value = "";
                 })
-                .catch((error) => {
+                .catch(() => {
                     mensagem.innerText = "Erro ao confirmar.";
-                    console.error(error);
                 });
         }
     </script>
