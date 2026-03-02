@@ -1,48 +1,63 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Leo & Ester</title>
 
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'><text y='1.2em' font-size='90'>🍃</text></svg>">
+
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
+
     <style>
         :root {
-            --bg: #0f0f14;
-            --gold: #d4af37;
-            --card: #1a1a22;
-            --text: #f5f5f5;
+            --gold: #d4b26a;
+            --dark: #0f1412;
+            --glass: rgba(255,255,255,0.05);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Georgia', serif;
-        }
-
-        html {
-            scroll-behavior: smooth;
         }
 
         body {
-            background: var(--bg);
-            color: var(--text);
-            text-align: center;
+            font-family: 'Montserrat',sans-serif;
+            background: var(--dark);
+            color: white;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
         }
 
         /* INTRO */
-        #intro {
+        .intro {
             position: fixed;
             inset: 0;
-            background: #000;
+            background: linear-gradient(135deg,#000000,#0f1412);
             display: flex;
-            align-items: center;
             justify-content: center;
+            align-items: center;
             z-index: 9999;
-            font-size: 28px;
-            letter-spacing: 3px;
-            animation: fadeOut 2.5s ease forwards;
-            animation-delay: 2s;
+            animation: fadeOut 2s ease 2.8s forwards;
+        }
+
+            .intro h1 {
+                font-family: 'Cormorant Garamond',serif;
+                font-size: clamp(28px,6vw,56px);
+                color: var(--gold);
+                letter-spacing: 4px;
+                animation: glow 2s ease infinite alternate;
+            }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 10px rgba(212,178,106,.4);
+            }
+
+            to {
+                text-shadow: 0 0 25px rgba(212,178,106,1);
+            }
         }
 
         @keyframes fadeOut {
@@ -54,119 +69,152 @@
 
         /* HERO */
         .hero {
-            padding: 120px 20px 80px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: linear-gradient(rgba(0,0,0,.6),rgba(0,0,0,.6)), url('https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=2070');
+            background-size: cover;
+            background-position: center;
+            padding: 20px;
         }
 
             .hero h1 {
-                font-size: 42px;
+                font-family: 'Cormorant Garamond',serif;
+                font-size: clamp(36px,8vw,70px);
                 color: var(--gold);
-                margin-bottom: 10px;
             }
 
             .hero p {
-                margin: 5px 0;
+                margin-top: 15px;
+                letter-spacing: 2px;
             }
 
+            .hero a {
+                color: var(--gold);
+                text-decoration: none;
+            }
+
+        /* SEÇÕES */
         section {
-            padding: 60px 20px;
+            padding: 100px 20px;
+            display: flex;
+            justify-content: center;
         }
 
         .card {
-            background: var(--card);
-            max-width: 600px;
-            margin: auto;
-            padding: 40px 25px;
-            border-radius: 20px;
-            box-shadow: 0 0 25px rgba(212,175,55,0.15);
+            max-width: 850px;
+            width: 100%;
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            padding: clamp(30px,5vw,70px);
+            border-radius: 30px;
+            border: 1px solid rgba(255,255,255,.08);
+            box-shadow: 0 30px 60px rgba(0,0,0,.5);
+            text-align: center;
         }
 
-            .card h2 {
-                color: var(--gold);
-                margin-bottom: 20px;
-            }
+        h2 {
+            font-family: 'Cormorant Garamond',serif;
+            font-size: clamp(28px,5vw,42px);
+            color: var(--gold);
+            margin-bottom: 30px;
+        }
 
-        /* INPUT */
+        p {
+            line-height: 1.8;
+            opacity: .85;
+        }
+
+        .confirmacao-texto {
+            margin-bottom: 40px; /* espaço maior antes do input */
+        }
+
         input {
             width: 100%;
-            padding: 14px;
-            border-radius: 10px;
-            border: none;
-            margin-top: 15px; /* espaço extra após o texto */
+            padding: 15px;
             margin-bottom: 20px;
+            border-radius: 12px;
+            border: none;
+            background: rgba(255,255,255,.08);
+            color: white;
             font-size: 16px;
         }
 
         button {
-            background: var(--gold);
-            color: #000;
+            padding: 15px 45px;
+            border-radius: 50px;
             border: none;
-            padding: 12px 25px;
-            border-radius: 30px;
+            background: var(--gold);
+            color: black;
             cursor: pointer;
+            transition: .3s;
             font-weight: bold;
-            transition: 0.3s;
         }
 
             button:hover {
-                opacity: 0.8;
+                transform: translateY(-4px);
+                box-shadow: 0 10px 30px rgba(212,178,106,.5);
             }
 
-        /* PIX */
-        .pix img {
-            width: 200px;
-            margin-bottom: 20px;
-        }
-
-        /* SPOTIFY */
-        .spotify iframe {
-            width: 100%;
-            height: 220px;
-            border: none;
-            border-radius: 15px;
+        .qr-pix {
+            width: 230px;
+            max-width: 80%;
+            margin: 30px 0;
+            border-radius: 20px;
         }
 
         /* MAPA */
-        #mapa iframe {
+        .mapa iframe {
             width: 100%;
-            height: 250px;
-            border-radius: 15px;
+            height: 350px;
             border: none;
-            margin-top: 20px;
+            border-radius: 20px;
+            margin-top: 30px;
         }
+
+        /* SPOTIFY AJUSTADO */
+        .spotify {
+            margin-top: 30px;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+            .spotify iframe {
+                width: 100%;
+                height: 220px; /* ALTURA REDUZIDA AQUI */
+                border: none;
+            }
 
         /* CONTADOR */
         .floating-countdown {
             position: fixed;
-            bottom: 20px;
             right: 20px;
+            bottom: 20px;
             background: var(--gold);
-            color: #000;
-            padding: 12px 18px;
-            border-radius: 30px;
+            color: black;
+            padding: 15px 25px;
+            border-radius: 60px;
+            z-index: 1000;
             font-weight: bold;
             font-size: 14px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-        }
-
-        @media(max-width:768px) {
-            .hero h1 {
-                font-size: 32px;
-            }
         }
     </style>
 </head>
 
 <body>
 
-    <div id="intro">
-        Abrindo Convite...
+    <div class="intro">
+        <h1>Abrindo Convite...</h1>
     </div>
 
     <div class="hero">
         <h1>Leo & Ester</h1>
         <p>16 DE MAIO DE 2026 • 16:00</p>
         <p>
-            <a href="#mapa" style="color:var(--gold); text-decoration:none;">
+            <a href="#mapa">
                 Igreja Evangélica Avivamento Bíblico • São Carlos - SP
             </a>
         </p>
@@ -179,8 +227,7 @@
             <p>
                 Após a cerimônia, iremos comemorar juntos no Planalto.
                 Cada convidado será responsável pelo seu consumo,
-                mas o mais importante é ter a presença de vocês
-                celebrando esse momento com a gente!
+                mas o mais importante é ter a presença de vocês celebrando esse momento com a gente!
             </p>
         </div>
     </section>
@@ -190,48 +237,57 @@
         <div class="card">
             <h2>Confirmar Presença</h2>
 
-            <p>
+            <p class="confirmacao-texto">
                 Pedimos, por gentileza, a confirmação de presença para que possamos organizar tudo com muito carinho.
             </p>
 
-            <input type="text" id="nome" placeholder="Digite seu nome">
-            <button onclick="confirmar()">Confirmar Presença</button>
+            <input type="text" id="nome" placeholder="Seu nome completo">
+            <input type="number" id="acompanhantes" placeholder="Número de acompanhantes">
 
-            <p id="msg" style="margin-top:15px;"></p>
+            <button onclick="confirmarPresenca()">Confirmar Presença</button>
+            <p id="confirmacaoMensagem"></p>
 
         </div>
     </section>
 
-    <!-- PIX -->
-    <section class="pix">
+    <!-- CONTRIBUIÇÕES -->
+    <section>
         <div class="card">
-            <h2>Contribuição</h2>
-            <img src="SEU_QR_CODE_AQUI.png" alt="QR Code Pix">
-            <br>
-            <button onclick="copiarPix()">Copiar Código Pix</button>
-        </div>
-    </section>
+            <h2>Contribuições</h2>
 
-    <!-- SPOTIFY -->
-    <section class="spotify">
-        <div class="card">
-            <h2>Nossa Playlist 🎶</h2>
-            <p style="margin-bottom:20px;">
-                Dê o play e entre no clima do nosso grande dia.
+            <p>
+                Neste momento especial, estamos finalizando a nossa casa.
+                Caso desejem nos presentear, ficaremos muito felizes com contribuições em dinheiro.
             </p>
 
-            <iframe src="https://open.spotify.com/embed/playlist/59o1J4N0X3Eovrv9rREuQQ?utm_source=generator"
-                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture">
-            </iframe>
+            <img src="assets/leoester/qrcodepix.png" class="qr-pix">
+
+            <button onclick="copiarPix()">Copiar Código Pix</button>
+            <p id="pixFeedback"></p>
+
+        </div>
+    </section>
+
+    <!-- PLAYLIST -->
+    <section>
+        <div class="card">
+            <h2>Nossa Playlist</h2>
+
+            <div class="spotify">
+                <iframe src="https://open.spotify.com/embed/playlist/59o1J4N0X3Eovrv9rREuQQ?utm_source=generator"
+                        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture">
+                </iframe>
+            </div>
 
         </div>
     </section>
 
     <!-- MAPA -->
     <section id="mapa">
-        <div class="card">
+        <div class="card mapa">
             <h2>Local da Cerimônia</h2>
-            <p>
+
+            <p style="margin-bottom:25px;">
                 Igreja Evangélica Avivamento Bíblico<br>
                 São Carlos - SP
             </p>
@@ -244,33 +300,64 @@
 
     <div class="floating-countdown" id="countdown"></div>
 
-    <script>
-        function confirmar() {
-            let nome = document.getElementById("nome").value;
-            if (nome === "") {
-                document.getElementById("msg").innerText = "Por favor, digite seu nome.";
-            } else {
-                document.getElementById("msg").innerText = "Presença confirmada! 💛";
+    <!-- FIREBASE -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+        import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "SUA_API_KEY",
+            authDomain: "chadecozinhaesterleonardo.firebaseapp.com",
+            databaseURL: "https://chadecozinhaesterleonardo-default-rtdb.firebaseio.com",
+            projectId: "chadecozinhaesterleonardo",
+            storageBucket: "chadecozinhaesterleonardo.appspot.com",
+            messagingSenderId: "SEU_SENDER_ID",
+            appId: "SEU_APP_ID"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+
+        window.confirmarPresenca = function () {
+            const nome = document.getElementById("nome").value;
+            const acompanhantes = document.getElementById("acompanhantes").value;
+            const mensagem = document.getElementById("confirmacaoMensagem");
+
+            if (nome.trim() === "") {
+                mensagem.innerText = "Digite seu nome.";
+                return;
             }
-        }
 
+            push(ref(database, "confirmacoesPresenca"), {
+                nome: nome,
+                acompanhantes: acompanhantes || 0,
+                data: new Date().toLocaleString()
+            })
+                .then(() => {
+                    mensagem.innerText = "Presença confirmada com sucesso 💛";
+                    document.getElementById("nome").value = "";
+                    document.getElementById("acompanhantes").value = "";
+                })
+                .catch((error) => {
+                    mensagem.innerText = "Erro ao confirmar.";
+                    console.error(error);
+                });
+        }
+    </script>
+
+    <script>
         function copiarPix() {
-            navigator.clipboard.writeText("SEU_CODIGO_PIX_AQUI");
-            alert("Código Pix copiado!");
+            const codigoPix = `00020126580014BR.GOV.BCB.PIX0136af34a053-1290-43a7-9451-92eaa872ad675204000053039865802BR5923Ester Fernandes Pereira6009SAO PAULO62140510U32cvopI8963047B8A`;
+            navigator.clipboard.writeText(codigoPix);
+            document.getElementById("pixFeedback").innerText = "Código Pix copiado 💛";
+            setTimeout(() => { document.getElementById("pixFeedback").innerText = ""; }, 3000);
         }
 
-        /* CONTADOR */
-        const dataCasamento = new Date("May 16, 2026 16:00:00").getTime();
-
-        setInterval(function () {
-            let agora = new Date().getTime();
-            let distancia = dataCasamento - agora;
-
-            let dias = Math.floor(distancia / (1000 * 60 * 60 * 24));
-            let horas = Math.floor((distancia % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-
-            document.getElementById("countdown").innerHTML =
-                dias + " dias e " + horas + "h";
+        const casamento = new Date("May 16, 2026 16:00:00").getTime();
+        setInterval(() => {
+            const agora = new Date().getTime();
+            const dias = Math.floor((casamento - agora) / (1000 * 60 * 60 * 24));
+            document.getElementById("countdown").innerHTML = "Faltam " + dias + " dias";
         }, 1000);
     </script>
 
