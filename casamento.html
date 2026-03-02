@@ -7,21 +7,22 @@
 
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍃</text></svg>">
 
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 
     <style>
 
         :root {
-            --bg: #f7f5f2;
-            --text: #1f1f1f;
+            --bg: #f4f2ef;
+            --card: #ffffff;
+            --text: #1c1c1c;
             --accent: #b89b72;
-            --line: #e5e0d8;
+            --muted: #777;
         }
 
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
         }
 
         body {
@@ -32,70 +33,73 @@
         }
 
         .container {
-            max-width: 900px;
+            max-width: 1000px;
             margin: auto;
             padding: 0 20px;
         }
 
         header {
-            padding: 120px 0 80px;
+            padding: 140px 20px 100px;
             text-align: center;
         }
 
         h1 {
-            font-family: 'Cormorant Garamond',serif;
-            font-size: clamp(40px,8vw,70px);
+            font-family: 'Playfair Display',serif;
+            font-size: clamp(42px,8vw,72px);
             font-weight: 600;
-            letter-spacing: 1px;
+            letter-spacing: .5px;
         }
 
         .date {
             margin-top: 15px;
-            font-size: 14px;
             letter-spacing: 3px;
             text-transform: uppercase;
+            font-size: 13px;
             color: var(--accent);
         }
 
-        .divider {
-            width: 60px;
-            height: 1px;
-            background: var(--accent);
-            margin: 40px auto;
+        section {
+            padding: 100px 0;
         }
 
-        section {
-            padding: 90px 0;
-            border-top: 1px solid var(--line);
+        .card {
+            background: var(--card);
+            padding: 60px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.05);
+            margin-bottom: 40px;
         }
 
         h2 {
-            font-family: 'Cormorant Garamond',serif;
-            font-size: clamp(28px,5vw,36px);
-            margin-bottom: 25px;
+            font-family: 'Playfair Display',serif;
+            font-size: clamp(26px,5vw,36px);
+            margin-bottom: 30px;
         }
 
-        .info p {
+        p {
             margin-bottom: 8px;
+            color: var(--muted);
         }
 
         input {
             width: 100%;
-            max-width: 400px;
-            padding: 15px;
-            margin: 10px 0;
-            border: 1px solid var(--line);
-            background: white;
+            max-width: 420px;
+            padding: 16px;
+            margin: 12px 0;
+            border: 1px solid #e5e5e5;
+            background: #fafafa;
             font-size: 15px;
+            border-radius: 8px;
         }
 
         button {
             margin-top: 15px;
-            padding: 14px 35px;
+            padding: 14px 40px;
             background: var(--accent);
             color: white;
             border: none;
-            font-size: 14px;
+            border-radius: 30px;
+            font-size: 13px;
             letter-spacing: 1px;
             cursor: pointer;
             transition: .3s;
@@ -109,38 +113,48 @@
             width: 100%;
             height: 380px;
             border: none;
+            border-radius: 16px;
             margin-top: 30px;
         }
 
+        /* CONTADOR FLUTUANTE */
         #contador {
             position: fixed;
-            bottom: 25px;
-            right: 25px;
-            background: white;
-            padding: 18px 22px;
-            border: 1px solid var(--line);
-            font-size: 13px;
+            right: 30px;
+            bottom: 30px;
+            background: var(--accent);
+            color: white;
+            padding: 18px 28px;
+            border-radius: 50px;
+            box-shadow: 0 15px 40px rgba(0,0,0,.15);
+            font-size: 14px;
+            letter-spacing: 1px;
             text-align: center;
         }
 
             #contador span {
                 display: block;
-                font-size: 22px;
-                color: var(--accent);
+                font-size: 20px;
                 font-weight: 500;
+                margin-top: 4px;
             }
 
+        /* RESPONSIVO */
         @media(max-width:768px) {
-            section {
-                padding: 60px 0;
+
+            header {
+                padding: 100px 20px 70px;
+            }
+
+            .card {
+                padding: 35px;
             }
 
             #contador {
-                position: relative;
-                margin: 40px auto;
-                right: auto;
-                bottom: auto;
-                width: 140px;
+                right: 20px;
+                bottom: 20px;
+                padding: 14px 22px;
+                font-size: 12px;
             }
         }
     </style>
@@ -154,44 +168,49 @@
         dias
     </div>
 
-    <header class="container">
-        <h1>Ester & Leo</h1>
-        <div class="date">16 de Maio de 2026 — 16h</div>
-        <div class="divider"></div>
+    <header>
+        <div class="container">
+            <h1>Ester & Leo</h1>
+            <div class="date">16 de Maio de 2026 — 16h</div>
+        </div>
     </header>
 
-    <section class="container">
-        <h2>Cerimônia</h2>
-        <div class="info">
-            <p><strong>Igreja Evangélica Avivamento Bíblico</strong></p>
-            <p>R. Ricardo Ninelli, 223</p>
-            <p>São Carlos/SP</p>
+    <section>
+        <div class="container">
+
+            <div class="card">
+                <h2>Cerimônia</h2>
+                <p><strong>Igreja Evangélica Avivamento Bíblico</strong></p>
+                <p>R. Ricardo Ninelli, 223</p>
+                <p>São Carlos/SP</p>
+            </div>
+
+            <div class="card">
+                <h2>Confirme sua presença</h2>
+                <input type="text" id="nome" placeholder="Seu nome completo">
+                <input type="number" id="acompanhantes" placeholder="Número de acompanhantes">
+                <button onclick="confirmarPresenca()">Confirmar presença</button>
+            </div>
+
+            <div class="card">
+                <h2>Contribuição via Pix</h2>
+                <input type="number" id="valorPix" placeholder="Digite o valor (R$)">
+                <div id="qrcode"></div>
+                <p style="margin-top:20px;">Chave Pix:</p>
+                <strong>45289314865</strong>
+            </div>
+
+            <div class="card">
+                <h2>Nossa playlist</h2>
+                <iframe src="https://open.spotify.com/embed/playlist/59o1J4N0X3Eovrv9rREuQQ"></iframe>
+            </div>
+
+            <div class="card">
+                <h2>Localização</h2>
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3652.950418720515!2d-47.898198!3d-22.060432!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94b877bc17876a71%3A0x42e4b84d0c0fdb16!2sIgreja%20Evang%C3%A9lica%20Avivamento%20Bibl%C3%ADco%20em%20S%C3%A3o%20Carlos!5e0!3m2!1spt-BR!2sbr"></iframe>
+            </div>
+
         </div>
-    </section>
-
-    <section class="container">
-        <h2>Confirme sua presença</h2>
-        <input type="text" id="nome" placeholder="Seu nome completo">
-        <input type="number" id="acompanhantes" placeholder="Número de acompanhantes">
-        <button onclick="confirmarPresenca()">Confirmar presença</button>
-    </section>
-
-    <section class="container">
-        <h2>Contribuição via Pix</h2>
-        <input type="number" id="valorPix" placeholder="Digite o valor (R$)">
-        <div id="qrcode"></div>
-        <p style="margin-top:15px;">Chave Pix:</p>
-        <strong>45289314865</strong>
-    </section>
-
-    <section class="container">
-        <h2>Nossa playlist</h2>
-        <iframe src="https://open.spotify.com/embed/playlist/59o1J4N0X3Eovrv9rREuQQ"></iframe>
-    </section>
-
-    <section class="container">
-        <h2>Localização</h2>
-        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3652.950418720515!2d-47.898198!3d-22.060432!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94b877bc17876a71%3A0x42e4b84d0c0fdb16!2sIgreja%20Evang%C3%A9lica%20Avivamento%20Bibl%C3%ADco%20em%20S%C3%A3o%20Carlos!5e0!3m2!1spt-BR!2sbr"></iframe>
     </section>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
