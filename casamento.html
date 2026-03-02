@@ -34,21 +34,26 @@
         .intro {
             position: fixed;
             inset: 0;
-            background: black;
+            background: linear-gradient(135deg,#000000,#0f1412);
             display: flex;
             justify-content: center;
             align-items: center;
             z-index: 9999;
-            animation: fadeOut 2s ease 2.5s forwards;
+            animation: fadeOut 2s ease 2.8s forwards;
         }
 
-            .intro h1 {
-                font-family: 'Cormorant Garamond',serif;
-                font-size: 50px;
-                color: var(--gold);
-                letter-spacing: 4px;
-                animation: glow 2s ease infinite alternate;
-            }
+        .intro-content {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .intro h1 {
+            font-family: 'Cormorant Garamond',serif;
+            font-size: clamp(28px,6vw,56px);
+            color: var(--gold);
+            letter-spacing: 4px;
+            animation: glow 2s ease infinite alternate;
+        }
 
         /* HERO */
         .hero {
@@ -61,11 +66,12 @@
             background: linear-gradient(rgba(0,0,0,.6),rgba(0,0,0,.6)), url('https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=2070');
             background-size: cover;
             background-position: center;
+            padding: 20px;
         }
 
             .hero h1 {
                 font-family: 'Cormorant Garamond',serif;
-                font-size: 70px;
+                font-size: clamp(36px,8vw,70px);
                 color: var(--gold);
             }
 
@@ -81,16 +87,17 @@
 
         /* SEÇÕES */
         section {
-            padding: 120px 20px;
+            padding: 100px 20px;
             display: flex;
             justify-content: center;
         }
 
         .card {
             max-width: 850px;
+            width: 100%;
             background: var(--glass);
             backdrop-filter: blur(15px);
-            padding: 70px;
+            padding: clamp(30px,5vw,70px);
             border-radius: 30px;
             border: 1px solid rgba(255,255,255,.08);
             box-shadow: 0 30px 60px rgba(0,0,0,.5);
@@ -99,13 +106,13 @@
 
         h2 {
             font-family: 'Cormorant Garamond',serif;
-            font-size: 42px;
+            font-size: clamp(28px,5vw,42px);
             color: var(--gold);
             margin-bottom: 30px;
         }
 
         p {
-            line-height: 1.9;
+            line-height: 1.8;
             opacity: .85;
         }
 
@@ -118,6 +125,7 @@
             border: none;
             background: rgba(255,255,255,.08);
             color: white;
+            font-size: 16px;
         }
 
         button {
@@ -128,6 +136,7 @@
             color: black;
             cursor: pointer;
             transition: .3s;
+            font-weight: bold;
         }
 
             button:hover {
@@ -137,6 +146,7 @@
 
         .qr-pix {
             width: 230px;
+            max-width: 80%;
             margin: 30px 0;
             border-radius: 20px;
         }
@@ -152,14 +162,15 @@
         /* CONTADOR */
         .floating-countdown {
             position: fixed;
-            right: 25px;
-            bottom: 25px;
+            right: 20px;
+            bottom: 20px;
             background: var(--gold);
             color: black;
-            padding: 18px 28px;
+            padding: 15px 25px;
             border-radius: 60px;
             z-index: 1000;
             font-weight: bold;
+            font-size: 14px;
         }
 
         /* ANIMAÇÕES */
@@ -179,23 +190,15 @@
                 visibility: hidden;
             }
         }
-
-        @media(max-width:768px) {
-            .hero h1 {
-                font-size: 42px;
-            }
-
-            .card {
-                padding: 40px 25px;
-            }
-        }
     </style>
 </head>
 
 <body>
 
     <div class="intro">
-        <h1>Abrindo Convite...</h1>
+        <div class="intro-content">
+            <h1>Abrindo Convite...</h1>
+        </div>
     </div>
 
     <div class="hero">
@@ -206,7 +209,6 @@
         </p>
     </div>
 
-    <!-- CONFIRMAÇÃO -->
     <section>
         <div class="card">
             <h2>Confirmar Presença</h2>
@@ -221,11 +223,9 @@
             <button onclick="confirmarPresenca()">Confirmar Presença</button>
 
             <p id="confirmacaoMensagem"></p>
-
         </div>
     </section>
 
-    <!-- PIX -->
     <section>
         <div class="card">
             <h2>Contribuições</h2>
@@ -239,11 +239,9 @@
 
             <button onclick="copiarPix()">Copiar Código Pix</button>
             <p id="pixFeedback"></p>
-
         </div>
     </section>
 
-    <!-- MAPA -->
     <section id="mapa">
         <div class="card">
             <h2>Local da Cerimônia</h2>
@@ -253,9 +251,7 @@
 
     <div class="floating-countdown" id="countdown"></div>
 
-    <!-- 🔥 FIREBASE REALTIME -->
     <script type="module">
-
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
         import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
@@ -301,7 +297,6 @@
                 });
 
         }
-
     </script>
 
     <script>
