@@ -5,111 +5,148 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Leo & Ester</title>
 
-    <!-- Ícone da aba -->
+    <!-- Ícone -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22><text y=%221.2em%22 font-size=%2290%22>🍃</text></svg>">
 
-    <!-- Fonte elegante -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
 
     <style>
-        body {
+
+        :root {
+            --verde: #1f3d36;
+            --verde-claro: #2e5d50;
+            --fundo: #f5f3ef;
+            --branco: #ffffff;
+        }
+
+        * {
             margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
             font-family: 'Montserrat',sans-serif;
-            background: #f8f8f8;
+            background: var(--fundo);
             color: #1a1a1a;
             scroll-behavior: smooth;
         }
 
         h1, h2 {
             font-family: 'Playfair Display',serif;
+            font-weight: 600;
         }
 
-        section {
-            padding: 100px 20px;
-            text-align: center;
-        }
+        /* HERO */
 
         .hero {
-            background: #ffffff;
-            padding: 140px 20px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: linear-gradient(rgba(0,0,0,0.35),rgba(0,0,0,0.35)), url('https://images.unsplash.com/photo-1520857014576-2c4f4c972b57?q=80&w=2070');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 20px;
         }
 
             .hero h1 {
-                font-size: 48px;
-                margin: 0;
+                font-size: 60px;
+                letter-spacing: 3px;
             }
 
             .hero p {
-                margin-top: 15px;
+                margin-top: 20px;
                 font-size: 18px;
-                color: #666;
+                letter-spacing: 2px;
             }
 
-        .floating-countdown {
-            position: fixed;
-            right: 20px;
-            bottom: 20px;
-            background: #2e5d50;
-            color: white;
-            padding: 15px 20px;
-            border-radius: 40px;
-            font-size: 14px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            z-index: 999;
+        /* SECTIONS */
+
+        section {
+            padding: 120px 20px;
+            text-align: center;
         }
 
-        .map-container iframe {
+        .section-card {
+            max-width: 900px;
+            margin: auto;
+            background: rgba(255,255,255,0.75);
+            backdrop-filter: blur(10px);
+            padding: 60px;
+            border-radius: 30px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.08);
+        }
+
+        h2 {
+            font-size: 36px;
+            margin-bottom: 25px;
+            color: var(--verde);
+        }
+
+        p {
+            line-height: 1.8;
+            color: #555;
+        }
+
+        /* MAPA */
+
+        iframe {
             width: 100%;
             height: 350px;
-            border: 0;
+            border: none;
             border-radius: 20px;
+            margin-top: 30px;
+        }
+
+        /* RSVP */
+
+        form {
             margin-top: 40px;
-        }
-
-        .rsvp-container {
-            max-width: 500px;
-            margin: auto;
-        }
-
-        .input-group {
-            margin-bottom: 25px;
         }
 
         input {
             width: 100%;
-            padding: 12px;
-            border-radius: 10px;
+            padding: 14px;
+            margin-bottom: 20px;
+            border-radius: 12px;
             border: 1px solid #ddd;
+            font-size: 14px;
         }
 
         button {
-            padding: 14px 30px;
+            padding: 14px 40px;
             border: none;
-            border-radius: 30px;
-            background: #2e5d50;
+            border-radius: 40px;
+            background: var(--verde);
             color: white;
+            font-size: 14px;
+            letter-spacing: 1px;
             cursor: pointer;
             transition: .3s;
         }
 
             button:hover {
-                background: #24493f;
-                transform: translateY(-2px);
+                background: var(--verde-claro);
+                transform: translateY(-3px);
             }
 
-        .contribuicao {
-            background: white;
-        }
+        /* PIX */
 
         .pix-box {
-            background: #f4f4f4;
+            margin-top: 40px;
             padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.05);
+            background: var(--branco);
+            border-radius: 25px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.06);
         }
 
         .qr-pix {
-            width: 220px;
+            width: 230px;
             margin-bottom: 20px;
         }
 
@@ -119,21 +156,46 @@
             border-radius: 12px;
             border: 1px solid #ccc;
             padding: 10px;
-            resize: none;
             font-size: 12px;
+            resize: none;
         }
 
-        .spotify {
-            margin-top: 60px;
+        /* SPOTIFY */
+
+        .spotify iframe {
+            border-radius: 20px;
+            margin-top: 30px;
         }
+
+        /* CONTADOR */
+
+        .floating-countdown {
+            position: fixed;
+            right: 25px;
+            bottom: 25px;
+            background: var(--verde);
+            color: white;
+            padding: 18px 25px;
+            border-radius: 50px;
+            font-size: 14px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+            z-index: 999;
+        }
+
+        /* RESPONSIVO */
 
         @media(max-width:768px) {
+
             .hero h1 {
-                font-size: 36px;
+                font-size: 38px;
+            }
+
+            .section-card {
+                padding: 40px 25px;
             }
 
             section {
-                padding: 70px 15px;
+                padding: 80px 15px;
             }
         }
     </style>
@@ -142,120 +204,76 @@
 <body>
 
     <!-- HERO -->
-    <section class="hero">
+    <div class="hero">
         <h1>Leo & Ester</h1>
         <p>16 de Maio de 2026 • 16:00</p>
         <p>Igreja Evangelica Avivamento Bíblico<br>São Carlos - SP</p>
-    </section>
+    </div>
 
-    <!-- MAPA -->
+    <!-- LOCAL -->
     <section>
-        <h2>Local da Cerimônia</h2>
-        <div class="map-container">
-            <iframe src="https://www.google.com/maps?q=-22.060432,-47.898198&hl=pt-BR&z=17&output=embed">
-            </iframe>
+        <div class="section-card">
+            <h2>Local da Cerimônia</h2>
+            <p>Igreja Evangelica Avivamento Bíblico</p>
+            <iframe src="https://www.google.com/maps?q=-22.060432,-47.898198&hl=pt-BR&z=17&output=embed"></iframe>
         </div>
     </section>
 
     <!-- CONFIRMAÇÃO -->
-    <section id="confirmacao">
-        <div class="rsvp-container">
+    <section>
+        <div class="section-card">
             <h2>Confirme sua Presença</h2>
             <p>Pedimos, por gentileza, a confirmação de presença para que possamos organizar tudo com muito carinho.</p>
 
-            <form id="rsvpForm">
-                <div class="input-group">
-                    <input type="text" id="nome" placeholder="Seu nome completo" required>
-                </div>
-
-                <div class="input-group">
-                    <input type="number" id="acompanhantes" placeholder="Número de acompanhantes" min="0" required>
-                </div>
-
-                <button type="submit">Confirmar Presença</button>
+            <form>
+                <input type="text" placeholder="Seu nome completo" required>
+                <input type="number" placeholder="Número de acompanhantes" min="0" required>
+                <button>Confirmar Presença</button>
             </form>
-
-            <p id="mensagemConfirmacao"></p>
         </div>
     </section>
 
     <!-- CONTRIBUIÇÃO -->
-    <section class="contribuicao">
-        <h2>Contribuições</h2>
+    <section>
+        <div class="section-card">
+            <h2>Contribuições</h2>
 
-        <p>
-            Neste momento especial, estamos finalizando a nossa casa.
-            Por isso, caso desejem nos presentear, ficaremos muito felizes
-            com contribuições em dinheiro, que nos ajudarão a construir esse novo lar.
-        </p>
+            <p>
+                Neste momento especial, estamos finalizando a nossa casa.
+                Por isso, caso desejem nos presentear, ficaremos muito felizes
+                com contribuições em dinheiro, que nos ajudarão a construir esse novo lar.
+            </p>
 
-        <div class="pix-box">
+            <div class="pix-box">
+                <img src="assets/leoester/qrcodepix.png" class="qr-pix">
 
-            <img src="assets/leoester/qrcodepix.png" class="qr-pix">
-
-            <p><strong>Pix Copia e Cola</strong></p>
-
-<textarea readonly id="pixCode">
+<textarea readonly>
 00020126580014BR.GOV.BCB.PIX0136af34a053-1290-43a7-9451-92eaa872ad675204000053039865802BR5923Ester Fernandes Pereira6009SAO PAULO62140510U32cvopI8963047B8A
 </textarea>
 
-            <br><br>
-
-            <button onclick="copiarPix()">Copiar Código Pix</button>
-
-            <p id="pixFeedback"></p>
+                <br><br>
+                <button onclick="copiarPix()">Copiar Código Pix</button>
+                <p id="pixFeedback"></p>
+            </div>
 
         </div>
     </section>
 
-    <!-- SPOTIFY -->
+    <!-- PLAYLIST -->
     <section class="spotify">
-        <h2>Nossa Playlist</h2>
-        <iframe style="border-radius:20px"
-                src="https://open.spotify.com/embed/playlist/SEU_LINK_AQUI"
-                width="100%" height="380" frameborder="0"
-                allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture">
-        </iframe>
+        <div class="section-card">
+            <h2>Nossa Playlist</h2>
+            <iframe src="https://open.spotify.com/embed/playlist/SEU_LINK_AQUI"
+                    width="100%" height="380" frameborder="0"
+                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+        </div>
     </section>
 
-    <!-- CONTADOR -->
     <div class="floating-countdown" id="countdown"></div>
 
-    <!-- FIREBASE -->
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
-
     <script>
-        const firebaseConfig = {
-            apiKey: "SUA_API_KEY",
-            authDomain: "SEU_DOMINIO.firebaseapp.com",
-            projectId: "SEU_PROJECT_ID",
-            storageBucket: "SEU_BUCKET",
-            messagingSenderId: "SEU_SENDER_ID",
-            appId: "SEU_APP_ID"
-        };
-
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-
-        document.getElementById("rsvpForm").addEventListener("submit", async function (e) {
-            e.preventDefault();
-
-            const nome = document.getElementById("nome").value;
-            const acompanhantes = document.getElementById("acompanhantes").value;
-
-            await db.collection("confirmacoes").add({
-                nome: nome,
-                acompanhantes: acompanhantes,
-                data: new Date()
-            });
-
-            document.getElementById("mensagemConfirmacao").innerText = "Presença confirmada com sucesso 💚";
-            this.reset();
-        });
-
         function copiarPix() {
-            const texto = document.getElementById("pixCode").value;
+            const texto = document.querySelector("textarea").value;
             navigator.clipboard.writeText(texto);
             document.getElementById("pixFeedback").innerText = "Código Pix copiado 💚";
             setTimeout(() => {
