@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Leo & Ester</title>
 
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22><text y=%221.2em%22 font-size=%2290%22>🍃</text></svg>">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'><text y='1.2em' font-size='90'>🍃</text></svg>">
 
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
 
@@ -31,7 +31,6 @@
         }
 
         /* ABERTURA */
-
         .intro {
             position: fixed;
             inset: 0;
@@ -52,7 +51,6 @@
             }
 
         /* HERO */
-
         .hero {
             height: 100vh;
             display: flex;
@@ -87,7 +85,6 @@
             }
 
         /* PARTÍCULAS */
-
         canvas {
             position: fixed;
             top: 0;
@@ -97,7 +94,6 @@
         }
 
         /* SEÇÕES */
-
         section {
             padding: 120px 20px;
             display: flex;
@@ -128,7 +124,6 @@
         }
 
         /* FORM */
-
         input {
             width: 100%;
             padding: 15px;
@@ -155,26 +150,13 @@
             }
 
         /* PIX */
-
         .qr-pix {
             width: 230px;
             margin: 30px 0;
             border-radius: 20px;
         }
 
-        textarea {
-            width: 100%;
-            height: 90px;
-            background: rgba(255,255,255,.08);
-            border: none;
-            border-radius: 12px;
-            color: white;
-            padding: 10px;
-            resize: none;
-        }
-
         /* MAPA */
-
         iframe {
             width: 100%;
             height: 350px;
@@ -184,7 +166,6 @@
         }
 
         /* CONTADOR */
-
         .floating-countdown {
             position: fixed;
             right: 25px;
@@ -197,7 +178,6 @@
         }
 
         /* ANIMAÇÕES */
-
         @keyframes glow {
             from {
                 text-shadow: 0 0 10px rgba(212,178,106,.4);
@@ -276,12 +256,9 @@
 
             <img src="assets/leoester/qrcodepix.png" class="qr-pix">
 
-<textarea readonly>
-00020126580014BR.GOV.BCB.PIX0136af34a053-1290-43a7-9451-92eaa872ad675204000053039865802BR5923Ester Fernandes Pereira6009SAO PAULO62140510U32cvopI8963047B8A
-</textarea>
-            <br><br>
             <button onclick="copiarPix()">Copiar Código Pix</button>
             <p id="pixFeedback"></p>
+
         </div>
     </section>
 
@@ -296,8 +273,8 @@
 
     <script>
         function copiarPix() {
-            const texto = document.querySelector("textarea").value;
-            navigator.clipboard.writeText(texto);
+            const codigoPix = `00020126580014BR.GOV.BCB.PIX0136af34a053-1290-43a7-9451-92eaa872ad675204000053039865802BR5923Ester Fernandes Pereira6009SAO PAULO62140510U32cvopI8963047B8A`;
+            navigator.clipboard.writeText(codigoPix);
             document.getElementById("pixFeedback").innerText = "Código Pix copiado 💛";
             setTimeout(() => { document.getElementById("pixFeedback").innerText = ""; }, 3000);
         }
@@ -311,7 +288,6 @@
         }, 1000);
 
         /* PARTÍCULAS */
-
         const canvas = document.getElementById("particles");
         const ctx = canvas.getContext("2d");
         canvas.width = window.innerWidth;
