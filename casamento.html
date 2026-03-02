@@ -10,12 +10,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
 
     <style>
-
         :root {
-            --dark: #0f1a17;
-            --gold: #c6a96e;
-            --soft: #f3efe9;
-            --green: #1e3a34;
+            --gold: #d4b26a;
+            --dark: #0f1412;
+            --glass: rgba(255,255,255,0.06);
         }
 
         * {
@@ -29,15 +27,31 @@
             background: var(--dark);
             color: white;
             overflow-x: hidden;
+            scroll-behavior: smooth;
         }
 
-        h1, h2 {
-            font-family: 'Cormorant Garamond',serif;
-            font-weight: 600;
-            letter-spacing: 1px;
+        /* ABERTURA */
+
+        .intro {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            animation: fadeOut 2s ease 2.5s forwards;
         }
 
-        /* HERO CINEMATOGRÁFICO */
+            .intro h1 {
+                font-family: 'Cormorant Garamond',serif;
+                font-size: 50px;
+                color: var(--gold);
+                letter-spacing: 4px;
+                animation: glow 2s ease infinite alternate;
+            }
+
+        /* HERO */
 
         .hero {
             height: 100vh;
@@ -46,24 +60,41 @@
             justify-content: center;
             align-items: center;
             text-align: center;
-            background: linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)), url('https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=2070');
+            background: linear-gradient(rgba(0,0,0,.65),rgba(0,0,0,.65)), url('https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=2070');
             background-size: cover;
             background-position: center;
-            animation: fadeIn 2s ease forwards;
+            position: relative;
         }
 
             .hero h1 {
+                font-family: 'Cormorant Garamond',serif;
                 font-size: 70px;
                 color: var(--gold);
-                animation: slideUp 1.5s ease forwards;
+                letter-spacing: 3px;
+                animation: slideUp 2s ease forwards;
             }
 
             .hero p {
                 margin-top: 20px;
-                font-size: 18px;
                 letter-spacing: 3px;
                 opacity: .8;
             }
+
+            .hero a {
+                color: var(--gold);
+                text-decoration: none;
+                cursor: pointer;
+            }
+
+        /* PARTÍCULAS */
+
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 0;
+            pointer-events: none;
+        }
 
         /* SEÇÕES */
 
@@ -75,16 +106,17 @@
 
         .card {
             max-width: 850px;
-            background: rgba(255,255,255,0.05);
+            background: var(--glass);
+            backdrop-filter: blur(15px);
             padding: 70px;
             border-radius: 30px;
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255,255,255,0.08);
-            box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,.08);
+            box-shadow: 0 30px 60px rgba(0,0,0,.5);
             text-align: center;
         }
 
         h2 {
+            font-family: 'Cormorant Garamond',serif;
             font-size: 42px;
             color: var(--gold);
             margin-bottom: 30px;
@@ -95,16 +127,6 @@
             opacity: .85;
         }
 
-        /* MAPA */
-
-        iframe {
-            width: 100%;
-            height: 350px;
-            border: none;
-            border-radius: 20px;
-            margin-top: 40px;
-        }
-
         /* FORM */
 
         input {
@@ -113,14 +135,9 @@
             margin-bottom: 20px;
             border-radius: 12px;
             border: none;
-            background: rgba(255,255,255,0.08);
+            background: rgba(255,255,255,.08);
             color: white;
-            font-size: 14px;
         }
-
-            input::placeholder {
-                color: rgba(255,255,255,0.5);
-            }
 
         button {
             padding: 15px 45px;
@@ -128,22 +145,16 @@
             border: none;
             background: var(--gold);
             color: black;
-            font-weight: 500;
-            letter-spacing: 2px;
             cursor: pointer;
             transition: .3s;
         }
 
             button:hover {
                 transform: translateY(-4px);
-                box-shadow: 0 10px 30px rgba(198,169,110,.4);
+                box-shadow: 0 10px 30px rgba(212,178,106,.5);
             }
 
         /* PIX */
-
-        .pix-box {
-            margin-top: 40px;
-        }
 
         .qr-pix {
             width: 230px;
@@ -154,20 +165,22 @@
         textarea {
             width: 100%;
             height: 90px;
-            border-radius: 12px;
+            background: rgba(255,255,255,.08);
             border: none;
-            padding: 10px;
-            font-size: 12px;
-            background: rgba(255,255,255,0.08);
+            border-radius: 12px;
             color: white;
+            padding: 10px;
             resize: none;
         }
 
-        /* SPOTIFY */
+        /* MAPA */
 
-        .spotify iframe {
+        iframe {
+            width: 100%;
+            height: 350px;
+            border: none;
             border-radius: 20px;
-            margin-top: 40px;
+            margin-top: 30px;
         }
 
         /* CONTADOR */
@@ -180,20 +193,25 @@
             color: black;
             padding: 18px 28px;
             border-radius: 60px;
-            font-size: 14px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.5);
-            z-index: 999;
+            z-index: 1000;
         }
 
         /* ANIMAÇÕES */
 
-        @keyframes fadeIn {
+        @keyframes glow {
             from {
-                opacity: 0;
+                text-shadow: 0 0 10px rgba(212,178,106,.4);
             }
 
             to {
-                opacity: 1;
+                text-shadow: 0 0 25px rgba(212,178,106,1);
+            }
+        }
+
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+                visibility: hidden;
             }
         }
 
@@ -209,10 +227,7 @@
             }
         }
 
-        /* RESPONSIVO */
-
         @media(max-width:768px) {
-
             .hero h1 {
                 font-size: 42px;
             }
@@ -220,73 +235,60 @@
             .card {
                 padding: 40px 25px;
             }
-
-            section {
-                padding: 80px 15px;
-            }
         }
     </style>
 </head>
 
 <body>
 
+    <div class="intro">
+        <h1>Leo & Ester</h1>
+    </div>
+
+    <canvas id="particles"></canvas>
+
     <div class="hero">
         <h1>Leo & Ester</h1>
         <p>16 DE MAIO DE 2026 • 16:00</p>
-        <p>Igreja Evangelica Avivamento Bíblico • São Carlos - SP</p>
+        <p>
+            <a href="#mapa">Igreja Evangelica Avivamento Bíblico • São Carlos - SP</a>
+        </p>
     </div>
-
-    <section>
-        <div class="card">
-            <h2>Local da Cerimônia</h2>
-            <p>Igreja Evangelica Avivamento Bíblico</p>
-            <iframe src="https://www.google.com/maps?q=-22.060432,-47.898198&hl=pt-BR&z=17&output=embed"></iframe>
-        </div>
-    </section>
 
     <section>
         <div class="card">
             <h2>Confirme sua Presença</h2>
             <p>Pedimos, por gentileza, a confirmação de presença para que possamos organizar tudo com muito carinho.</p>
-
-            <form>
-                <input type="text" placeholder="Seu nome completo" required>
-                <input type="number" placeholder="Número de acompanhantes" required>
-                <button>Confirmar Presença</button>
-            </form>
+            <input type="text" placeholder="Seu nome completo">
+            <input type="number" placeholder="Número de acompanhantes">
+            <button>Confirmar Presença</button>
         </div>
     </section>
 
     <section>
         <div class="card">
             <h2>Contribuições</h2>
-
             <p>
                 Neste momento especial, estamos finalizando a nossa casa.
-                Por isso, caso desejem nos presentear, ficaremos muito felizes
-                com contribuições em dinheiro, que nos ajudarão a construir esse novo lar.
+                Caso desejem nos presentear, ficaremos muito felizes com contribuições em dinheiro,
+                que nos ajudarão a construir esse novo lar.
             </p>
 
-            <div class="pix-box">
-                <img src="assets/leoester/qrcodepix.png" class="qr-pix">
+            <img src="assets/leoester/qrcodepix.png" class="qr-pix">
 
 <textarea readonly>
 00020126580014BR.GOV.BCB.PIX0136af34a053-1290-43a7-9451-92eaa872ad675204000053039865802BR5923Ester Fernandes Pereira6009SAO PAULO62140510U32cvopI8963047B8A
 </textarea>
-
-                <br><br>
-                <button onclick="copiarPix()">Copiar Código Pix</button>
-                <p id="pixFeedback"></p>
-            </div>
+            <br><br>
+            <button onclick="copiarPix()">Copiar Código Pix</button>
+            <p id="pixFeedback"></p>
         </div>
     </section>
 
-    <section class="spotify">
+    <section id="mapa">
         <div class="card">
-            <h2>Nossa Playlist</h2>
-            <iframe src="https://open.spotify.com/embed/playlist/SEU_LINK_AQUI"
-                    width="100%" height="380"
-                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+            <h2>Local da Cerimônia</h2>
+            <iframe src="https://www.google.com/maps?q=-22.060432,-47.898198&hl=pt-BR&z=17&output=embed"></iframe>
         </div>
     </section>
 
@@ -307,6 +309,37 @@
             const dias = Math.floor(distancia / (1000 * 60 * 60 * 24));
             document.getElementById("countdown").innerHTML = "Faltam " + dias + " dias";
         }, 1000);
+
+        /* PARTÍCULAS */
+
+        const canvas = document.getElementById("particles");
+        const ctx = canvas.getContext("2d");
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let particles = [];
+        for (let i = 0; i < 60; i++) {
+            particles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                r: Math.random() * 2,
+                d: Math.random() * 1
+            });
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "rgba(212,178,106,0.6)";
+            particles.forEach(p => {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                ctx.fill();
+                p.y += p.d;
+                if (p.y > canvas.height) { p.y = 0; }
+            });
+            requestAnimationFrame(draw);
+        }
+        draw();
     </script>
 
 </body>
