@@ -148,7 +148,7 @@
             margin-bottom: 40px;
         }
 
-        input {
+        input, select {
             width: 100%;
             padding: 15px;
             margin-bottom: 20px;
@@ -157,7 +157,14 @@
             background: rgba(255,255,255,.08);
             color: white;
             font-size: 16px;
+            font-family: 'Montserrat',sans-serif;
         }
+
+            /* Estilização das opções do select para ficarem visíveis no tema escuro */
+            select option {
+                background: var(--dark);
+                color: white;
+            }
 
         button {
             padding: 15px 45px;
@@ -282,6 +289,11 @@
 
             <input type="text" id="nome" placeholder="Seu nome completo">
             <input type="number" id="acompanhantes" placeholder="Número de acompanhantes">
+            <select id="jantar">
+                <option value="" disabled selected>Vai participar do Jantar?</option>
+                <option value="Sim">Sim</option>
+                <option value="Não">Não</option>
+            </select>
             <button onclick="confirmarPresenca()">Confirmar Presença</button>
             <p id="confirmacaoMensagem"></p>
         </div>
@@ -337,7 +349,6 @@
 
     <div class="floating-countdown" id="countdown"></div>
 
-    <!-- FIREBASE -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
         import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
@@ -358,18 +369,22 @@
         window.confirmarPresenca = function () {
             const nome = document.getElementById("nome").value;
             const acompanhantes = document.getElementById("acompanhantes").value;
+            const jantar = document.getElementById("jantar").value;
             const mensagem = document.getElementById("confirmacaoMensagem");
 
             if (nome.trim() === "") { mensagem.innerText = "Digite seu nome."; return; }
+            if (jantar === "") { mensagem.innerText = "Informe se vai participar do jantar."; return; }
 
             push(ref(database, "confirmacoesPresenca"), {
                 nome: nome,
                 acompanhantes: acompanhantes || 0,
+                vaiAoJantar: jantar,
                 data: new Date().toLocaleString()
             }).then(() => {
                 mensagem.innerText = "Presença confirmada com sucesso 💛";
                 document.getElementById("nome").value = "";
                 document.getElementById("acompanhantes").value = "";
+                document.getElementById("jantar").value = "";
             }).catch(() => {
                 mensagem.innerText = "Erro ao confirmar.";
             });
