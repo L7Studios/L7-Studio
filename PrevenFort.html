@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PREVEN FORT - Manutenção Preventiva Predial</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        brand: { 50: '#eff6ff', 100: '#dbeafe', 500: '#3b82f6', 600: '#2563eb', 800: '#1e40af', 900: '#1e3a8a' },
+                        accent: { 500: '#10b981', 600: '#059669' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .hero-pattern {
+            background-image: linear-gradient(to bottom, rgba(30, 58, 138, 0.85), rgba(15, 23, 42, 0.95)), url('https://images.unsplash.com/photo-1541888081622-4a0b25e790a3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 antialiased">
+
+    <nav class="fixed w-full bg-white/95 backdrop-blur-md shadow-sm z-50 border-b border-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-20">
+            <div class="flex items-center gap-2">
+                <i class="ri-building-4-fill text-3xl text-brand-600"></i>
+                <h1 class="text-2xl font-black text-gray-900 tracking-tighter">PREVEN<span class="text-brand-600">FORT</span></h1>
+            </div>
+            <div class="hidden md:flex gap-8 items-center">
+                <a href="#servicos" class="font-semibold text-gray-600 hover:text-brand-600 transition">Serviços</a>
+                <a href="#planos" class="font-semibold text-gray-600 hover:text-brand-600 transition">Planos</a>
+                <a href="#contato" class="font-semibold text-gray-600 hover:text-brand-600 transition">Contato</a>
+                <a href="https://wa.me/5511978705297" class="px-6 py-2.5 bg-accent-500 hover:bg-accent-600 text-white font-bold rounded-lg transition-all shadow-lg hover:shadow-xl flex items-center gap-2">
+                    <i class="ri-whatsapp-line text-xl"></i> WhatsApp
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero-pattern min-h-screen flex items-center pt-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+            <div class="max-w-3xl text-white">
+                <div class="inline-block bg-brand-600 px-4 py-1.5 rounded-full text-sm font-bold tracking-wide mb-6 uppercase shadow-lg">
+                    Manutenção Preventiva Especializada
+                </div>
+                <h2 class="text-5xl md:text-7xl font-extrabold mb-6 leading-tight tracking-tight">
+                    Nós evitamos o problema <span class="text-blue-300">antes que ele vire prejuízo.</span>
+                </h2>
+                <p class="text-xl md:text-2xl mb-10 text-gray-200 leading-relaxed font-light">
+                    Manutenção preventiva especializada para condomínios e empresas. Evite infiltrações, vazamentos e emergências que geram grandes prejuízos.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="https://wa.me/5511978705297" class="px-8 py-4 bg-accent-500 hover:bg-accent-600 text-white text-lg font-bold rounded-xl transition-all shadow-[0_0_20px_rgba(16,185,129,0.4)] hover:shadow-[0_0_30px_rgba(16,185,129,0.6)] flex items-center justify-center gap-2">
+                        <i class="ri-whatsapp-line text-2xl"></i> Falar no WhatsApp
+                    </a>
+                    <a href="#contato" class="px-8 py-4 bg-white hover:bg-gray-100 text-brand-900 text-lg font-bold rounded-xl transition-all shadow-lg text-center">
+                        Solicitar Avaliação
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h3 class="text-3xl md:text-5xl font-extrabold text-gray-900 mb-4">Problemas Comuns que Geram Grandes Prejuízos</h3>
+            <p class="text-xl text-gray-500 mb-16 max-w-2xl mx-auto">Pequenos problemas ignorados podem causar danos devastadores. Veja o custo do descuido:</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+                <div class="bg-red-50 p-6 rounded-2xl border border-red-100 text-left flex items-start gap-4">
+                    <div class="bg-red-100 p-3 rounded-lg text-red-600"><i class="ri-water-flash-fill text-2xl"></i></div>
+                    <div><h4 class="font-bold text-gray-900">Infiltrações no teto</h4><p class="text-red-600 font-black text-xl">R$ 5.000+</p></div>
+                </div>
+                <div class="bg-red-50 p-6 rounded-2xl border border-red-100 text-left flex items-start gap-4">
+                    <div class="bg-red-100 p-3 rounded-lg text-red-600"><i class="ri-layout-top-2-fill text-2xl"></i></div>
+                    <div><h4 class="font-bold text-gray-900">Danos em forros de gesso</h4><p class="text-red-600 font-black text-xl">R$ 3.000+</p></div>
+                </div>
+                <div class="bg-red-50 p-6 rounded-2xl border border-red-100 text-left flex items-start gap-4">
+                    <div class="bg-red-100 p-3 rounded-lg text-red-600"><i class="ri-paint-brush-fill text-2xl"></i></div>
+                    <div><h4 class="font-bold text-gray-900">Repintura completa</h4><p class="text-red-600 font-black text-xl">R$ 8.000+</p></div>
+                </div>
+                <div class="bg-red-50 p-6 rounded-2xl border border-red-100 text-left flex items-start gap-4">
+                    <div class="bg-red-100 p-3 rounded-lg text-red-600"><i class="ri-flashlight-fill text-2xl"></i></div>
+                    <div><h4 class="font-bold text-gray-900">Curto circuito elétrico</h4><p class="text-red-600 font-black text-xl">R$ 2.000+</p></div>
+                </div>
+                <div class="bg-red-50 p-6 rounded-2xl border border-red-100 text-left flex items-start gap-4">
+                    <div class="bg-red-100 p-3 rounded-lg text-red-600"><i class="ri-tv-2-fill text-2xl"></i></div>
+                    <div><h4 class="font-bold text-gray-900">Queima de equipamentos</h4><p class="text-red-600 font-black text-xl">R$ 4.000+</p></div>
+                </div>
+                <div class="bg-red-50 p-6 rounded-2xl border border-red-100 text-left flex items-start gap-4">
+                    <div class="bg-red-100 p-3 rounded-lg text-red-600"><i class="ri-home-warning-fill text-2xl"></i></div>
+                    <div><h4 class="font-bold text-gray-900">Danos estruturais</h4><p class="text-red-600 font-black text-xl">R$ 15.000+</p></div>
+                </div>
+            </div>
+
+            <div class="bg-gray-900 rounded-3xl p-8 md:p-12 text-center max-w-4xl mx-auto shadow-2xl relative overflow-hidden">
+                <div class="absolute top-0 right-0 opacity-10"><i class="ri-money-dollar-circle-fill text-9xl"></i></div>
+                <h4 class="text-2xl md:text-3xl font-bold text-white mb-4">Prejuízos podem ultrapassar <span class="text-red-400">R$ 10.000</span> ou mais.</h4>
+                <p class="text-xl text-gray-300">A manutenção preventiva custa uma fração desse valor.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-24 bg-brand-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h3 class="text-3xl md:text-5xl font-extrabold text-brand-900 mb-6">A Solução – PREVEN FORT</h3>
+                <p class="text-xl text-gray-700 max-w-3xl mx-auto mb-4">A PREVEN FORT realiza <strong>visitas preventivas mensais</strong>, inspeções técnicas e atendimentos emergenciais.</p>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto mb-8">Mesmo sem chamados, nossa equipe faz acompanhamento mensal com relatório técnico, identificando problemas antes que se tornem emergências caras.</p>
+                <div class="inline-block bg-white px-6 py-3 rounded-full border border-gray-200 text-brand-600 font-bold text-lg shadow-sm">
+                    "Prevenção é investimento. Remediar é perder dinheiro."
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="bg-white p-8 rounded-2xl shadow-lg hover:-translate-y-2 transition duration-300">
+                    <div class="w-14 h-14 bg-brand-100 text-brand-600 rounded-xl flex items-center justify-center text-2xl mb-6"><i class="ri-calendar-check-line"></i></div>
+                    <h4 class="font-bold text-xl mb-3 text-gray-900">Visitas Mensais</h4>
+                    <p class="text-gray-600">Acompanhamento regular com inspeções técnicas programadas.</p>
+                </div>
+                <div class="bg-white p-8 rounded-2xl shadow-lg hover:-translate-y-2 transition duration-300">
+                    <div class="w-14 h-14 bg-brand-100 text-brand-600 rounded-xl flex items-center justify-center text-2xl mb-6"><i class="ri-file-list-3-line"></i></div>
+                    <h4 class="font-bold text-xl mb-3 text-gray-900">Relatórios Técnicos</h4>
+                    <p class="text-gray-600">Documentação completa de cada visita e serviço realizado.</p>
+                </div>
+                <div class="bg-white p-8 rounded-2xl shadow-lg hover:-translate-y-2 transition duration-300">
+                    <div class="w-14 h-14 bg-brand-100 text-brand-600 rounded-xl flex items-center justify-center text-2xl mb-6"><i class="ri-tools-line"></i></div>
+                    <h4 class="font-bold text-xl mb-3 text-gray-900">Atend. Emergencial</h4>
+                    <p class="text-gray-600">Equipe disponível para resolver problemas urgentes rapidamente.</p>
+                </div>
+                <div class="bg-white p-8 rounded-2xl shadow-lg hover:-translate-y-2 transition duration-300">
+                    <div class="w-14 h-14 bg-brand-100 text-brand-600 rounded-xl flex items-center justify-center text-2xl mb-6"><i class="ri-search-eye-line"></i></div>
+                    <h4 class="font-bold text-xl mb-3 text-gray-900">Identificação Precoce</h4>
+                    <p class="text-gray-600">Detectamos problemas antes que se tornem emergências caras.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="servicos" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h3 class="text-3xl md:text-5xl font-extrabold text-gray-900 mb-4">Serviços Especializados</h3>
+                <p class="text-xl text-gray-500">Soluções completas para manutenção preventiva e corretiva do seu condomínio ou empresa.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="border border-gray-100 p-5 rounded-xl hover:shadow-lg transition bg-gray-50"><i class="ri-drop-fill text-brand-500 text-2xl mb-2 block"></i><h4 class="font-bold text-gray-900">Limpeza de Calhas</h4><p class="text-sm text-gray-600">Desobstrução e limpeza completa do sistema de drenagem</p></div>
+                <div class="border border-gray-100 p-5 rounded-xl hover:shadow-lg transition bg-gray-50"><i class="ri-building-line text-brand-500 text-2xl mb-2 block"></i><h4 class="font-bold text-gray-900">Manutenção de Rufos</h4><p class="text-sm text-gray-600">Inspeção e reparo de rufos e acabamentos metálicos</p></div>
+                <div class="border border-gray-100 p-5 rounded-xl hover:shadow-lg transition bg-gray-50"><i class="ri-home-smile-line text-brand-500 text-2xl mb-2 block"></i><h4 class="font-bold text-gray-900">Inspeção de Telhados</h4><p class="text-sm text-gray-600">Verificação completa de telhas, estruturas e pontos</p></div>
+                <div class="border border-gray-100 p-5 rounded-xl hover:shadow-lg transition bg-gray-50"><i class="ri-hammer-line text-brand-500 text-2xl mb-2 block"></i><h4 class="font-bold text-gray-900">Troca de Telhas</h4><p class="text-sm text-gray-600">Substituição de telhas quebradas com materiais de qualidade</p></div>
+
+                <div class="border border-gray-100 p-5 rounded-xl hover:shadow-lg transition bg-gray-50"><i class="ri-water-flash-line text-brand-500 text-2xl mb-2 block"></i><h4 class="font-bold text-gray-900">Reparo de Infiltrações</h4><p class="text-sm text-gray-600">Diagnóstico e correção definitiva de infiltrações</p></div>
+                <div class="border border-gray-100 p-5 rounded-xl hover:shadow-lg transition bg-gray-50"><i class="ri-haze-line text-brand-500 text-2xl mb-2 block"></i><h4 class="font-bold text-gray-900">Correção de Vazamentos</h4><p class="text-sm text-gray-600">Localização e reparo de vazamentos hidráulicos</p></div>
+                <div class="border border-gray-100 p-5 rounded-xl hover:shadow-lg transition bg-gray-50"><i class="ri-tools-fill text-brand-500 text-2xl mb-2 block"></i><h4 class="font-bold text-gray-900">Reparo de Tubulações</h4><p class="text-sm text-gray-600">Conserto e substituição de tubos e conexões</p></div>
+                <div class="border border-gray-100 p-5 rounded-xl hover:shadow-lg transition bg-gray-50"><i class="ri-recycle-line text-brand-500 text-2xl mb-2 block"></i><h4 class="font-bold text-gray-900">Desentupimentos</h4><p class="text-sm text-gray-600">Desobstrução de ralos e pias com equipamentos modernos</p></div>
+
+                <div class="border border-gray-100 p-5 rounded-xl hover:shadow-lg transition bg-gray-50"><i class="ri-shield-check-line text-brand-500 text-2xl mb-2 block"></i><h4 class="font-bold text-gray-900">Impermeabilização</h4><p class="text-sm text-gray-600">Aplicação de impermeabilizantes em áreas críticas</p></div>
+                <div class="border border-gray-100 p-5 rounded-xl hover:shadow-lg transition bg-gray-50"><i class="ri-cup-line text-brand-500 text-2xl mb-2 block"></i><h4 class="font-bold text-gray-900">Impermeab. Caixa d'água</h4><p class="text-sm text-gray-600">Tratamento interno e aplicação de impermeabilizantes atóxicos</p></div>
+                <div class="border border-gray-100 p-5 rounded-xl hover:shadow-lg transition bg-gray-50"><i class="ri-settings-4-line text-brand-500 text-2xl mb-2 block"></i><h4 class="font-bold text-gray-900">Troca de Boia</h4><p class="text-sm text-gray-600">Instalação de boias de reservatório com ajuste preciso</p></div>
+                <div class="border border-gray-100 p-5 rounded-xl hover:shadow-lg transition bg-gray-50"><i class="ri-scissors-cut-line text-brand-500 text-2xl mb-2 block"></i><h4 class="font-bold text-gray-900">Reparo de Trincas</h4><p class="text-sm text-gray-600">Reparo estrutural em caixa d'água com materiais duráveis</p></div>
+
+                <div class="border border-gray-100 p-5 rounded-xl hover:shadow-lg transition bg-gray-50"><i class="ri-lightbulb-flash-line text-brand-500 text-2xl mb-2 block"></i><h4 class="font-bold text-gray-900">Troca de Lâmpadas</h4><p class="text-sm text-gray-600">Substituição de lâmpadas em áreas comuns e emergenciais</p></div>
+                <div class="border border-gray-100 p-5 rounded-xl hover:shadow-lg transition bg-gray-50"><i class="ri-plug-line text-brand-500 text-2xl mb-2 block"></i><h4 class="font-bold text-gray-900">Troca de Tomadas</h4><p class="text-sm text-gray-600">Instalação e substituição de tomadas e interruptores</p></div>
+                <div class="border border-gray-100 p-5 rounded-xl hover:shadow-lg transition bg-gray-50"><i class="ri-flashlight-line text-brand-500 text-2xl mb-2 block"></i><h4 class="font-bold text-gray-900">Reparos Elétricos</h4><p class="text-sm text-gray-600">Pequena manutenção elétrica preventiva e corretiva</p></div>
+                <div class="border border-gray-100 p-5 rounded-xl hover:shadow-lg transition bg-gray-50"><i class="ri-list-check-2 text-brand-500 text-2xl mb-2 block"></i><h4 class="font-bold text-gray-900">Manutenção Predial</h4><p class="text-sm text-gray-600">Inspeções completas e programadas de todas as áreas</p></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-20 bg-gray-900 text-white border-b border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col lg:flex-row gap-12 items-center">
+                <div class="lg:w-1/2">
+                    <h3 class="text-3xl md:text-5xl font-bold mb-6">Visita Preventiva Mensal</h3>
+                    <p class="text-lg text-gray-400 mb-4">Nossa equipe realiza <strong>inspeções mensais</strong> verificando todos os pontos críticos do seu condomínio ou empresa.</p>
+                    <p class="text-lg text-gray-400 mb-8">Após cada visita é gerado um <strong>relatório técnico preventivo</strong> completo com todas as verificações realizadas e recomendações.</p>
+                </div>
+                <div class="lg:w-1/2 grid grid-cols-2 gap-4">
+                    <div class="bg-gray-800 p-4 rounded-xl border border-gray-700"><i class="ri-home-4-line text-brand-400 mb-2 text-xl block"></i><h5 class="font-bold">Telhados</h5><p class="text-xs text-gray-400 mt-1">Verificação de telhas, estruturas e infiltração.</p></div>
+                    <div class="bg-gray-800 p-4 rounded-xl border border-gray-700"><i class="ri-drop-line text-brand-400 mb-2 text-xl block"></i><h5 class="font-bold">Calhas e Rufos</h5><p class="text-xs text-gray-400 mt-1">Inspeção de obstruções e estado de conservação.</p></div>
+                    <div class="bg-gray-800 p-4 rounded-xl border border-gray-700"><i class="ri-tools-line text-brand-400 mb-2 text-xl block"></i><h5 class="font-bold">Tubulações</h5><p class="text-xs text-gray-400 mt-1">Checagem de vazamentos e pressão do sistema.</p></div>
+                    <div class="bg-gray-800 p-4 rounded-xl border border-gray-700"><i class="ri-cup-fill text-brand-400 mb-2 text-xl block"></i><h5 class="font-bold">Caixas d'água</h5><p class="text-xs text-gray-400 mt-1">Verificação de trincas, boias e impermeabilização.</p></div>
+                    <div class="bg-gray-800 p-4 rounded-xl border border-gray-700"><i class="ri-search-line text-brand-400 mb-2 text-xl block"></i><h5 class="font-bold">Sinais de Infiltração</h5><p class="text-xs text-gray-400 mt-1">Identificação precoce de manchas e umidade.</p></div>
+                    <div class="bg-gray-800 p-4 rounded-xl border border-gray-700"><i class="ri-file-text-line text-brand-400 mb-2 text-xl block"></i><h5 class="font-bold">Relatório Técnico</h5><p class="text-xs text-gray-400 mt-1">Documentação completa após cada visita.</p></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-24 bg-brand-50 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h3 class="text-3xl md:text-5xl font-extrabold text-gray-900 mb-4">Funcionário Interno vs PREVEN FORT</h3>
+                <p class="text-xl text-gray-600">Compare os custos e benefícios de cada opção</p>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
+                <div class="bg-white rounded-3xl p-8 shadow-xl border-t-4 border-red-500">
+                    <h4 class="text-2xl font-bold text-center mb-2">Funcionário Interno</h4>
+                    <p class="text-center text-gray-500 mb-8">Custos mensais fixos</p>
+
+                    <ul class="space-y-4 mb-8">
+                        <li class="flex justify-between border-b pb-2"><span class="text-gray-600">Salário mensal</span> <strong class="text-gray-900">R$ 2.500+</strong></li>
+                        <li class="flex justify-between border-b pb-2"><span class="text-gray-600">Encargos trabalhistas (FGTS, INSS)</span> <strong class="text-gray-900">R$ 800+</strong></li>
+                        <li class="flex justify-between border-b pb-2"><span class="text-gray-600">Férias e 13º salário</span> <strong class="text-gray-900">R$ 400+/mês</strong></li>
+                        <li class="flex justify-between border-b pb-2"><span class="text-gray-600">Vale transporte e alimentação</span> <strong class="text-gray-900">R$ 300+</strong></li>
+                    </ul>
+                    <div class="bg-red-50 p-4 rounded-xl mb-6">
+                        <div class="flex justify-between items-center text-lg">
+                            <span class="font-bold text-red-800">Custo total mensal</span>
+                            <strong class="text-2xl text-red-600">R$ 4.000+</strong>
+                        </div>
+                    </div>
+                    <div class="text-center p-3 bg-gray-100 rounded-lg text-sm text-gray-600">
+                        <i class="ri-error-warning-line text-red-500"></i> <strong>Limitação:</strong> Conhecimento restrito a poucas áreas.
+                    </div>
+                </div>
+
+                <div class="bg-brand-600 rounded-3xl p-8 shadow-2xl border-t-4 border-accent-400 text-white transform lg:scale-105 z-10 relative">
+                    <div class="absolute top-4 right-4 text-brand-300 opacity-20"><i class="ri-shield-star-fill text-6xl"></i></div>
+                    <h4 class="text-2xl font-bold text-center mb-2">PREVEN FORT</h4>
+                    <p class="text-center text-brand-100 mb-8">Solução completa e especializada</p>
+
+                    <ul class="space-y-4 mb-8">
+                        <li class="flex gap-3 items-center"><i class="ri-checkbox-circle-fill text-accent-400 text-xl"></i> Equipe especializada</li>
+                        <li class="flex gap-3 items-center"><i class="ri-checkbox-circle-fill text-accent-400 text-xl"></i> Manutenção preventiva programada</li>
+                        <li class="flex gap-3 items-center"><i class="ri-checkbox-circle-fill text-accent-400 text-xl"></i> Relatórios técnicos mensais</li>
+                        <li class="flex gap-3 items-center"><i class="ri-checkbox-circle-fill text-accent-400 text-xl"></i> Atendimento emergencial incluído</li>
+                        <li class="flex gap-3 items-center"><i class="ri-checkbox-circle-fill text-accent-400 text-xl"></i> Sem encargos trabalhistas</li>
+                        <li class="flex gap-3 items-center"><i class="ri-checkbox-circle-fill text-accent-400 text-xl"></i> Múltiplas especialidades</li>
+                    </ul>
+                    <div class="bg-white/10 backdrop-blur-sm p-6 rounded-xl text-center border border-white/20">
+                        <p class="text-sm text-brand-200 mb-1">A partir de</p>
+                        <strong class="text-4xl text-white block mb-1">R$ 298,90</strong>
+                        <p class="text-sm text-brand-200">por mês</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-16 text-center max-w-3xl mx-auto">
+                <p class="text-2xl font-bold text-brand-900 italic mb-2">"Um único funcionário dificilmente consegue executar todos esses serviços com excelência."</p>
+                <p class="text-lg text-gray-600">Com a PREVEN FORT você tem uma equipe completa de especialistas.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-16 bg-accent-50 border-y border-accent-100">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <span class="bg-accent-500 text-white px-4 py-1 rounded-full text-sm font-bold tracking-widest mb-4 inline-block shadow-md">BENEFÍCIO EXCLUSIVO</span>
+            <h3 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4">12 Meses Sem Emergências? Você Ganha um Prêmio!</h3>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto mb-10">Se o seu condomínio passar 12 meses sem emergências, você recebe um dos seguintes benefícios:</p>
+
+            <div class="flex flex-wrap justify-center gap-4 mb-10">
+                <div class="bg-white p-4 rounded-xl shadow border border-gray-100 w-64">
+                    <i class="ri-drop-line text-3xl text-brand-500 mb-2 block"></i>
+                    <h4 class="font-bold">Limpeza de Caixa d'água</h4><p class="text-xs text-gray-500 mt-1">Limpeza completa e higienização</p>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow border border-gray-100 w-64">
+                    <i class="ri-water-flash-line text-3xl text-brand-500 mb-2 block"></i>
+                    <h4 class="font-bold">Limpeza de Calhas</h4><p class="text-xs text-gray-500 mt-1">Desobstrução e limpeza profunda</p>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow border border-gray-100 w-64">
+                    <i class="ri-paint-brush-line text-3xl text-brand-500 mb-2 block"></i>
+                    <h4 class="font-bold">Pintura de Área Comum</h4><p class="text-xs text-gray-500 mt-1">Revitalização de espaços</p>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow border border-gray-100 w-64">
+                    <i class="ri-tools-line text-3xl text-brand-500 mb-2 block"></i>
+                    <h4 class="font-bold">Melhorias Preventivas</h4><p class="text-xs text-gray-500 mt-1">Upgrades e otimizações</p>
+                </div>
+            </div>
+            <p class="font-bold text-xl text-brand-900">"Com a PREVEN FORT você nunca perde."</p>
+            <p class="text-gray-600 mt-2">Prevenção eficaz significa menos emergências e mais economia. E quando você economiza, nós recompensamos!</p>
+        </div>
+    </section>
+
+    <section id="planos" class="py-24 bg-white relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h3 class="text-3xl md:text-5xl font-extrabold text-gray-900 mb-4">Planos Mensais</h3>
+                <p class="text-xl text-gray-600 mb-2">Escolha o plano ideal para o seu condomínio ou empresa</p>
+                <p class="text-lg font-bold text-brand-600">Prevenção custa menos que reforma estrutural</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-16">
+                <div class="bg-white border border-gray-200 rounded-3xl p-8 shadow-lg flex flex-col">
+                    <h4 class="text-2xl font-bold text-gray-900 mb-2">Plano Essencial</h4>
+                    <div class="text-4xl font-extrabold text-brand-600 mb-6">R$ 298,90<span class="text-lg text-gray-500 font-medium">/mês</span></div>
+                    <ul class="space-y-4 mb-8 flex-1 text-gray-700">
+                        <li class="flex gap-3 items-start"><i class="ri-check-line text-accent-500 text-xl font-bold"></i> Manutenção preventiva mensal</li>
+                        <li class="flex gap-3 items-start"><i class="ri-check-line text-accent-500 text-xl font-bold"></i> Limpeza de calhas</li>
+                        <li class="flex gap-3 items-start"><i class="ri-check-line text-accent-500 text-xl font-bold"></i> Inspeção de telhado</li>
+                        <li class="flex gap-3 items-start"><i class="ri-check-line text-accent-500 text-xl font-bold"></i> 1 atendimento emergencial mensal</li>
+                        <li class="flex gap-3 items-start"><i class="ri-check-line text-accent-500 text-xl font-bold"></i> Relatório técnico mensal</li>
+                        <li class="flex gap-3 items-start"><i class="ri-check-line text-accent-500 text-xl font-bold"></i> Pequenos reparos incluídos</li>
+                    </ul>
+                    <a href="#form-proposta" class="w-full text-center py-4 bg-gray-100 hover:bg-gray-200 text-gray-900 font-bold rounded-xl transition">Solicitar Proposta</a>
+                </div>
+
+                <div class="bg-brand-600 border border-brand-500 rounded-3xl p-8 shadow-2xl relative transform md:scale-105 flex flex-col text-white">
+                    <div class="absolute top-0 right-1/2 transform translate-x-1/2 -translate-y-1/2 bg-yellow-400 text-brand-900 px-4 py-1 font-black rounded-full text-sm uppercase tracking-wider">MAIS POPULAR</div>
+                    <h4 class="text-2xl font-bold mb-2 mt-2">Plano Standard</h4>
+                    <div class="text-4xl font-extrabold text-white mb-6">R$ 479,90<span class="text-lg text-brand-200 font-medium">/mês</span></div>
+                    <ul class="space-y-4 mb-8 flex-1 text-brand-50">
+                        <li class="flex gap-3 items-start"><i class="ri-check-double-line text-yellow-400 text-xl font-bold"></i> Todos os serviços do Plano Essencial</li>
+                        <li class="flex gap-3 items-start"><i class="ri-check-double-line text-yellow-400 text-xl font-bold"></i> Impermeabilização de caixa d'água</li>
+                        <li class="flex gap-3 items-start"><i class="ri-check-double-line text-yellow-400 text-xl font-bold"></i> Até 3 atendimentos emergenciais mensais</li>
+                        <li class="flex gap-3 items-start"><i class="ri-check-double-line text-yellow-400 text-xl font-bold"></i> Manutenção de rufos</li>
+                        <li class="flex gap-3 items-start"><i class="ri-check-double-line text-yellow-400 text-xl font-bold"></i> Troca de telhas quebradas</li>
+                        <li class="flex gap-3 items-start"><i class="ri-check-double-line text-yellow-400 text-xl font-bold"></i> Desentupimentos incluídos</li>
+                        <li class="flex gap-3 items-start"><i class="ri-check-double-line text-yellow-400 text-xl font-bold"></i> Prioridade no atendimento</li>
+                    </ul>
+                    <a href="#form-proposta" class="w-full text-center py-4 bg-white hover:bg-gray-100 text-brand-700 font-bold rounded-xl transition shadow-lg">Solicitar Proposta</a>
+                </div>
+            </div>
+
+            <div id="form-proposta" class="max-w-2xl mx-auto bg-white rounded-3xl shadow-xl p-8 border border-gray-100">
+                <h4 class="text-2xl font-bold text-center mb-6 text-gray-900">Solicite uma Proposta Personalizada</h4>
+                <form class="space-y-4">
+                    <div><input type="text" placeholder="Nome Completo *" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500 outline-none" required></div>
+                    <div><input type="tel" placeholder="Telefone/WhatsApp *" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500 outline-none" required></div>
+                    <div><input type="text" placeholder="Nome do Condomínio/Empresa *" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500 outline-none" required></div>
+                    <div><input type="text" placeholder="Cidade *" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500 outline-none" required></div>
+                    <div>
+                        <select class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500 outline-none text-gray-700" required>
+                            <option value="" disabled selected>Plano de Interesse *</option>
+                            <option value="essencial">Plano Essencial - R$ 298,90</option>
+                            <option value="standard">Plano Standard - R$ 479,90</option>
+                        </select>
+                    </div>
+                    <button type="button" class="w-full py-4 bg-brand-600 hover:bg-brand-700 text-white font-bold text-lg rounded-xl transition-colors shadow-lg mt-4">
+                        Solicitar Proposta
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-20 bg-gray-900 text-white">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <h3 class="text-3xl md:text-5xl font-extrabold mb-12">Antes e Depois</h3>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-gray-800 rounded-2xl overflow-hidden border border-gray-700">
+                    <h4 class="font-bold py-3 bg-gray-700">Infiltração Corrigida</h4>
+                    <div class="flex h-48">
+                        <div class="w-1/2 relative bg-gray-600 border-r border-gray-500">
+                            <span class="absolute top-2 left-2 bg-red-600 text-xs font-bold px-2 py-1 rounded">ANTES</span>
+                            <img src="https://images.unsplash.com/photo-1599839619722-39751411ea63?w=400&q=80" alt="Antes" class="w-full h-full object-cover opacity-70 mix-blend-multiply">
+                        </div>
+                        <div class="w-1/2 relative bg-gray-500">
+                            <span class="absolute top-2 right-2 bg-green-500 text-xs font-bold px-2 py-1 rounded">DEPOIS</span>
+                            <img src="https://images.unsplash.com/photo-1562664377-709f2c337eb2?w=400&q=80" alt="Depois" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-800 rounded-2xl overflow-hidden border border-gray-700">
+                    <h4 class="font-bold py-3 bg-gray-700">Caixa d'água Impermeabilizada</h4>
+                    <div class="flex h-48">
+                        <div class="w-1/2 relative bg-gray-600 border-r border-gray-500">
+                            <span class="absolute top-2 left-2 bg-red-600 text-xs font-bold px-2 py-1 rounded">ANTES</span>
+                            <img src="https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=400&q=80" alt="Antes" class="w-full h-full object-cover opacity-70 mix-blend-multiply">
+                        </div>
+                        <div class="w-1/2 relative bg-gray-500">
+                            <span class="absolute top-2 right-2 bg-green-500 text-xs font-bold px-2 py-1 rounded">DEPOIS</span>
+                            <img src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=400&q=80" alt="Depois" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-800 rounded-2xl overflow-hidden border border-gray-700">
+                    <h4 class="font-bold py-3 bg-gray-700">Telhado Restaurado</h4>
+                    <div class="flex h-48">
+                        <div class="w-1/2 relative bg-gray-600 border-r border-gray-500">
+                            <span class="absolute top-2 left-2 bg-red-600 text-xs font-bold px-2 py-1 rounded">ANTES</span>
+                            <img src="https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=400&q=80" alt="Antes" class="w-full h-full object-cover opacity-70 mix-blend-multiply">
+                        </div>
+                        <div class="w-1/2 relative bg-gray-500">
+                            <span class="absolute top-2 right-2 bg-green-500 text-xs font-bold px-2 py-1 rounded">DEPOIS</span>
+                            <img src="https://images.unsplash.com/photo-1513694203232-719a280e022f?w=400&q=80" alt="Depois" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-24 bg-brand-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h3 class="text-3xl md:text-5xl font-extrabold text-gray-900 mb-4">O Que Nossos Clientes Dizem</h3>
+                <p class="text-xl text-gray-600">Depoimentos reais de síndicos e administradores satisfeitos</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-2xl shadow border border-gray-100"><div class="flex text-yellow-400 mb-3"><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i></div><p class="text-gray-700 italic mb-4">"Desde que contratamos a PREVEN FORT, não tivemos mais problemas com infiltrações. A manutenção preventiva realmente funciona e economizamos muito!"</p><h5 class="font-bold text-gray-900">Carlos Mendes</h5><p class="text-xs text-gray-500">Síndico - Cond. Res. Jardim das Flores</p></div>
+                <div class="bg-white p-6 rounded-2xl shadow border border-gray-100"><div class="flex text-yellow-400 mb-3"><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i></div><p class="text-gray-700 italic mb-4">"Equipe extremamente profissional e pontual. Os relatórios mensais nos dão total controle sobre a manutenção do prédio. Recomendo!"</p><h5 class="font-bold text-gray-900">Ana Paula Silva</h5><p class="text-xs text-gray-500">Administradora - Edifício Comercial Centro</p></div>
+                <div class="bg-white p-6 rounded-2xl shadow border border-gray-100"><div class="flex text-yellow-400 mb-3"><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i></div><p class="text-gray-700 italic mb-4">"Evitamos um prejuízo de mais de R$ 15.000 graças à inspeção preventiva que identificou um problema na caixa d'água antes que virasse emergência."</p><h5 class="font-bold text-gray-900">Roberto Oliveira</h5><p class="text-xs text-gray-500">Síndico - Condomínio Vila Verde</p></div>
+                <div class="bg-white p-6 rounded-2xl shadow border border-gray-100"><div class="flex text-yellow-400 mb-3"><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i></div><p class="text-gray-700 italic mb-4">"O custo-benefício é excelente. Pagamos menos que um funcionário e temos uma equipe completa de especialistas à disposição."</p><h5 class="font-bold text-gray-900">Mariana Costa</h5><p class="text-xs text-gray-500">Síndica - Residencial Parque das Árvores</p></div>
+                <div class="bg-white p-6 rounded-2xl shadow border border-gray-100"><div class="flex text-yellow-400 mb-3"><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i></div><p class="text-gray-700 italic mb-4">"Atendimento rápido e eficiente. Quando tivemos uma emergência, a equipe chegou em menos de 2 horas e resolveu o problema."</p><h5 class="font-bold text-gray-900">Fernando Santos</h5><p class="text-xs text-gray-500">Proprietário - Empresa Logística Santos</p></div>
+                <div class="bg-white p-6 rounded-2xl shadow border border-gray-100"><div class="flex text-yellow-400 mb-3"><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i></div><p class="text-gray-700 italic mb-4">"Transparência total nos serviços. Os relatórios técnicos facilitam muito na prestação de contas nas assembleias. Estamos muito satisfeitos!"</p><h5 class="font-bold text-gray-900">Juliana Ferreira</h5><p class="text-xs text-gray-500">Síndica - Condomínio Horizonte Azul</p></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contato" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-brand-600 rounded-3xl shadow-2xl overflow-hidden flex flex-col lg:flex-row">
+                <div class="lg:w-1/2 p-10 md:p-16 text-white flex flex-col justify-center bg-gradient-to-br from-brand-700 to-brand-900">
+                    <h3 class="text-3xl md:text-5xl font-extrabold mb-6">Evite Infiltrações Antes que Virem Prejuízo</h3>
+                    <p class="text-xl text-brand-100 mb-8">Solicite uma avaliação técnica gratuita e descubra como a manutenção preventiva pode economizar milhares de reais.</p>
+                    <ul class="space-y-4 mb-10 font-medium text-lg">
+                        <li class="flex items-center gap-3"><i class="ri-shield-check-fill text-2xl text-accent-400"></i> Garantia de qualidade nos serviços</li>
+                        <li class="flex items-center gap-3"><i class="ri-timer-flash-fill text-2xl text-accent-400"></i> Atendimento rápido e eficiente</li>
+                        <li class="flex items-center gap-3"><i class="ri-team-fill text-2xl text-accent-400"></i> Equipe especializada e certificada</li>
+                    </ul>
+                    <div class="space-y-4">
+                        <a href="https://wa.me/5511978705297" class="w-full flex justify-center items-center gap-2 py-4 bg-accent-500 hover:bg-accent-600 font-bold rounded-xl transition text-lg shadow-lg">
+                            <i class="ri-whatsapp-line text-2xl"></i> WhatsApp: (11) 97870-5297
+                        </a>
+                        <a href="mailto:semprenovapinturas@gmail.com" class="w-full flex justify-center items-center gap-2 py-4 bg-white/10 hover:bg-white/20 font-bold rounded-xl transition text-lg border border-white/30">
+                            <i class="ri-mail-line text-2xl"></i> semprenovapinturas@gmail.com
+                        </a>
+                    </div>
+                </div>
+                <div class="lg:w-1/2 p-10 md:p-16 bg-gray-50 flex items-center">
+                    <div class="w-full">
+                        <h4 class="text-2xl font-bold text-gray-900 mb-8">Solicite uma Avaliação Gratuita</h4>
+                        <form class="space-y-5">
+                            <div><input type="text" placeholder="Nome Completo *" class="w-full px-4 py-4 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none shadow-sm" required></div>
+                            <div><input type="tel" placeholder="Telefone/WhatsApp *" class="w-full px-4 py-4 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none shadow-sm" required></div>
+                            <div><input type="text" placeholder="Nome do Condomínio/Empresa *" class="w-full px-4 py-4 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none shadow-sm" required></div>
+                            <div><input type="text" placeholder="Cidade *" class="w-full px-4 py-4 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none shadow-sm" required></div>
+                            <button type="button" class="w-full py-4 bg-brand-600 hover:bg-brand-700 text-white font-bold text-lg rounded-xl transition-colors shadow-lg mt-2">
+                                Solicitar Avaliação Gratuita
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-gray-900 text-gray-300 py-16 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8 mb-12">
+                <div class="md:col-span-1">
+                    <h3 class="text-2xl font-black text-white mb-4">PREVEN<span class="text-brand-500">FORT</span></h3>
+                    <p class="text-sm text-gray-400">Especialistas em prevenção de infiltrações e manutenção predial para condomínios e empresas.</p>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-4">Serviços</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li>Manutenção Preventiva</li>
+                        <li>Correção de Infiltrações</li>
+                        <li>Impermeabilização</li>
+                        <li>Limpeza de Calhas</li>
+                        <li>Reparo de Telhados</li>
+                        <li>Desentupimentos</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-4">Planos</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li>Plano Essencial</li>
+                        <li>Plano Standard</li>
+                        <li>Atendimento Emergencial</li>
+                        <li>Visitas Preventivas</li>
+                        <li>Relatórios Técnicos</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-4">Contato</h4>
+                    <ul class="space-y-3 text-sm">
+                        <li class="flex items-center gap-2"><i class="ri-whatsapp-line text-accent-400 text-lg"></i> (11) 97870-5297</li>
+                        <li class="flex items-center gap-2"><i class="ri-mail-line text-brand-400 text-lg"></i> semprenovapinturas@gmail.com</li>
+                    </ul>
+                    <a href="#contato" class="inline-block mt-4 px-5 py-2 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded text-sm transition">Fale Conosco</a>
+                </div>
+            </div>
+            <div class="text-center pt-8 border-t border-gray-800 text-sm text-gray-500">
+                <p>© 2026 PREVEN FORT - Todos os direitos reservados.</p>
+                <p>Especialistas em prevenção de infiltrações e manutenção predial.</p>
+            </div>
+        </div>
+    </footer>
+
+    <a href="https://wa.me/5511978705297" class="fixed bottom-6 right-6 w-16 h-16 bg-accent-500 hover:bg-accent-600 text-white rounded-full shadow-[0_0_20px_rgba(16,185,129,0.5)] flex items-center justify-center transition-transform hover:scale-110 z-50 hover:-translate-y-1">
+        <i class="ri-whatsapp-line text-4xl"></i>
+    </a>
+
+</body>
+</html>
