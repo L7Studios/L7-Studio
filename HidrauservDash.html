@@ -270,6 +270,17 @@
             font-weight: 500;
         }
 
+        .clickable-machine {
+            cursor: pointer;
+            color: var(--primary);
+            transition: all 0.2s;
+        }
+
+            .clickable-machine:hover {
+                background-color: #e2e8f0;
+                color: var(--primary-hover);
+            }
+
         .pecas-list {
             font-size: 12px;
             color: var(--text-muted);
@@ -322,6 +333,118 @@
             display: none;
             margin-bottom: 20px;
         }
+
+        /* MODAL DE DETALHES */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-content {
+            background: white;
+            width: 90%;
+            max-width: 900px;
+            border-radius: 12px;
+            padding: 30px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .close-modal {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            font-size: 24px;
+            border: none;
+            background: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+            .close-modal:hover {
+                color: var(--danger);
+            }
+
+        .modal-header h2 {
+            color: var(--primary);
+            font-size: 22px;
+            margin-bottom: 5px;
+            border-left: 5px solid var(--primary);
+            padding-left: 10px;
+        }
+
+        .modal-subtitle {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 25px;
+            padding-left: 15px;
+        }
+
+        .modal-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .modal-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .modal-panel {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+            .modal-panel h3 {
+                font-size: 15px;
+                color: var(--text-main);
+                margin-bottom: 15px;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+        .detalhe-table {
+            width: 100%;
+            font-size: 13px;
+        }
+
+            .detalhe-table th {
+                background: #e2e8f0;
+                color: var(--text-main);
+                padding: 8px;
+            }
+
+            .detalhe-table td {
+                padding: 8px;
+                border-bottom: 1px solid #e2e8f0;
+            }
+
+        .obs-box {
+            background: #fef3c7;
+            border-left: 4px solid var(--warning);
+            padding: 10px 15px;
+            border-radius: 4px;
+            margin-top: 10px;
+            font-size: 13px;
+            color: #92400e;
+        }
     </style>
 </head>
 
@@ -365,7 +488,6 @@
             </div>
             <i class="fa-solid fa-boxes-stacked kpi-icon"></i>
         </div>
-
         <div class="kpi-card danger">
             <div class="kpi-info">
                 <h3>Tempo Parado (Min)</h3>
@@ -373,7 +495,6 @@
             </div>
             <i class="fa-solid fa-clock-rotate-left kpi-icon"></i>
         </div>
-
         <div class="kpi-card success">
             <div class="kpi-info">
                 <h3>Eficiência OEE</h3>
@@ -381,7 +502,6 @@
             </div>
             <i class="fa-solid fa-chart-line kpi-icon"></i>
         </div>
-
         <div class="kpi-card primary">
             <div class="kpi-info">
                 <h3>Máquinas Ativas</h3>
@@ -389,7 +509,6 @@
             </div>
             <i class="fa-solid fa-gears kpi-icon"></i>
         </div>
-
         <div class="kpi-card primary">
             <div class="kpi-info">
                 <h3>Prod. Média/Máquina</h3>
@@ -397,7 +516,6 @@
             </div>
             <i class="fa-solid fa-calculator kpi-icon"></i>
         </div>
-
         <div class="kpi-card danger">
             <div class="kpi-info">
                 <h3>Parada Média (Min)</h3>
@@ -405,7 +523,6 @@
             </div>
             <i class="fa-solid fa-stopwatch kpi-icon"></i>
         </div>
-
         <div class="kpi-card warning">
             <div class="kpi-info">
                 <h3>Produção por Hora</h3>
@@ -413,7 +530,6 @@
             </div>
             <i class="fa-solid fa-gauge-high kpi-icon"></i>
         </div>
-
         <div class="kpi-card primary">
             <div class="kpi-info">
                 <h3>Relatórios Emitidos</h3>
@@ -440,6 +556,7 @@
     <div class="section">
         <div class="section-header">
             <h2>Resumo Operacional por Máquina</h2>
+            <small style="color:var(--text-muted);"><i class="fa-solid fa-circle-info"></i> Clique no nome da máquina para ver detalhes</small>
         </div>
         <div class="table-container">
             <table>
@@ -458,6 +575,60 @@
                 <tbody id="tabela">
                 </tbody>
             </table>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modalDetalhes">
+        <div class="modal-content">
+            <button class="close-modal" onclick="fecharModalDetalhes()">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="modal-header">
+                <h2 id="modal-titulo">Detalhes da Máquina</h2>
+                <div class="modal-subtitle" id="modal-subtitulo">Data: 00/00/0000 | Turno: -</div>
+            </div>
+
+            <div class="modal-grid">
+                <div class="modal-panel">
+                    <h3><i class="fa-solid fa-boxes-stacked" style="color:var(--primary)"></i> Histórico de Produção</h3>
+                    <table class="detalhe-table">
+                        <thead>
+                            <tr>
+                                <th>Horário</th>
+                                <th>Peça</th>
+                                <th>Lote</th>
+                                <th>Qtd</th>
+                            </tr>
+                        </thead>
+                        <tbody id="modal-body-producao">
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="modal-panel">
+                    <h3><i class="fa-solid fa-clock-rotate-left" style="color:var(--danger)"></i> Histórico de Paradas</h3>
+                    <table class="detalhe-table">
+                        <thead>
+                            <tr>
+                                <th>Início</th>
+                                <th>Fim</th>
+                                <th>Motivo</th>
+                                <th>Duração</th>
+                            </tr>
+                        </thead>
+                        <tbody id="modal-body-paradas">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="modal-panel" style="margin-top:20px;">
+                <h3><i class="fa-solid fa-comments" style="color:var(--warning)"></i> Observações do(s) Operador(es)</h3>
+                <div id="modal-body-obs">
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -488,8 +659,9 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // ------------------ ESTADO GLOBAL DOS GRÁFICOS ------------------
+        // ------------------ ESTADO GLOBAL ------------------
         let instanciasGraficos = {};
+        window.dadosGeraisModal = {}; // <-- Guarda dados para exibir no modal
 
         function limparGraficosAnteriores() {
             Object.values(instanciasGraficos).forEach(chart => {
@@ -498,57 +670,114 @@
             instanciasGraficos = {};
         }
 
+        // ------------------ FUNÇÕES DO MODAL ------------------
+        window.abrirModalDetalhes = function (maquinaKey) {
+            const dados = window.dadosGeraisModal[maquinaKey];
+            if (!dados) return;
+
+            document.getElementById('modal-titulo').innerText = "Detalhes - " + dados.nomeFormatado;
+            document.getElementById('modal-subtitulo').innerText = `Operador(es): ${dados.operadores.join(', ')} | Relatórios lançados: ${dados.relatoriosCount}`;
+
+            // Preenche Produção
+            const tbProd = document.getElementById('modal-body-producao');
+            tbProd.innerHTML = "";
+            if (dados.logsProducao.length === 0) {
+                tbProd.innerHTML = "<tr><td colspan='4' style='text-align:center;'>Nenhuma produção registrada.</td></tr>";
+            } else {
+                // Ordenar por horário
+                dados.logsProducao.sort((a, b) => (a.hora > b.hora) ? 1 : -1);
+                dados.logsProducao.forEach(p => {
+                    tbProd.innerHTML += `<tr><td>${p.hora}</td><td>${p.peca}</td><td>${p.lote}</td><td><strong>${p.qtd}</strong></td></tr>`;
+                });
+            }
+
+            // Preenche Paradas
+            const tbParadas = document.getElementById('modal-body-paradas');
+            tbParadas.innerHTML = "";
+            if (dados.logsParada.length === 0) {
+                tbParadas.innerHTML = "<tr><td colspan='4' style='text-align:center;'>Nenhuma parada registrada.</td></tr>";
+            } else {
+                dados.logsParada.sort((a, b) => (a.inicio > b.inicio) ? 1 : -1);
+                dados.logsParada.forEach(p => {
+                    tbParadas.innerHTML += `<tr><td>${p.inicio}</td><td>${p.fim}</td><td>${p.motivo}</td><td style="color:var(--danger); font-weight:bold;">${p.duracao} min</td></tr>`;
+                });
+            }
+
+            // Preenche Observações
+            const divObs = document.getElementById('modal-body-obs');
+            divObs.innerHTML = "";
+            if (dados.observacoes.length === 0) {
+                divObs.innerHTML = "<p style='color:var(--text-muted); font-size:13px; margin:0;'>Nenhuma observação registrada.</p>";
+            } else {
+                dados.observacoes.forEach(obs => {
+                    divObs.innerHTML += `<div class="obs-box"><i class="fa-solid fa-quote-left" style="opacity:0.3; margin-right:5px;"></i> ${obs}</div>`;
+                });
+            }
+
+            document.getElementById('modalDetalhes').style.display = 'flex';
+        }
+
+        window.fecharModalDetalhes = function () {
+            document.getElementById('modalDetalhes').style.display = 'none';
+        }
+
+        // Fechar ao clicar fora do modal
+        window.onclick = function (event) {
+            const modal = document.getElementById('modalDetalhes');
+            if (event.target == modal) {
+                fecharModalDetalhes();
+            }
+        }
+
         // ------------------ FUNÇÃO PRINCIPAL DE BUSCA ------------------
         async function carregarDados(dataEscolhida, turnoEscolhido) {
             document.getElementById("loading").style.display = "block";
+            window.dadosGeraisModal = {}; // Reseta os dados do modal
 
             try {
                 const snap = await get(ref(db, "relatorios_pcp/" + dataEscolhida));
 
-                let prodTotal = 0;
-                let paradaTotal = 0;
-                let relatorios = 0;
+                let prodTotal = 0; let paradaTotal = 0; let relatorios = 0;
                 let prodHoraArray = new Array(24).fill(0);
 
-                const prodMaquina = {};
-                const paradaMaquina = {};
-                const relMaquina = {};
-                const operadoresPorMaquina = {}; // NOVO: Armazena operadores
-
-                const pecasTotalGeral = {};
-                const pecasPorMaquina = {};
-                const motivosParadaTotal = {};
+                const prodMaquina = {}; const paradaMaquina = {}; const relMaquina = {};
+                const operadoresPorMaquina = {};
+                const pecasTotalGeral = {}; const pecasPorMaquina = {}; const motivosParadaTotal = {};
 
                 if (snap.exists()) {
                     const dados = snap.val();
 
                     for (const maquina in dados) {
-                        let prod = 0;
-                        let parada = 0;
-                        let rel = 0;
+                        let prod = 0; let parada = 0; let rel = 0;
 
                         pecasPorMaquina[maquina] = {};
-                        operadoresPorMaquina[maquina] = new Set(); // Usando Set para não repetir o mesmo nome
+                        operadoresPorMaquina[maquina] = new Set();
+
+                        // Estrutura para o Modal
+                        window.dadosGeraisModal[maquina] = {
+                            nomeFormatado: maquina.replace("Maquina_", "Máquina "),
+                            operadores: [],
+                            logsProducao: [],
+                            logsParada: [],
+                            observacoes: [],
+                            relatoriosCount: 0
+                        };
 
                         const registros = dados[maquina];
 
                         for (const id in registros) {
                             const r = registros[id];
 
-                            // FILTRO DE TURNO
-                            if (turnoEscolhido !== 'todos' && r.turno !== turnoEscolhido) {
-                                continue;
+                            if (turnoEscolhido !== 'todos' && r.turno !== turnoEscolhido) continue;
+
+                            relatorios++; rel++;
+                            window.dadosGeraisModal[maquina].relatoriosCount++;
+
+                            if (r.operador) operadoresPorMaquina[maquina].add(r.operador);
+                            if (r.observacoes && r.observacoes.trim() !== "") {
+                                window.dadosGeraisModal[maquina].observacoes.push(r.observacoes);
                             }
 
-                            relatorios++;
-                            rel++;
-
-                            // Registrar o operador
-                            if (r.operador) {
-                                operadoresPorMaquina[maquina].add(r.operador);
-                            }
-
-                            // Lógica de Produção
                             if (r.producao) {
                                 r.producao.forEach(p => {
                                     const qtd = Number(p.quantidade);
@@ -560,48 +789,60 @@
 
                                     if (p.horario) {
                                         const hora = parseInt(p.horario.split(":")[0]);
-                                        if (!isNaN(hora)) {
-                                            prodHoraArray[hora] += qtd;
-                                        }
+                                        if (!isNaN(hora)) prodHoraArray[hora] += qtd;
                                     }
+
+                                    // Salva pro modal
+                                    window.dadosGeraisModal[maquina].logsProducao.push({
+                                        hora: p.horario || "-",
+                                        peca: nomePeca,
+                                        lote: p.lote || "-",
+                                        qtd: qtd
+                                    });
                                 });
                             }
 
-                            // Lógica de Paradas
                             if (r.paradas) {
                                 r.paradas.forEach(p => {
                                     if (p.inicio && p.fim) {
-                                        const i = p.inicio.split(":");
-                                        const f = p.fim.split(":");
+                                        const i = p.inicio.split(":"); const f = p.fim.split(":");
                                         const mi = parseInt(i[0]) * 60 + parseInt(i[1]);
                                         const mf = parseInt(f[0]) * 60 + parseInt(f[1]);
-
                                         let diferenca = mf - mi;
                                         if (diferenca < 0) diferenca += (24 * 60);
 
                                         parada += diferenca;
-
                                         const motivo = p.motivo || "Outros";
                                         motivosParadaTotal[motivo] = (motivosParadaTotal[motivo] || 0) + diferenca;
+
+                                        // Salva pro modal
+                                        window.dadosGeraisModal[maquina].logsParada.push({
+                                            inicio: p.inicio,
+                                            fim: p.fim,
+                                            motivo: motivo,
+                                            duracao: diferenca
+                                        });
                                     }
                                 });
                             }
                         }
 
-                        // Só armazena a máquina no array final se ela produziu algo ou teve parada no turno filtrado
                         if (prod > 0 || parada > 0 || rel > 0) {
                             prodMaquina[maquina] = prod;
                             paradaMaquina[maquina] = parada;
                             relMaquina[maquina] = rel;
-
                             prodTotal += prod;
                             paradaTotal += parada;
+                            // Converte o Set de operadores em array para o Modal
+                            window.dadosGeraisModal[maquina].operadores = Array.from(operadoresPorMaquina[maquina]);
+                        } else {
+                            // Se não teve nada no filtro, deleta da memória do modal
+                            delete window.dadosGeraisModal[maquina];
                         }
                     }
                 }
 
                 const maquinas = Object.keys(prodMaquina);
-
                 const minutosPorTurno = (turnoEscolhido === '1') ? 600 : 480;
 
                 // Atualização dos KPIs
@@ -609,7 +850,6 @@
                 document.getElementById("tempoParado").innerText = paradaTotal.toLocaleString('pt-BR');
                 document.getElementById("maquinasAtivas").innerText = maquinas.length;
                 document.getElementById("relatorios").innerText = relatorios;
-
                 document.getElementById("mediaProd").innerText = Math.round(prodTotal / (maquinas.length || 1)).toLocaleString('pt-BR');
                 document.getElementById("mediaParada").innerText = Math.round(paradaTotal / (maquinas.length || 1)).toLocaleString('pt-BR');
 
@@ -618,7 +858,6 @@
 
                 const elementEficiencia = document.getElementById("eficiencia");
                 elementEficiencia.innerText = Math.round(eficiencia) + "%";
-
                 if (eficiencia >= 85) elementEficiencia.style.color = 'var(--success)';
                 else if (eficiencia >= 70 || maquinas.length === 0) elementEficiencia.style.color = 'var(--warning)';
                 else elementEficiencia.style.color = 'var(--danger)';
@@ -631,39 +870,33 @@
                 tabela.innerHTML = "";
 
                 if (maquinas.length === 0) {
-                    tabela.innerHTML = `<tr><td colspan="8" style="text-align:center; padding: 30px; color: var(--text-muted);">Nenhum lançamento encontrado para os filtros selecionados.</td></tr>`;
+                    tabela.innerHTML = `<tr><td colspan="8" style="text-align:center; padding: 30px; color: var(--text-muted);">Nenhum lançamento encontrado.</td></tr>`;
                 } else {
                     maquinas.forEach(m => {
                         const nomeFormatado = m.replace("Maquina_", "Máquina ");
                         const eficienciaM = Math.max(0, 100 - (paradaMaquina[m] / minutosPorTurno) * 100);
 
-                        let statusClass = 'bg-danger';
-                        let statusText = 'Crítico';
+                        let statusClass = 'bg-danger'; let statusText = 'Crítico';
                         if (eficienciaM >= 85) { statusClass = 'bg-success'; statusText = 'Excelente'; }
                         else if (eficienciaM >= 70) { statusClass = 'bg-warning'; statusText = 'Atenção'; }
 
-                        // Formatar as Peças
                         let pecasHTML = "";
                         if (Object.keys(pecasPorMaquina[m]).length > 0) {
                             for (const [peca, qtd] of Object.entries(pecasPorMaquina[m])) {
                                 pecasHTML += `<span class="pecas-list"><strong>${peca}:</strong> ${qtd}</span>`;
                             }
-                        } else {
-                            pecasHTML = `<span class="pecas-list" style="background:transparent">-</span>`;
-                        }
+                        } else pecasHTML = `<span class="pecas-list" style="background:transparent">-</span>`;
 
-                        // Formatar os Operadores
                         let operadoresHTML = "";
                         if (operadoresPorMaquina[m] && operadoresPorMaquina[m].size > 0) {
-                            const opsArray = Array.from(operadoresPorMaquina[m]);
-                            operadoresHTML = opsArray.map(op => `<span class="pecas-list operador-badge"><i class="fa-solid fa-user-gear"></i> ${op}</span>`).join(' ');
-                        } else {
-                            operadoresHTML = `<span class="pecas-list" style="background:transparent">-</span>`;
-                        }
+                            operadoresHTML = Array.from(operadoresPorMaquina[m]).map(op => `<span class="pecas-list operador-badge"><i class="fa-solid fa-user-gear"></i> ${op}</span>`).join(' ');
+                        } else operadoresHTML = `<span class="pecas-list" style="background:transparent">-</span>`;
 
                         tabela.innerHTML += `
                                 <tr>
-                                    <td><strong><i class="fa-solid fa-microchip" style="color:var(--text-muted); margin-right:5px;"></i> ${nomeFormatado}</strong></td>
+                                    <td class="clickable-machine" onclick="abrirModalDetalhes('${m}')" title="Clique para ver os detalhes da máquina">
+                                        <strong><i class="fa-solid fa-microchip" style="margin-right:5px;"></i> ${nomeFormatado} <i class="fa-solid fa-magnifying-glass-plus text-muted" style="font-size:12px; margin-left:5px;"></i></strong>
+                                    </td>
                                     <td style="max-width: 180px; white-space: normal;">${operadoresHTML}</td>
                                     <td>${prodMaquina[m].toLocaleString('pt-BR')} peças</td>
                                     <td style="max-width: 200px; white-space: normal;">${pecasHTML}</td>
@@ -681,90 +914,25 @@
                     });
                 }
 
-                // Limpa gráficos antigos
                 limparGraficosAnteriores();
+                if (maquinas.length === 0) { document.getElementById("loading").style.display = "none"; return; }
 
-                if (maquinas.length === 0) {
-                    document.getElementById("loading").style.display = "none";
-                    return;
-                }
-
-                // Configuração Universal dos Gráficos
-                Chart.defaults.font.family = 'Inter';
-                Chart.defaults.color = '#64748b';
+                // Graficos...
+                Chart.defaults.font.family = 'Inter'; Chart.defaults.color = '#64748b';
                 const commonOptions = { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } } };
                 const paletaCores = ['#0b4a8f', '#198754', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4', '#f97316', '#64748b'];
 
-                // 1. Gráfico: Produção por Máquina
-                instanciasGraficos.prod = new Chart(document.getElementById('graficoProducao'), {
-                    type: "bar",
-                    data: {
-                        labels: maquinas.map(m => m.replace("Maquina_", "M ")),
-                        datasets: [{ label: "Produção (Peças)", data: Object.values(prodMaquina), backgroundColor: 'rgba(11, 74, 143, 0.8)', borderRadius: 6 }]
-                    },
-                    options: { ...commonOptions, plugins: { title: { display: true, text: 'Produção por Máquina' }, legend: { display: false } } }
-                });
+                instanciasGraficos.prod = new Chart(document.getElementById('graficoProducao'), { type: "bar", data: { labels: maquinas.map(m => m.replace("Maquina_", "M ")), datasets: [{ label: "Produção (Peças)", data: Object.values(prodMaquina), backgroundColor: 'rgba(11, 74, 143, 0.8)', borderRadius: 6 }] }, options: { ...commonOptions, plugins: { title: { display: true, text: 'Produção por Máquina' }, legend: { display: false } } } });
 
-                // 2. Gráfico Inteligente: Produção por Hora
-                let horasLabels = [];
-                let horasDados = [];
+                let horasLabels = []; let horasDados = [];
+                if (turnoEscolhido === '1') { horasLabels = [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17].map(h => `${h}h`); horasDados = prodHoraArray.slice(7, 18); }
+                else { horasLabels = [...Array(24).keys()].map(h => `${h}h`); horasDados = prodHoraArray; }
 
-                if (turnoEscolhido === '1') {
-                    horasLabels = [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17].map(h => `${h}h`);
-                    horasDados = prodHoraArray.slice(7, 18);
-                } else {
-                    horasLabels = [...Array(24).keys()].map(h => `${h}h`);
-                    horasDados = prodHoraArray;
-                }
-
-                instanciasGraficos.hora = new Chart(document.getElementById('graficoHora'), {
-                    type: "line",
-                    data: {
-                        labels: horasLabels,
-                        datasets: [{ label: "Peças Produzidas", data: horasDados, borderColor: '#198754', backgroundColor: 'rgba(25, 135, 84, 0.2)', borderWidth: 2, fill: true, tension: 0.3, pointBackgroundColor: '#198754' }]
-                    },
-                    options: { ...commonOptions, plugins: { title: { display: true, text: (turnoEscolhido === '1' ? 'Curva de Produção (07:00 às 17:00)' : 'Curva de Produção (24h)') }, legend: { display: false } } }
-                });
-
-                // 3. Gráfico: Volume de Produção por Peça
-                instanciasGraficos.pecas = new Chart(document.getElementById('graficoPecas'), {
-                    type: "doughnut",
-                    data: {
-                        labels: Object.keys(pecasTotalGeral),
-                        datasets: [{ data: Object.values(pecasTotalGeral), backgroundColor: paletaCores, borderWidth: 0 }]
-                    },
-                    options: { responsive: true, maintainAspectRatio: false, cutout: '50%', plugins: { legend: { position: 'right' }, title: { display: true, text: 'Mix de Produção (Peças)' } } }
-                });
-
-                // 4. Gráfico: Paradas por Máquina
-                instanciasGraficos.paradas = new Chart(document.getElementById('graficoParadas'), {
-                    type: "bar",
-                    data: {
-                        labels: maquinas.map(m => m.replace("Maquina_", "M ")),
-                        datasets: [{ label: "Minutos Parados", data: Object.values(paradaMaquina), backgroundColor: 'rgba(239, 68, 68, 0.8)', borderRadius: 6 }]
-                    },
-                    options: { ...commonOptions, plugins: { title: { display: true, text: 'Tempo Parado por Máquina' }, legend: { display: false } } }
-                });
-
-                // 5. Gráfico: Motivos de Parada
-                instanciasGraficos.motivos = new Chart(document.getElementById('graficoMotivosParada'), {
-                    type: "pie",
-                    data: {
-                        labels: Object.keys(motivosParadaTotal),
-                        datasets: [{ data: Object.values(motivosParadaTotal), backgroundColor: ['#ef4444', '#f97316', '#f59e0b', '#64748b', '#8b5cf6'], borderWidth: 1, borderColor: '#fff' }]
-                    },
-                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right' }, title: { display: true, text: 'Motivos de Parada (Minutos)' } } }
-                });
-
-                // 6. Gráfico: Participação por Máquina
-                instanciasGraficos.ranking = new Chart(document.getElementById('graficoRanking'), {
-                    type: "doughnut",
-                    data: {
-                        labels: maquinas.map(m => m.replace("Maquina_", "M ")),
-                        datasets: [{ data: Object.values(prodMaquina), backgroundColor: paletaCores, borderWidth: 0 }]
-                    },
-                    options: { responsive: true, maintainAspectRatio: false, cutout: '60%', plugins: { legend: { position: 'right' }, title: { display: true, text: 'Participação Total %' } } }
-                });
+                instanciasGraficos.hora = new Chart(document.getElementById('graficoHora'), { type: "line", data: { labels: horasLabels, datasets: [{ label: "Peças Produzidas", data: horasDados, borderColor: '#198754', backgroundColor: 'rgba(25, 135, 84, 0.2)', borderWidth: 2, fill: true, tension: 0.3, pointBackgroundColor: '#198754' }] }, options: { ...commonOptions, plugins: { title: { display: true, text: (turnoEscolhido === '1' ? 'Curva de Produção (07:00 às 17:00)' : 'Curva de Produção (24h)') }, legend: { display: false } } } });
+                instanciasGraficos.pecas = new Chart(document.getElementById('graficoPecas'), { type: "doughnut", data: { labels: Object.keys(pecasTotalGeral), datasets: [{ data: Object.values(pecasTotalGeral), backgroundColor: paletaCores, borderWidth: 0 }] }, options: { responsive: true, maintainAspectRatio: false, cutout: '50%', plugins: { legend: { position: 'right' }, title: { display: true, text: 'Mix de Produção (Peças)' } } } });
+                instanciasGraficos.paradas = new Chart(document.getElementById('graficoParadas'), { type: "bar", data: { labels: maquinas.map(m => m.replace("Maquina_", "M ")), datasets: [{ label: "Minutos Parados", data: Object.values(paradaMaquina), backgroundColor: 'rgba(239, 68, 68, 0.8)', borderRadius: 6 }] }, options: { ...commonOptions, plugins: { title: { display: true, text: 'Tempo Parado por Máquina' }, legend: { display: false } } } });
+                instanciasGraficos.motivos = new Chart(document.getElementById('graficoMotivosParada'), { type: "pie", data: { labels: Object.keys(motivosParadaTotal), datasets: [{ data: Object.values(motivosParadaTotal), backgroundColor: ['#ef4444', '#f97316', '#f59e0b', '#64748b', '#8b5cf6'], borderWidth: 1, borderColor: '#fff' }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right' }, title: { display: true, text: 'Motivos de Parada (Minutos)' } } } });
+                instanciasGraficos.ranking = new Chart(document.getElementById('graficoRanking'), { type: "doughnut", data: { labels: maquinas.map(m => m.replace("Maquina_", "M ")), datasets: [{ data: Object.values(prodMaquina), backgroundColor: paletaCores, borderWidth: 0 }] }, options: { responsive: true, maintainAspectRatio: false, cutout: '60%', plugins: { legend: { position: 'right' }, title: { display: true, text: 'Participação Total %' } } } });
 
             } catch (error) {
                 console.error("Erro ao carregar dados do Firebase:", error);
@@ -777,8 +945,6 @@
             }
         }
 
-        // ------------------ INICIALIZAÇÃO E EVENTOS ------------------
-
         const hoje = new Date().toISOString().split("T")[0];
         document.getElementById("filtroData").value = hoje;
 
@@ -787,9 +953,7 @@
             const turnoSelecionado = document.getElementById("filtroTurno").value;
             if (dataSelecionada) {
                 carregarDados(dataSelecionada, turnoSelecionado);
-            } else {
-                alert("Por favor, selecione uma data válida.");
-            }
+            } else alert("Por favor, selecione uma data válida.");
         });
 
         carregarDados(hoje, "todos");
