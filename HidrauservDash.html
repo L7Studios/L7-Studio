@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard PCP AMC | Controle de Produção</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        :root {
+            --bg-color: #f1f5f9;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --primary: #0b4a8f;
+            --primary-hover: #08386e;
+            --success: #198754;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --border: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 20px 30px;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--border);
+        }
+
+            header h1 {
+                font-size: 24px;
+                font-weight: 700;
+                color: var(--primary);
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+
+        .logo-container img {
+            max-height: 40px;
+            margin-right: 15px;
+            vertical-align: middle;
+        }
+
+        .datetime {
+            text-align: right;
+            font-size: 14px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        /* Filtro de Data e Turno */
+        .filter-section {
+            background: var(--card-bg);
+            padding: 15px 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+            .filter-section label {
+                font-weight: 600;
+                color: var(--text-main);
+                font-size: 14px;
+            }
+
+            .filter-section input[type="date"],
+            .filter-section select {
+                padding: 8px 12px;
+                border: 1px solid var(--border);
+                border-radius: 6px;
+                font-family: inherit;
+                color: var(--text-main);
+                outline: none;
+                font-size: 14px;
+                background-color: #fff;
+            }
+
+            .filter-section button {
+                background: var(--primary);
+                color: white;
+                border: none;
+                padding: 9px 18px;
+                border-radius: 6px;
+                cursor: pointer;
+                font-weight: 600;
+                transition: background 0.3s;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                font-size: 14px;
+                margin-left: auto; /* Empurra o botão para a direita */
+            }
+
+                .filter-section button:hover {
+                    background: var(--primary-hover);
+                }
+
+        /* KPI Grid */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .kpi-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: transform 0.2s ease;
+            border-left: 5px solid var(--primary);
+        }
+
+            .kpi-card:hover {
+                transform: translateY(-3px);
+            }
+
+            .kpi-card.danger {
+                border-left-color: var(--danger);
+            }
+
+            .kpi-card.success {
+                border-left-color: var(--success);
+            }
+
+            .kpi-card.warning {
+                border-left-color: var(--warning);
+            }
+
+        .kpi-info h3 {
+            font-size: 13px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .kpi-info .numero {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .kpi-icon {
+            font-size: 32px;
+            color: var(--border);
+            opacity: 0.5;
+        }
+
+        .kpi-card.danger .kpi-icon {
+            color: var(--danger);
+            opacity: 0.2;
+        }
+
+        .kpi-card.success .kpi-icon {
+            color: var(--success);
+            opacity: 0.2;
+        }
+
+        .kpi-card.primary .kpi-icon {
+            color: var(--primary);
+            opacity: 0.2;
+        }
+
+        /* Sections */
+        .section {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section h2 {
+            font-size: 18px;
+            color: var(--text-main);
+            font-weight: 600;
+            border-left: 4px solid var(--primary);
+            padding-left: 10px;
+        }
+
+        /* Charts */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 25px;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 15px;
+            background: #fafafa;
+        }
+
+        /* Table */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            white-space: nowrap;
+        }
+
+        th, td {
+            padding: 14px 20px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background: #f8fafc;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+        }
+
+        tbody tr:hover {
+            background-color: #f1f5f9;
+        }
+
+        td {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .pecas-list {
+            font-size: 12px;
+            color: var(--text-muted);
+            background: #e2e8f0;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin-right: 5px;
+            display: inline-block;
+            margin-bottom: 4px;
+        }
+
+        /* Status Badges */
+        .badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            text-align: center;
+            display: inline-block;
+        }
+
+            .badge.bg-success {
+                background: #d1fae5;
+                color: #065f46;
+            }
+
+            .badge.bg-warning {
+                background: #fef3c7;
+                color: #92400e;
+            }
+
+            .badge.bg-danger {
+                background: #fee2e2;
+                color: #991b1b;
+            }
+
+        /* Loading */
+        #loading {
+            text-align: center;
+            padding: 20px;
+            font-size: 18px;
+            color: var(--primary);
+            font-weight: bold;
+            display: none;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>
+            <div class="logo-container">
+                <img src="https://amchidraulica.com.br/wp/wp-content/uploads/2025/04/1-2.webp" alt="Logo AMC">
+            </div>
+            Dashboard PCP
+        </h1>
+        <div class="datetime">
+            <div id="dataAtual">Carregando data...</div>
+            <div id="horaAtual" style="font-size: 18px; color: var(--primary);">00:00:00</div>
+        </div>
+    </header>
+
+    <div class="filter-section">
+        <label for="filtroData">Data:</label>
+        <input type="date" id="filtroData">
+
+        <label for="filtroTurno" style="margin-left: 10px;">Turno:</label>
+        <select id="filtroTurno">
+            <option value="todos">Todos os Turnos</option>
+            <option value="1">1º Turno (07:00 às 17:00)</option>
+            <option value="2">2º Turno</option>
+            <option value="3">3º Turno</option>
+        </select>
+
+        <button id="btnFiltrar"><i class="fa-solid fa-filter"></i> Aplicar Filtros</button>
+    </div>
+
+    <div id="loading"><i class="fa-solid fa-spinner fa-spin"></i> Processando dados...</div>
+
+    <div class="kpi-grid" id="kpi-container">
+        <div class="kpi-card primary">
+            <div class="kpi-info">
+                <h3>Produção Total</h3>
+                <div class="numero" id="prodTotal">0</div>
+            </div>
+            <i class="fa-solid fa-boxes-stacked kpi-icon"></i>
+        </div>
+
+        <div class="kpi-card danger">
+            <div class="kpi-info">
+                <h3>Tempo Parado (Min)</h3>
+                <div class="numero" id="tempoParado">0</div>
+            </div>
+            <i class="fa-solid fa-clock-rotate-left kpi-icon"></i>
+        </div>
+
+        <div class="kpi-card success">
+            <div class="kpi-info">
+                <h3>Eficiência OEE</h3>
+                <div class="numero" id="eficiencia">0%</div>
+            </div>
+            <i class="fa-solid fa-chart-line kpi-icon"></i>
+        </div>
+
+        <div class="kpi-card primary">
+            <div class="kpi-info">
+                <h3>Máquinas Ativas</h3>
+                <div class="numero" id="maquinasAtivas">0</div>
+            </div>
+            <i class="fa-solid fa-gears kpi-icon"></i>
+        </div>
+
+        <div class="kpi-card primary">
+            <div class="kpi-info">
+                <h3>Prod. Média/Máquina</h3>
+                <div class="numero" id="mediaProd">0</div>
+            </div>
+            <i class="fa-solid fa-calculator kpi-icon"></i>
+        </div>
+
+        <div class="kpi-card danger">
+            <div class="kpi-info">
+                <h3>Parada Média (Min)</h3>
+                <div class="numero" id="mediaParada">0</div>
+            </div>
+            <i class="fa-solid fa-stopwatch kpi-icon"></i>
+        </div>
+
+        <div class="kpi-card warning">
+            <div class="kpi-info">
+                <h3>Produção por Hora</h3>
+                <div class="numero" id="prodHora">0</div>
+            </div>
+            <i class="fa-solid fa-gauge-high kpi-icon"></i>
+        </div>
+
+        <div class="kpi-card primary">
+            <div class="kpi-info">
+                <h3>Relatórios Emitidos</h3>
+                <div class="numero" id="relatorios">0</div>
+            </div>
+            <i class="fa-solid fa-file-signature kpi-icon"></i>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-header">
+            <h2>Análise Gráfica de Produção e Paradas</h2>
+        </div>
+        <div class="charts-grid">
+            <div class="chart-container"><canvas id="graficoProducao"></canvas></div>
+            <div class="chart-container"><canvas id="graficoHora"></canvas></div>
+            <div class="chart-container"><canvas id="graficoPecas"></canvas></div>
+            <div class="chart-container"><canvas id="graficoRanking"></canvas></div>
+            <div class="chart-container"><canvas id="graficoParadas"></canvas></div>
+            <div class="chart-container"><canvas id="graficoMotivosParada"></canvas></div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-header">
+            <h2>Resumo Operacional por Máquina</h2>
+        </div>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Máquina</th>
+                        <th>Produção Total</th>
+                        <th>Peças Fabricadas (Qtd)</th>
+                        <th>Tempo Parado</th>
+                        <th>Relatórios</th>
+                        <th>Eficiência (%)</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="tabela">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script type="module">
+        // ------------------ RELÓGIO ------------------
+        function atualizarRelogio() {
+            const agora = new Date();
+            document.getElementById('dataAtual').innerText = agora.toLocaleDateString('pt-BR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            document.getElementById('horaAtual').innerText = agora.toLocaleTimeString('pt-BR');
+        }
+        setInterval(atualizarRelogio, 1000);
+        atualizarRelogio();
+
+        // ------------------ FIREBASE ------------------
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCrdE0G59vmnI23t_1aPJizNXLcZ5MH6Lk",
+            authDomain: "chadecozinhaesterleonardo.firebaseapp.com",
+            databaseURL: "https://chadecozinhaesterleonardo-default-rtdb.firebaseio.com",
+            projectId: "chadecozinhaesterleonardo",
+            storageBucket: "chadecozinhaesterleonardo.firebasestorage.app",
+            messagingSenderId: "926086485235",
+            appId: "1:926086485235:web:923a115e3a430b0fe4d386"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // ------------------ ESTADO GLOBAL DOS GRÁFICOS ------------------
+        let instanciasGraficos = {};
+
+        function limparGraficosAnteriores() {
+            Object.values(instanciasGraficos).forEach(chart => {
+                if (chart) chart.destroy();
+            });
+            instanciasGraficos = {};
+        }
+
+        // ------------------ FUNÇÃO PRINCIPAL DE BUSCA ------------------
+        async function carregarDados(dataEscolhida, turnoEscolhido) {
+            document.getElementById("loading").style.display = "block";
+
+            try {
+                const snap = await get(ref(db, "relatorios_pcp/" + dataEscolhida));
+
+                let prodTotal = 0;
+                let paradaTotal = 0;
+                let relatorios = 0;
+                let prodHoraArray = new Array(24).fill(0);
+
+                const prodMaquina = {};
+                const paradaMaquina = {};
+                const relMaquina = {};
+
+                const pecasTotalGeral = {};
+                const pecasPorMaquina = {};
+                const motivosParadaTotal = {};
+
+                if (snap.exists()) {
+                    const dados = snap.val();
+
+                    for (const maquina in dados) {
+                        let prod = 0;
+                        let parada = 0;
+                        let rel = 0;
+                        pecasPorMaquina[maquina] = {};
+
+                        const registros = dados[maquina];
+
+                        for (const id in registros) {
+                            const r = registros[id];
+
+                            // FILTRO DE TURNO
+                            if (turnoEscolhido !== 'todos' && r.turno !== turnoEscolhido) {
+                                continue;
+                            }
+
+                            relatorios++;
+                            rel++;
+
+                            // Lógica de Produção
+                            if (r.producao) {
+                                r.producao.forEach(p => {
+                                    const qtd = Number(p.quantidade);
+                                    prod += qtd;
+
+                                    const nomePeca = p.peca || "Não Informada";
+                                    pecasTotalGeral[nomePeca] = (pecasTotalGeral[nomePeca] || 0) + qtd;
+                                    pecasPorMaquina[maquina][nomePeca] = (pecasPorMaquina[maquina][nomePeca] || 0) + qtd;
+
+                                    if (p.horario) {
+                                        const hora = parseInt(p.horario.split(":")[0]);
+                                        if (!isNaN(hora)) {
+                                            prodHoraArray[hora] += qtd;
+                                        }
+                                    }
+                                });
+                            }
+
+                            // Lógica de Paradas
+                            if (r.paradas) {
+                                r.paradas.forEach(p => {
+                                    if (p.inicio && p.fim) {
+                                        const i = p.inicio.split(":");
+                                        const f = p.fim.split(":");
+                                        const mi = parseInt(i[0]) * 60 + parseInt(i[1]);
+                                        const mf = parseInt(f[0]) * 60 + parseInt(f[1]);
+
+                                        let diferenca = mf - mi;
+                                        if (diferenca < 0) diferenca += (24 * 60);
+
+                                        parada += diferenca;
+
+                                        const motivo = p.motivo || "Outros";
+                                        motivosParadaTotal[motivo] = (motivosParadaTotal[motivo] || 0) + diferenca;
+                                    }
+                                });
+                            }
+                        }
+
+                        // Só armazena a máquina no array final se ela produziu algo ou teve parada no turno filtrado
+                        if (prod > 0 || parada > 0 || rel > 0) {
+                            prodMaquina[maquina] = prod;
+                            paradaMaquina[maquina] = parada;
+                            relMaquina[maquina] = rel;
+
+                            prodTotal += prod;
+                            paradaTotal += parada;
+                        }
+                    }
+                }
+
+                const maquinas = Object.keys(prodMaquina);
+
+                // --- Ajuste do Tempo de Turno para o Cálculo de Eficiência ---
+                // Se o turno 1 for selecionado, sabemos que ele tem 10h de duração (600 minutos)
+                // Caso contrário (todos ou turnos não informados), usamos um padrão de 8h (480 minutos)
+                const minutosPorTurno = (turnoEscolhido === '1') ? 600 : 480;
+
+                // Atualização dos KPIs
+                document.getElementById("prodTotal").innerText = prodTotal.toLocaleString('pt-BR');
+                document.getElementById("tempoParado").innerText = paradaTotal.toLocaleString('pt-BR');
+                document.getElementById("maquinasAtivas").innerText = maquinas.length;
+                document.getElementById("relatorios").innerText = relatorios;
+
+                document.getElementById("mediaProd").innerText = Math.round(prodTotal / (maquinas.length || 1)).toLocaleString('pt-BR');
+                document.getElementById("mediaParada").innerText = Math.round(paradaTotal / (maquinas.length || 1)).toLocaleString('pt-BR');
+
+                const tempoDisponivelTotal = (maquinas.length || 1) * minutosPorTurno;
+                const eficiencia = maquinas.length === 0 ? 0 : Math.max(0, 100 - (paradaTotal / tempoDisponivelTotal) * 100);
+
+                const elementEficiencia = document.getElementById("eficiencia");
+                elementEficiencia.innerText = Math.round(eficiencia) + "%";
+
+                if (eficiencia >= 85) elementEficiencia.style.color = 'var(--success)';
+                else if (eficiencia >= 70 || maquinas.length === 0) elementEficiencia.style.color = 'var(--warning)';
+                else elementEficiencia.style.color = 'var(--danger)';
+
+                // Produção por hora baseada na duração do turno focado
+                const horasNoTurno = (turnoEscolhido === '1') ? 10 : 8;
+                document.getElementById("prodHora").innerText = Math.round(prodTotal / horasNoTurno).toLocaleString('pt-BR');
+
+                // Preenchimento da Tabela
+                const tabela = document.getElementById("tabela");
+                tabela.innerHTML = "";
+
+                if (maquinas.length === 0) {
+                    tabela.innerHTML = `<tr><td colspan="7" style="text-align:center; padding: 30px; color: var(--text-muted);">Nenhum lançamento encontrado para os filtros selecionados.</td></tr>`;
+                } else {
+                    maquinas.forEach(m => {
+                        const nomeFormatado = m.replace("Maquina_", "Máquina ");
+                        const eficienciaM = Math.max(0, 100 - (paradaMaquina[m] / minutosPorTurno) * 100);
+
+                        let statusClass = 'bg-danger';
+                        let statusText = 'Crítico';
+                        if (eficienciaM >= 85) { statusClass = 'bg-success'; statusText = 'Excelente'; }
+                        else if (eficienciaM >= 70) { statusClass = 'bg-warning'; statusText = 'Atenção'; }
+
+                        let pecasHTML = "";
+                        if (Object.keys(pecasPorMaquina[m]).length > 0) {
+                            for (const [peca, qtd] of Object.entries(pecasPorMaquina[m])) {
+                                pecasHTML += `<span class="pecas-list"><strong>${peca}:</strong> ${qtd}</span>`;
+                            }
+                        } else {
+                            pecasHTML = `<span class="pecas-list" style="background:transparent">-</span>`;
+                        }
+
+                        tabela.innerHTML += `
+                                <tr>
+                                    <td><strong><i class="fa-solid fa-microchip" style="color:var(--text-muted); margin-right:5px;"></i> ${nomeFormatado}</strong></td>
+                                    <td>${prodMaquina[m].toLocaleString('pt-BR')} peças</td>
+                                    <td style="max-width: 250px; white-space: normal;">${pecasHTML}</td>
+                                    <td style="color: var(--danger); font-weight: bold;">${paradaMaquina[m]} min</td>
+                                    <td>${relMaquina[m]}</td>
+                                    <td>
+                                        <div style="display:flex; align-items:center; gap:10px;">
+                                            <progress value="${eficienciaM}" max="100" style="width: 60px;"></progress>
+                                            ${Math.round(eficienciaM)}%
+                                        </div>
+                                    </td>
+                                    <td><span class="badge ${statusClass}">${statusText}</span></td>
+                                </tr>
+                            `;
+                    });
+                }
+
+                // Limpa gráficos antigos
+                limparGraficosAnteriores();
+
+                if (maquinas.length === 0) {
+                    document.getElementById("loading").style.display = "none";
+                    return;
+                }
+
+                // Configuração Universal dos Gráficos
+                Chart.defaults.font.family = 'Inter';
+                Chart.defaults.color = '#64748b';
+                const commonOptions = { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } } };
+                const paletaCores = ['#0b4a8f', '#198754', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4', '#f97316', '#64748b'];
+
+                // 1. Gráfico: Produção por Máquina
+                instanciasGraficos.prod = new Chart(document.getElementById('graficoProducao'), {
+                    type: "bar",
+                    data: {
+                        labels: maquinas.map(m => m.replace("Maquina_", "M ")),
+                        datasets: [{ label: "Produção (Peças)", data: Object.values(prodMaquina), backgroundColor: 'rgba(11, 74, 143, 0.8)', borderRadius: 6 }]
+                    },
+                    options: { ...commonOptions, plugins: { title: { display: true, text: 'Produção por Máquina' }, legend: { display: false } } }
+                });
+
+                // 2. Gráfico Inteligente: Produção por Hora
+                // Se for o Turno 1, filtramos o gráfico apenas para as 07h até as 17h. Se não, exibe tudo.
+                let horasLabels = [];
+                let horasDados = [];
+
+                if (turnoEscolhido === '1') {
+                    // Janela de 7h as 17h (totalizando 11 pontos no gráfico: 7,8,9,10,11,12,13,14,15,16,17)
+                    horasLabels = [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17].map(h => `${h}h`);
+                    horasDados = prodHoraArray.slice(7, 18);
+                } else {
+                    // 24 horas
+                    horasLabels = [...Array(24).keys()].map(h => `${h}h`);
+                    horasDados = prodHoraArray;
+                }
+
+                instanciasGraficos.hora = new Chart(document.getElementById('graficoHora'), {
+                    type: "line",
+                    data: {
+                        labels: horasLabels,
+                        datasets: [{ label: "Peças Produzidas", data: horasDados, borderColor: '#198754', backgroundColor: 'rgba(25, 135, 84, 0.2)', borderWidth: 2, fill: true, tension: 0.3, pointBackgroundColor: '#198754' }]
+                    },
+                    options: { ...commonOptions, plugins: { title: { display: true, text: (turnoEscolhido === '1' ? 'Curva de Produção (07:00 às 17:00)' : 'Curva de Produção (24h)') }, legend: { display: false } } }
+                });
+
+                // 3. Gráfico: Volume de Produção por Peça
+                instanciasGraficos.pecas = new Chart(document.getElementById('graficoPecas'), {
+                    type: "doughnut",
+                    data: {
+                        labels: Object.keys(pecasTotalGeral),
+                        datasets: [{ data: Object.values(pecasTotalGeral), backgroundColor: paletaCores, borderWidth: 0 }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, cutout: '50%', plugins: { legend: { position: 'right' }, title: { display: true, text: 'Mix de Produção (Peças)' } } }
+                });
+
+                // 4. Gráfico: Paradas por Máquina
+                instanciasGraficos.paradas = new Chart(document.getElementById('graficoParadas'), {
+                    type: "bar",
+                    data: {
+                        labels: maquinas.map(m => m.replace("Maquina_", "M ")),
+                        datasets: [{ label: "Minutos Parados", data: Object.values(paradaMaquina), backgroundColor: 'rgba(239, 68, 68, 0.8)', borderRadius: 6 }]
+                    },
+                    options: { ...commonOptions, plugins: { title: { display: true, text: 'Tempo Parado por Máquina' }, legend: { display: false } } }
+                });
+
+                // 5. Gráfico: Motivos de Parada
+                instanciasGraficos.motivos = new Chart(document.getElementById('graficoMotivosParada'), {
+                    type: "pie",
+                    data: {
+                        labels: Object.keys(motivosParadaTotal),
+                        datasets: [{ data: Object.values(motivosParadaTotal), backgroundColor: ['#ef4444', '#f97316', '#f59e0b', '#64748b', '#8b5cf6'], borderWidth: 1, borderColor: '#fff' }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right' }, title: { display: true, text: 'Motivos de Parada (Minutos)' } } }
+                });
+
+                // 6. Gráfico: Participação por Máquina
+                instanciasGraficos.ranking = new Chart(document.getElementById('graficoRanking'), {
+                    type: "doughnut",
+                    data: {
+                        labels: maquinas.map(m => m.replace("Maquina_", "M ")),
+                        datasets: [{ data: Object.values(prodMaquina), backgroundColor: paletaCores, borderWidth: 0 }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, cutout: '60%', plugins: { legend: { position: 'right' }, title: { display: true, text: 'Participação Total %' } } }
+                });
+
+            } catch (error) {
+                console.error("Erro ao carregar dados do Firebase:", error);
+                document.getElementById("loading").innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Erro ao conectar. Verifique a aba Console.';
+                document.getElementById("loading").style.color = "var(--danger)";
+            } finally {
+                if (document.getElementById("loading").innerHTML.indexOf('Erro') === -1) {
+                    document.getElementById("loading").style.display = "none";
+                }
+            }
+        }
+
+        // ------------------ INICIALIZAÇÃO E EVENTOS ------------------
+
+        // Define a data de hoje no campo de input ao abrir a tela
+        const hoje = new Date().toISOString().split("T")[0];
+        document.getElementById("filtroData").value = hoje;
+
+        // Adiciona evento de clique no botão Filtrar
+        document.getElementById("btnFiltrar").addEventListener("click", () => {
+            const dataSelecionada = document.getElementById("filtroData").value;
+            const turnoSelecionado = document.getElementById("filtroTurno").value;
+            if (dataSelecionada) {
+                carregarDados(dataSelecionada, turnoSelecionado);
+            } else {
+                alert("Por favor, selecione uma data válida.");
+            }
+        });
+
+        // Carrega os dados do dia atual com todos os turnos assim que a página é acessada
+        carregarDados(hoje, "todos");
+
+    </script>
+</body>
+</html>
