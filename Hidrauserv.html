@@ -8,6 +8,10 @@
     <link rel="icon" href="https://amchidraulica.com.br/wp/wp-content/uploads/2025/04/1-2.webp" type="image/webp">
 
     <style>
+        /* OTIMIZAÇÃO: Box-sizing para evitar que elementos quebrem a largura da tela */
+        * {
+            box-sizing: border-box;
+        }
 
         :root {
             --primary-color: #ec3237;
@@ -55,7 +59,8 @@
 
         .machines-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit,minmax(250px,1fr));
+            /* OTIMIZAÇÃO: Reduzido o minmax para caber melhor 2 ou 1 coluna no mobile */
+            grid-template-columns: repeat(auto-fit,minmax(140px,1fr));
             gap: 1.5rem;
         }
 
@@ -63,12 +68,13 @@
             background: white;
             border: 2px solid var(--primary-color);
             border-radius: var(--border-radius);
-            padding: 2rem;
+            padding: 2rem 1rem; /* OTIMIZAÇÃO: Ajuste de padding para não estourar lateralmente */
             font-size: 1.2rem;
             font-weight: bold;
             color: var(--primary-color);
             cursor: pointer;
             transition: .3s;
+            min-height: 80px; /* OTIMIZAÇÃO: Garantir boa área de toque */
         }
 
             .machine-btn:hover {
@@ -86,6 +92,7 @@
             background: rgba(0,0,0,.6);
             justify-content: center;
             align-items: center;
+            z-index: 1000; /* OTIMIZAÇÃO: Garantir que fique acima de tudo */
         }
 
         .modal-content {
@@ -101,12 +108,14 @@
 
         .close-modal {
             position: absolute;
-            right: 20px;
-            top: 10px;
-            font-size: 1.5rem;
+            right: 15px;
+            top: 15px;
+            font-size: 2rem; /* OTIMIZAÇÃO: Ícone um pouco maior */
             border: none;
             background: none;
             cursor: pointer;
+            line-height: 1;
+            padding: 5px 15px; /* OTIMIZAÇÃO: Maior área de toque para os dedos */
         }
 
         .top-fields {
@@ -114,6 +123,7 @@
             grid-template-columns: repeat(auto-fit,minmax(200px,1fr));
             gap: 1rem;
             margin-bottom: 2rem;
+            margin-top: 1rem; /* OTIMIZAÇÃO: Espaço extra por causa do botão X */
         }
 
         .form-group label {
@@ -130,6 +140,8 @@
             padding: .6rem;
             border: 1px solid #ccc;
             border-radius: 4px;
+            font-size: 16px; /* OTIMIZAÇÃO: 16px evita o auto-zoom em iPhones */
+            min-height: 44px; /* OTIMIZAÇÃO: Altura mínima recomendada para toque no celular */
         }
 
         .panels-container {
@@ -142,6 +154,7 @@
             background: #f8fafc;
             padding: 1.5rem;
             border-radius: var(--border-radius);
+            width: 100%; /* OTIMIZAÇÃO: Evita transbordo */
         }
 
         .panel-header {
@@ -157,13 +170,22 @@
         }
 
         .btn-add {
-            width: 38px;
-            height: 38px;
+            width: 44px; /* OTIMIZAÇÃO: Área de toque mais larga */
+            height: 44px; /* OTIMIZAÇÃO: Área de toque mais alta */
             border: none;
+            border-radius: 4px; /* OTIMIZAÇÃO: Arredondado para design consistente */
             background: var(--primary-color);
             color: white;
             font-size: 1.4rem;
             cursor: pointer;
+            flex-shrink: 0; /* OTIMIZAÇÃO: Impede o botão de ser esmagado */
+        }
+
+        /* OTIMIZAÇÃO: Envolver a tabela visualmente para mobile */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
         }
 
         table {
@@ -171,11 +193,13 @@
             border-collapse: collapse;
             font-size: .85rem;
             background: white;
+            min-width: 300px; /* OTIMIZAÇÃO: Impede a tabela de amassar as colunas */
         }
 
         th, td {
             border: 1px solid #cbd5e1;
             padding: 8px;
+            text-align: left; /* OTIMIZAÇÃO: Melhor legibilidade */
         }
 
         th {
@@ -188,11 +212,64 @@
             margin-top: 2rem;
             padding: 1rem;
             border: none;
+            border-radius: var(--border-radius); /* OTIMIZAÇÃO: Arredondado */
             background: var(--success);
             color: white;
             font-size: 1.2rem;
             font-weight: bold;
             cursor: pointer;
+            min-height: 54px; /* OTIMIZAÇÃO: Botão principal bem grande no mobile */
+        }
+
+        /* ========================================= */
+        /* MEDIA QUERIES PARA DISPOSITIVOS MÓVEIS    */
+        /* ========================================= */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+                padding: 1rem;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            .modal-content {
+                width: 100%;
+                height: 100%;
+                max-height: 100vh;
+                border-radius: 0; /* Parece um app abrindo em tela cheia */
+                padding: 1.5rem 1rem;
+            }
+
+            .panels-container {
+                grid-template-columns: 1fr; /* Coloca os painéis um embaixo do outro */
+                gap: 1.5rem;
+            }
+
+            .top-fields {
+                grid-template-columns: 1fr; /* Campos do topo um embaixo do outro */
+                gap: 0.8rem;
+            }
+
+            .input-row {
+                flex-wrap: wrap; /* Permite que os inputs desçam se não couberem */
+            }
+
+                .input-row .form-group {
+                    flex: 1 1 100%; /* Força os inputs a ocuparem a largura total na linha */
+                }
+
+            .btn-add {
+                width: 100%; /* O botão de + vira um botão de largura total no celular */
+                margin-top: 5px;
+            }
+
+            table th, table td {
+                white-space: nowrap; /* Evita quebra de linha estranha no celular, permitindo o scroll */
+            }
         }
     </style>
 </head>
@@ -201,7 +278,7 @@
 
     <header>
         <div class="logo-container">
-            <img src="https://amchidraulica.com.br/wp/wp-content/uploads/2025/04/1-2.webp">
+            <img src="https://amchidraulica.com.br/wp/wp-content/uploads/2025/04/1-2.webp" alt="Logo AMC Hidráulica">
         </div>
         <strong>Sistema de PCP</strong>
     </header>
@@ -281,20 +358,19 @@
 
                     </div>
 
-                    <table>
-
-                        <thead>
-                            <tr>
-                                <th>Peça</th>
-                                <th>Qtd</th>
-                                <th>Hora</th>
-                                <th>Lote</th>
-                            </tr>
-                        </thead>
-
-                        <tbody id="tbody-producao"></tbody>
-
-                    </table>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Peça</th>
+                                    <th>Qtd</th>
+                                    <th>Hora</th>
+                                    <th>Lote</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-producao"></tbody>
+                        </table>
+                    </div>
 
                 </div>
 
@@ -328,19 +404,18 @@
 
                     </div>
 
-                    <table>
-
-                        <thead>
-                            <tr>
-                                <th>Motivo</th>
-                                <th>Início</th>
-                                <th>Fim</th>
-                            </tr>
-                        </thead>
-
-                        <tbody id="tbody-parada"></tbody>
-
-                    </table>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Motivo</th>
+                                    <th>Início</th>
+                                    <th>Fim</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-parada"></tbody>
+                        </table>
+                    </div>
 
                 </div>
 
@@ -348,7 +423,7 @@
 
             <div class="form-group" style="margin-top:20px">
                 <label>Observações</label>
-<textarea id="observacoes"></textarea>
+                <textarea id="observacoes"></textarea>
             </div>
 
             <button class="submit-btn" id="btn-enviar" onclick="prepararEnvio()">Enviar Relatório</button>
