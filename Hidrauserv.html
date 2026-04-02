@@ -204,6 +204,7 @@
             border-collapse: collapse;
             font-size: 0.85rem;
             background: white;
+            margin-top: 1rem;
         }
 
             table th, table td {
@@ -267,6 +268,14 @@
         <h1>Controle de Produção</h1>
 
         <div class="machines-grid" id="machines-container">
+            <button class="machine-btn" onclick="abrirModal(1)">Máquina 1</button>
+            <button class="machine-btn" onclick="abrirModal(2)">Máquina 2</button>
+            <button class="machine-btn" onclick="abrirModal(3)">Máquina 3</button>
+            <button class="machine-btn" onclick="abrirModal(4)">Máquina 4</button>
+            <button class="machine-btn" onclick="abrirModal(5)">Máquina 5</button>
+            <button class="machine-btn" onclick="abrirModal(6)">Máquina 6</button>
+            <button class="machine-btn" onclick="abrirModal(7)">Máquina 7</button>
+            <button class="machine-btn" onclick="abrirModal(8)">Máquina 8</button>
         </div>
     </div>
 
@@ -378,63 +387,37 @@
                 <textarea id="observacoes" rows="2" placeholder="Opcional..."></textarea>
             </div>
 
-            <button class="submit-btn" onclick="enviarRelatorio()">Enviar Relatório</button>
+            <button class="submit-btn" onclick="prepararEnvio()">Enviar Relatório</button>
         </div>
     </div>
 
-    <script type="module">
-        // IMPORTANTE: Insira aqui a configuração do seu Firebase v10+
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "SUA_API_KEY",
-            authDomain: "SEU_PROJETO.firebaseapp.com",
-            projectId: "SEU_PROJETO",
-            storageBucket: "SEU_PROJETO.appspot.com",
-            messagingSenderId: "SEU_SENDER_ID",
-            appId: "SEU_APP_ID"
-        };
-
-        // Inicializa Firebase
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
-        // Variáveis Globais de Estado
+    <script>
         let maquinaAtual = "";
         let listaProducao = [];
         let listaParada = [];
 
-        // Inicializa Botões das Máquinas na Tela Inicial
+        // Inicia a data de hoje ao carregar
         window.onload = () => {
-            const container = document.getElementById('machines-container');
-            for (let i = 1; i <= 8; i++) {
-                container.innerHTML += `<button class="machine-btn" onclick="abrirModal(${i})">Máquina ${i}</button>`;
-            }
-            // Seta a data de hoje por padrão
             document.getElementById('data-registro').valueAsDate = new Date();
         };
 
-        // Funções de Modal expostas ao escopo global
-        window.abrirModal = (numMaquina) => {
+        function abrirModal(numMaquina) {
             maquinaAtual = `Máquina ${numMaquina}`;
             document.getElementById('modal-title').innerText = `Lançamento - ${maquinaAtual}`;
             document.getElementById('modal').style.display = 'flex';
 
-            // Limpa as listas e formulários
             listaProducao = [];
             listaParada = [];
             document.getElementById('cod-operador').value = '';
             document.getElementById('observacoes').value = '';
             atualizarTabelas();
-        };
+        }
 
-        window.fecharModal = () => {
+        function fecharModal() {
             document.getElementById('modal').style.display = 'none';
-        };
+        }
 
-        // Funções de Adição nas Tabelas
-        window.addProducao = () => {
+        function addProducao() {
             const peca = document.getElementById('prod-peca').value;
             const qtd = document.getElementById('prod-qtd').value;
 
@@ -446,18 +429,12 @@
             const loteGerado = "LT-" + Math.floor(Math.random() * 90000 + 10000);
             const horaAtual = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
 
-            listaProducao.push({
-                peca: peca,
-                quantidade: parseInt(qtd),
-                horario: horaAtual,
-                lote: loteGerado
-            });
-
-            document.getElementById('prod-qtd').value = ''; // Limpa input
+            listaProducao.push({ peca, quantidade: parseInt(qtd), horario: horaAtual, lote: loteGerado });
+            document.getElementById('prod-qtd').value = '';
             atualizarTabelas();
-        };
+        }
 
-        window.addParada = () => {
+        function addParada() {
             const motivo = document.getElementById('parada-motivo').value;
             const inicio = document.getElementById('parada-inicio').value;
             const fim = document.getElementById('parada-fim').value;
@@ -467,18 +444,12 @@
                 return;
             }
 
-            listaParada.push({
-                motivo: motivo,
-                inicio: inicio,
-                fim: fim
-            });
-
+            listaParada.push({ motivo, inicio, fim });
             document.getElementById('parada-inicio').value = '';
             document.getElementById('parada-fim').value = '';
             atualizarTabelas();
-        };
+        }
 
-        // Renderização das Tabelas no HTML
         function atualizarTabelas() {
             const tbProd = document.getElementById('tbody-producao');
             const tbParada = document.getElementById('tbody-parada');
@@ -494,45 +465,81 @@
             });
         }
 
-        // Envio para o Firebase
-        window.enviarRelatorio = async () => {
-            const codOperador = document.getElementById('cod-operador').value;
-            const dataRegistro = document.getElementById('data-registro').value;
-            const turno = document.getElementById('turno').value;
-            const obs = document.getElementById('observacoes').value;
-
-            if (!codOperador.trim()) {
-                alert("O Código do Operador é obrigatório!");
-                return;
-            }
-
-            if (listaProducao.length === 0 && listaParada.length === 0) {
-                alert("Adicione pelo menos um registro de Produção ou Parada antes de enviar.");
-                return;
-            }
-
-            // Monta o objeto final
-            const relatorio = {
-                maquina: maquinaAtual,
-                operador: codOperador,
-                data: dataRegistro,
-                turno: turno,
-                observacoes: obs,
-                producao: listaProducao,
-                paradas: listaParada,
-                criadoEm: new Date().toISOString()
-            };
-
-            try {
-                // Altere 'relatorios_pcp' para o nome que desejar dar à sua coleção no Firestore
-                await addDoc(collection(db, "relatorios_pcp"), relatorio);
-                alert("Relatório enviado com sucesso!");
-                fecharModal();
-            } catch (error) {
-                console.error("Erro ao salvar documento: ", error);
-                alert("Erro ao enviar. Verifique o console ou as chaves do Firebase. \nDetalhe: " + error.message);
-            }
+        // Função vazia padrão que será sobrescrita pelo módulo Firebase
+        window.prepararEnvio = () => {
+            alert("Aguarde o carregamento do banco de dados...");
         };
+    </script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+        import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+        // IMPORTANTE: Coloque AQUI as chaves do seu projeto!
+        const firebaseConfig = {
+            apiKey: "SUA_API_KEY",
+            authDomain: "SEU_PROJETO.firebaseapp.com",
+            databaseURL: "https://SEU_PROJETO-default-rtdb.firebaseio.com",
+            projectId: "SEU_PROJETO",
+            storageBucket: "SEU_PROJETO.appspot.com",
+            messagingSenderId: "SEU_SENDER_ID",
+            appId: "SEU_APP_ID"
+        };
+
+        try {
+            const app = initializeApp(firebaseConfig);
+            const database = getDatabase(app);
+            console.log("Firebase Realtime Database conectado!");
+
+            window.prepararEnvio = function () {
+                const btn = document.querySelector('.submit-btn');
+                const codOperador = document.getElementById('cod-operador').value;
+                const dataRegistro = document.getElementById('data-registro').value;
+                const turno = document.getElementById('turno').value;
+                const obs = document.getElementById('observacoes').value;
+
+                if (codOperador.trim() === "") {
+                    alert("O Código do Operador é obrigatório!");
+                    return;
+                }
+
+                if (listaProducao.length === 0 && listaParada.length === 0) {
+                    alert("Adicione pelo menos um registro de Produção ou Parada antes de enviar.");
+                    return;
+                }
+
+                btn.disabled = true;
+                btn.innerText = "Enviando...";
+
+                const relatorio = {
+                    maquina: maquinaAtual,
+                    operador: codOperador,
+                    data: dataRegistro,
+                    turno: turno,
+                    observacoes: obs,
+                    producao: listaProducao || [],
+                    paradas: listaParada || [],
+                    criadoEm: new Date().toLocaleString()
+                };
+
+                // Envia os dados para a tabela "relatorios_pcp"
+                push(ref(database, "relatorios_pcp"), relatorio)
+                    .then(() => {
+                        alert("Relatório enviado com sucesso!");
+                        fecharModal();
+                    })
+                    .catch((error) => {
+                        console.error("Erro ao enviar:", error);
+                        alert("Erro ao enviar o relatório. Verifique o console.");
+                    })
+                    .finally(() => {
+                        btn.disabled = false;
+                        btn.innerText = "Enviar Relatório";
+                    });
+            };
+        } catch (e) {
+            console.error("Erro na inicialização do Firebase:", e);
+        }
     </script>
 </body>
 </html>
