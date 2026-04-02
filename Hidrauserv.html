@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PCP - AMC Hidráulica</title>
+    <style>
+        :root {
+            --primary-color: #0b4a8f; /* Azul escuro industrial */
+            --secondary-color: #f1f5f9;
+            --accent-color: #eab308;
+            --danger: #dc3545;
+            --success: #198754;
+            --text-color: #333;
+            --border-radius: 8px;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .logo-container img {
+            max-height: 50px;
+            background: white;
+            padding: 5px;
+            border-radius: 4px;
+        }
+
+        .container {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--primary-color);
+        }
+
+        .machines-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .machine-btn {
+            background-color: white;
+            border: 2px solid var(--primary-color);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+            .machine-btn:hover {
+                background-color: var(--primary-color);
+                color: white;
+                transform: translateY(-2px);
+            }
+
+        /* Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            width: 95%;
+            max-width: 1100px;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+            background: none;
+            border: none;
+        }
+
+        .modal-header {
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 1rem;
+        }
+
+        .top-fields {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 0.6rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+
+        .panels-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .panel {
+            background: #f8fafc;
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            border: 1px solid #e2e8f0;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+            .panel-header h3 {
+                margin: 0;
+                color: var(--primary-color);
+            }
+
+        .input-row {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            align-items: flex-end;
+        }
+
+            .input-row > div {
+                flex: 1;
+            }
+
+        .btn-add {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            width: 38px;
+            height: 38px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+        }
+
+            .btn-add:hover {
+                background-color: #08386e;
+            }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            background: white;
+        }
+
+            table th, table td {
+                border: 1px solid #cbd5e1;
+                padding: 8px;
+                text-align: left;
+            }
+
+            table th {
+                background-color: var(--primary-color);
+                color: white;
+            }
+
+        .submit-btn {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            background-color: var(--success);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 2rem;
+            transition: background 0.3s;
+        }
+
+            .submit-btn:hover {
+                background-color: #146c43;
+            }
+
+        @media (max-width: 768px) {
+            .panels-container {
+                grid-template-columns: 1fr;
+            }
+
+            .input-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .btn-add {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-container">
+            <img src="https://amchidraulica.com.br/wp-content/uploads/2023/01/logo.png" onerror="this.src='https://via.placeholder.com/200x50?text=AMC+Hidráulica'" alt="AMC Hidráulica Logo">
+        </div>
+        <div>
+            <strong>Sistema de PCP</strong>
+        </div>
+    </header>
+
+    <div class="container">
+        <h1>Controle de Produção</h1>
+
+        <div class="machines-grid" id="machines-container">
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="fecharModal()">&times;</button>
+
+            <div class="modal-header">
+                <h2 id="modal-title">Lançamento</h2>
+            </div>
+
+            <div class="top-fields">
+                <div class="form-group">
+                    <label>Código Operador *</label>
+                    <input type="text" id="cod-operador" placeholder="Ex: 0012">
+                </div>
+                <div class="form-group">
+                    <label>Data</label>
+                    <input type="date" id="data-registro">
+                </div>
+                <div class="form-group">
+                    <label>Turno</label>
+                    <select id="turno">
+                        <option value="1">1º Turno</option>
+                        <option value="2">2º Turno</option>
+                        <option value="3">3º Turno</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="panels-container">
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3>Produção</h3>
+                    </div>
+
+                    <div class="input-row">
+                        <div class="form-group">
+                            <label>Peça</label>
+                            <select id="prod-peca">
+                                <option value="Memmo">Memmo</option>
+                                <option value="Sugar">Sugar</option>
+                                <option value="Espiga">Espiga</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Qtd.</label>
+                            <input type="number" id="prod-qtd" min="1" placeholder="0">
+                        </div>
+                        <button class="btn-add" onclick="addProducao()">+</button>
+                    </div>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Peça</th>
+                                <th>Qtd</th>
+                                <th>Horário</th>
+                                <th>Lote</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-producao">
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3>Parada</h3>
+                    </div>
+
+                    <div class="input-row">
+                        <div class="form-group">
+                            <label>Motivo</label>
+                            <select id="parada-motivo">
+                                <option value="Troca de Ferramenta">Troca de Ferramenta</option>
+                                <option value="Falta de Material">Falta de Material</option>
+                                <option value="Manutenção da Maquina">Manutenção da Máquina</option>
+                                <option value="Banheiro">Banheiro</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Início</label>
+                            <input type="time" id="parada-inicio">
+                        </div>
+                        <div class="form-group">
+                            <label>Fim</label>
+                            <input type="time" id="parada-fim">
+                        </div>
+                        <button class="btn-add" onclick="addParada()">+</button>
+                    </div>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Motivo</th>
+                                <th>Início</th>
+                                <th>Fim</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-parada">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="form-group" style="margin-top: 2rem;">
+                <label>Observações do Turno</label>
+                <textarea id="observacoes" rows="2" placeholder="Opcional..."></textarea>
+            </div>
+
+            <button class="submit-btn" onclick="enviarRelatorio()">Enviar Relatório</button>
+        </div>
+    </div>
+
+    <script type="module">
+        // IMPORTANTE: Insira aqui a configuração do seu Firebase v10+
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "SUA_API_KEY",
+            authDomain: "SEU_PROJETO.firebaseapp.com",
+            projectId: "SEU_PROJETO",
+            storageBucket: "SEU_PROJETO.appspot.com",
+            messagingSenderId: "SEU_SENDER_ID",
+            appId: "SEU_APP_ID"
+        };
+
+        // Inicializa Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Variáveis Globais de Estado
+        let maquinaAtual = "";
+        let listaProducao = [];
+        let listaParada = [];
+
+        // Inicializa Botões das Máquinas na Tela Inicial
+        window.onload = () => {
+            const container = document.getElementById('machines-container');
+            for (let i = 1; i <= 8; i++) {
+                container.innerHTML += `<button class="machine-btn" onclick="abrirModal(${i})">Máquina ${i}</button>`;
+            }
+            // Seta a data de hoje por padrão
+            document.getElementById('data-registro').valueAsDate = new Date();
+        };
+
+        // Funções de Modal expostas ao escopo global
+        window.abrirModal = (numMaquina) => {
+            maquinaAtual = `Máquina ${numMaquina}`;
+            document.getElementById('modal-title').innerText = `Lançamento - ${maquinaAtual}`;
+            document.getElementById('modal').style.display = 'flex';
+
+            // Limpa as listas e formulários
+            listaProducao = [];
+            listaParada = [];
+            document.getElementById('cod-operador').value = '';
+            document.getElementById('observacoes').value = '';
+            atualizarTabelas();
+        };
+
+        window.fecharModal = () => {
+            document.getElementById('modal').style.display = 'none';
+        };
+
+        // Funções de Adição nas Tabelas
+        window.addProducao = () => {
+            const peca = document.getElementById('prod-peca').value;
+            const qtd = document.getElementById('prod-qtd').value;
+
+            if (!qtd || qtd <= 0) {
+                alert("Por favor, preencha a quantidade produzida.");
+                return;
+            }
+
+            const loteGerado = "LT-" + Math.floor(Math.random() * 90000 + 10000);
+            const horaAtual = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+
+            listaProducao.push({
+                peca: peca,
+                quantidade: parseInt(qtd),
+                horario: horaAtual,
+                lote: loteGerado
+            });
+
+            document.getElementById('prod-qtd').value = ''; // Limpa input
+            atualizarTabelas();
+        };
+
+        window.addParada = () => {
+            const motivo = document.getElementById('parada-motivo').value;
+            const inicio = document.getElementById('parada-inicio').value;
+            const fim = document.getElementById('parada-fim').value;
+
+            if (!inicio || !fim) {
+                alert("Por favor, preencha o horário de início e fim da parada.");
+                return;
+            }
+
+            listaParada.push({
+                motivo: motivo,
+                inicio: inicio,
+                fim: fim
+            });
+
+            document.getElementById('parada-inicio').value = '';
+            document.getElementById('parada-fim').value = '';
+            atualizarTabelas();
+        };
+
+        // Renderização das Tabelas no HTML
+        function atualizarTabelas() {
+            const tbProd = document.getElementById('tbody-producao');
+            const tbParada = document.getElementById('tbody-parada');
+
+            tbProd.innerHTML = '';
+            listaProducao.forEach(p => {
+                tbProd.innerHTML += `<tr><td>${p.peca}</td><td>${p.quantidade}</td><td>${p.horario}</td><td>${p.lote}</td></tr>`;
+            });
+
+            tbParada.innerHTML = '';
+            listaParada.forEach(p => {
+                tbParada.innerHTML += `<tr><td>${p.motivo}</td><td>${p.inicio}</td><td>${p.fim}</td></tr>`;
+            });
+        }
+
+        // Envio para o Firebase
+        window.enviarRelatorio = async () => {
+            const codOperador = document.getElementById('cod-operador').value;
+            const dataRegistro = document.getElementById('data-registro').value;
+            const turno = document.getElementById('turno').value;
+            const obs = document.getElementById('observacoes').value;
+
+            if (!codOperador.trim()) {
+                alert("O Código do Operador é obrigatório!");
+                return;
+            }
+
+            if (listaProducao.length === 0 && listaParada.length === 0) {
+                alert("Adicione pelo menos um registro de Produção ou Parada antes de enviar.");
+                return;
+            }
+
+            // Monta o objeto final
+            const relatorio = {
+                maquina: maquinaAtual,
+                operador: codOperador,
+                data: dataRegistro,
+                turno: turno,
+                observacoes: obs,
+                producao: listaProducao,
+                paradas: listaParada,
+                criadoEm: new Date().toISOString()
+            };
+
+            try {
+                // Altere 'relatorios_pcp' para o nome que desejar dar à sua coleção no Firestore
+                await addDoc(collection(db, "relatorios_pcp"), relatorio);
+                alert("Relatório enviado com sucesso!");
+                fecharModal();
+            } catch (error) {
+                console.error("Erro ao salvar documento: ", error);
+                alert("Erro ao enviar. Verifique o console ou as chaves do Firebase. \nDetalhe: " + error.message);
+            }
+        };
+    </script>
+</body>
+</html>
