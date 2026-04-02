@@ -117,7 +117,7 @@
                 align-items: center;
                 gap: 8px;
                 font-size: 14px;
-                margin-left: auto; /* Empurra o botão para a direita */
+                margin-left: auto;
             }
 
                 .filter-section button:hover {
@@ -281,6 +281,12 @@
             margin-bottom: 4px;
         }
 
+        .operador-badge {
+            background-color: #dbeafe;
+            color: #1e3a8a;
+            border: 1px solid #bfdbfe;
+        }
+
         /* Status Badges */
         .badge {
             padding: 6px 12px;
@@ -440,6 +446,7 @@
                 <thead>
                     <tr>
                         <th>Máquina</th>
+                        <th>Operador(es)</th>
                         <th>Produção Total</th>
                         <th>Peças Fabricadas (Qtd)</th>
                         <th>Tempo Parado</th>
@@ -506,6 +513,7 @@
                 const prodMaquina = {};
                 const paradaMaquina = {};
                 const relMaquina = {};
+                const operadoresPorMaquina = {}; // NOVO: Armazena operadores
 
                 const pecasTotalGeral = {};
                 const pecasPorMaquina = {};
@@ -518,7 +526,9 @@
                         let prod = 0;
                         let parada = 0;
                         let rel = 0;
+
                         pecasPorMaquina[maquina] = {};
+                        operadoresPorMaquina[maquina] = new Set(); // Usando Set para não repetir o mesmo nome
 
                         const registros = dados[maquina];
 
@@ -532,6 +542,11 @@
 
                             relatorios++;
                             rel++;
+
+                            // Registrar o operador
+                            if (r.operador) {
+                                operadoresPorMaquina[maquina].add(r.operador);
+                            }
 
                             // Lógica de Produção
                             if (r.producao) {
@@ -587,9 +602,6 @@
 
                 const maquinas = Object.keys(prodMaquina);
 
-                // --- Ajuste do Tempo de Turno para o Cálculo de Eficiência ---
-                // Se o turno 1 for selecionado, sabemos que ele tem 10h de duração (600 minutos)
-                // Caso contrário (todos ou turnos não informados), usamos um padrão de 8h (480 minutos)
                 const minutosPorTurno = (turnoEscolhido === '1') ? 600 : 480;
 
                 // Atualização dos KPIs
@@ -611,7 +623,6 @@
                 else if (eficiencia >= 70 || maquinas.length === 0) elementEficiencia.style.color = 'var(--warning)';
                 else elementEficiencia.style.color = 'var(--danger)';
 
-                // Produção por hora baseada na duração do turno focado
                 const horasNoTurno = (turnoEscolhido === '1') ? 10 : 8;
                 document.getElementById("prodHora").innerText = Math.round(prodTotal / horasNoTurno).toLocaleString('pt-BR');
 
@@ -620,7 +631,7 @@
                 tabela.innerHTML = "";
 
                 if (maquinas.length === 0) {
-                    tabela.innerHTML = `<tr><td colspan="7" style="text-align:center; padding: 30px; color: var(--text-muted);">Nenhum lançamento encontrado para os filtros selecionados.</td></tr>`;
+                    tabela.innerHTML = `<tr><td colspan="8" style="text-align:center; padding: 30px; color: var(--text-muted);">Nenhum lançamento encontrado para os filtros selecionados.</td></tr>`;
                 } else {
                     maquinas.forEach(m => {
                         const nomeFormatado = m.replace("Maquina_", "Máquina ");
@@ -631,6 +642,7 @@
                         if (eficienciaM >= 85) { statusClass = 'bg-success'; statusText = 'Excelente'; }
                         else if (eficienciaM >= 70) { statusClass = 'bg-warning'; statusText = 'Atenção'; }
 
+                        // Formatar as Peças
                         let pecasHTML = "";
                         if (Object.keys(pecasPorMaquina[m]).length > 0) {
                             for (const [peca, qtd] of Object.entries(pecasPorMaquina[m])) {
@@ -640,11 +652,21 @@
                             pecasHTML = `<span class="pecas-list" style="background:transparent">-</span>`;
                         }
 
+                        // Formatar os Operadores
+                        let operadoresHTML = "";
+                        if (operadoresPorMaquina[m] && operadoresPorMaquina[m].size > 0) {
+                            const opsArray = Array.from(operadoresPorMaquina[m]);
+                            operadoresHTML = opsArray.map(op => `<span class="pecas-list operador-badge"><i class="fa-solid fa-user-gear"></i> ${op}</span>`).join(' ');
+                        } else {
+                            operadoresHTML = `<span class="pecas-list" style="background:transparent">-</span>`;
+                        }
+
                         tabela.innerHTML += `
                                 <tr>
                                     <td><strong><i class="fa-solid fa-microchip" style="color:var(--text-muted); margin-right:5px;"></i> ${nomeFormatado}</strong></td>
+                                    <td style="max-width: 180px; white-space: normal;">${operadoresHTML}</td>
                                     <td>${prodMaquina[m].toLocaleString('pt-BR')} peças</td>
-                                    <td style="max-width: 250px; white-space: normal;">${pecasHTML}</td>
+                                    <td style="max-width: 200px; white-space: normal;">${pecasHTML}</td>
                                     <td style="color: var(--danger); font-weight: bold;">${paradaMaquina[m]} min</td>
                                     <td>${relMaquina[m]}</td>
                                     <td>
@@ -684,16 +706,13 @@
                 });
 
                 // 2. Gráfico Inteligente: Produção por Hora
-                // Se for o Turno 1, filtramos o gráfico apenas para as 07h até as 17h. Se não, exibe tudo.
                 let horasLabels = [];
                 let horasDados = [];
 
                 if (turnoEscolhido === '1') {
-                    // Janela de 7h as 17h (totalizando 11 pontos no gráfico: 7,8,9,10,11,12,13,14,15,16,17)
                     horasLabels = [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17].map(h => `${h}h`);
                     horasDados = prodHoraArray.slice(7, 18);
                 } else {
-                    // 24 horas
                     horasLabels = [...Array(24).keys()].map(h => `${h}h`);
                     horasDados = prodHoraArray;
                 }
@@ -760,11 +779,9 @@
 
         // ------------------ INICIALIZAÇÃO E EVENTOS ------------------
 
-        // Define a data de hoje no campo de input ao abrir a tela
         const hoje = new Date().toISOString().split("T")[0];
         document.getElementById("filtroData").value = hoje;
 
-        // Adiciona evento de clique no botão Filtrar
         document.getElementById("btnFiltrar").addEventListener("click", () => {
             const dataSelecionada = document.getElementById("filtroData").value;
             const turnoSelecionado = document.getElementById("filtroTurno").value;
@@ -775,7 +792,6 @@
             }
         });
 
-        // Carrega os dados do dia atual com todos os turnos assim que a página é acessada
         carregarDados(hoje, "todos");
 
     </script>
