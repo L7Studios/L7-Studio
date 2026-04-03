@@ -13,8 +13,8 @@
 
     <link rel="icon" href="https://amchidraulica.com.br/wp/wp-content/uploads/2025/04/1-2.webp" type="image/webp">
 
-
     <style>
+
         :root {
             --bg-color: #f1f5f9;
             --card-bg: #ffffff;
@@ -445,6 +445,23 @@
             font-size: 13px;
             color: #92400e;
         }
+
+        /* Footer L7 Studio */
+        .site-footer {
+            text-align: center;
+            padding: 25px 20px 10px 20px;
+            margin-top: 40px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border);
+            width: 100%;
+        }
+
+            .site-footer span {
+                color: var(--primary);
+                font-weight: 700;
+            }
     </style>
 </head>
 
@@ -631,6 +648,10 @@
 
         </div>
     </div>
+
+    <footer class="site-footer">
+        &copy; 2026 Todos os direitos reservados a <span>L7 Studio</span>.
+    </footer>
 
     <script type="module">
         // ------------------ RELÓGIO ------------------
@@ -893,24 +914,24 @@
                         } else operadoresHTML = `<span class="pecas-list" style="background:transparent">-</span>`;
 
                         tabela.innerHTML += `
-                                <tr>
-                                    <td class="clickable-machine" onclick="abrirModalDetalhes('${m}')" title="Clique para ver os detalhes da máquina">
-                                        <strong><i class="fa-solid fa-microchip" style="margin-right:5px;"></i> ${nomeFormatado} <i class="fa-solid fa-magnifying-glass-plus text-muted" style="font-size:12px; margin-left:5px;"></i></strong>
-                                    </td>
-                                    <td style="max-width: 180px; white-space: normal;">${operadoresHTML}</td>
-                                    <td>${prodMaquina[m].toLocaleString('pt-BR')} peças</td>
-                                    <td style="max-width: 200px; white-space: normal;">${pecasHTML}</td>
-                                    <td style="color: var(--danger); font-weight: bold;">${paradaMaquina[m]} min</td>
-                                    <td>${relMaquina[m]}</td>
-                                    <td>
-                                        <div style="display:flex; align-items:center; gap:10px;">
-                                            <progress value="${eficienciaM}" max="100" style="width: 60px;"></progress>
-                                            ${Math.round(eficienciaM)}%
-                                        </div>
-                                    </td>
-                                    <td><span class="badge ${statusClass}">${statusText}</span></td>
-                                </tr>
-                            `;
+                                    <tr>
+                                        <td class="clickable-machine" onclick="abrirModalDetalhes('${m}')" title="Clique para ver os detalhes da máquina">
+                                            <strong><i class="fa-solid fa-microchip" style="margin-right:5px;"></i> ${nomeFormatado} <i class="fa-solid fa-magnifying-glass-plus text-muted" style="font-size:12px; margin-left:5px;"></i></strong>
+                                        </td>
+                                        <td style="max-width: 180px; white-space: normal;">${operadoresHTML}</td>
+                                        <td>${prodMaquina[m].toLocaleString('pt-BR')} peças</td>
+                                        <td style="max-width: 200px; white-space: normal;">${pecasHTML}</td>
+                                        <td style="color: var(--danger); font-weight: bold;">${paradaMaquina[m]} min</td>
+                                        <td>${relMaquina[m]}</td>
+                                        <td>
+                                            <div style="display:flex; align-items:center; gap:10px;">
+                                                <progress value="${eficienciaM}" max="100" style="width: 60px;"></progress>
+                                                ${Math.round(eficienciaM)}%
+                                            </div>
+                                        </td>
+                                        <td><span class="badge ${statusClass}">${statusText}</span></td>
+                                    </tr>
+                                `;
                     });
                 }
 

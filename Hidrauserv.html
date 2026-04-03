@@ -27,6 +27,9 @@
             color: var(--text-color);
             margin: 0;
             padding: 0;
+            display: flex; /* Adicionado flex para o footer ficar no fundo */
+            flex-direction: column;
+            min-height: 100vh;
         }
 
         header {
@@ -49,6 +52,7 @@
             padding: 2rem;
             max-width: 1200px;
             margin: auto;
+            flex: 1; /* Faz o container empurrar o footer para baixo */
         }
 
         h1 {
@@ -271,6 +275,24 @@
                 white-space: nowrap; /* Evita quebra de linha estranha no celular, permitindo o scroll */
             }
         }
+
+        /* Footer L7 Studio */
+        .site-footer {
+            text-align: center;
+            padding: 25px 20px 20px 20px;
+            margin-top: auto;
+            font-size: 13px;
+            font-weight: 500;
+            color: #64748b;
+            border-top: 1px solid #cbd5e1;
+            width: 100%;
+            background-color: var(--secondary-color);
+        }
+
+            .site-footer span {
+                color: var(--primary-color);
+                font-weight: 700;
+            }
     </style>
 </head>
 
@@ -430,6 +452,10 @@
 
         </div>
     </div>
+
+    <footer class="site-footer">
+        &copy; 2026 Todos os direitos reservados a <span>L7 Studio</span>.
+    </footer>
 
     <script type="module">
 
