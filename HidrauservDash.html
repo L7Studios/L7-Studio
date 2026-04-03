@@ -39,6 +39,9 @@
             background-color: var(--bg-color);
             color: var(--text-main);
             padding: 20px 30px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
         /* Header */
@@ -73,7 +76,7 @@
             font-weight: 600;
         }
 
-        /* Filtro de Data e Turno */
+        /* Filtros e Busca */
         .filter-section {
             background: var(--card-bg);
             padding: 15px 25px;
@@ -93,6 +96,7 @@
             }
 
             .filter-section input[type="date"],
+            .filter-section input[type="text"],
             .filter-section select {
                 padding: 8px 12px;
                 border: 1px solid var(--border);
@@ -117,12 +121,31 @@
                 align-items: center;
                 gap: 8px;
                 font-size: 14px;
-                margin-left: auto;
             }
 
                 .filter-section button:hover {
                     background: var(--primary-hover);
                 }
+
+        .search-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-left: auto; /* Empurra a busca para a direita */
+            padding-left: 20px;
+            border-left: 2px solid var(--border);
+        }
+
+        @media (max-width: 768px) {
+            .search-group {
+                margin-left: 0;
+                padding-left: 0;
+                border-left: none;
+                width: 100%;
+                justify-content: flex-start;
+                margin-top: 10px;
+            }
+        }
 
         /* KPI Grid */
         .kpi-grid {
@@ -450,7 +473,7 @@
         .site-footer {
             text-align: center;
             padding: 25px 20px 10px 20px;
-            margin-top: 40px;
+            margin-top: auto;
             font-size: 13px;
             font-weight: 500;
             color: var(--text-muted);
@@ -492,7 +515,13 @@
             <option value="3">3º Turno</option>
         </select>
 
-        <button id="btnFiltrar"><i class="fa-solid fa-filter"></i> Aplicar Filtros</button>
+        <button id="btnFiltrar"><i class="fa-solid fa-filter"></i> Filtrar Gráficos</button>
+
+        <div class="search-group">
+            <label for="inputBuscaLote">Buscar Lote:</label>
+            <input type="text" id="inputBuscaLote" placeholder="Ex: LT-12345" style="width: 130px;">
+            <button id="btnBuscarLote" style="background-color: var(--success);"><i class="fa-solid fa-magnifying-glass"></i> Buscar</button>
+        </div>
     </div>
 
     <div id="loading"><i class="fa-solid fa-spinner fa-spin"></i> Processando dados...</div>
@@ -649,6 +678,39 @@
         </div>
     </div>
 
+    <div class="modal-overlay" id="modalBuscaLote">
+        <div class="modal-content" style="max-width: 1000px;">
+            <button class="close-modal" onclick="document.getElementById('modalBuscaLote').style.display='none'">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="modal-header">
+                <h2><i class="fa-solid fa-box-open" style="color:var(--success)"></i> Resultados da Busca de Lote</h2>
+                <div class="modal-subtitle">Histórico completo de rastreabilidade</div>
+            </div>
+
+            <div class="table-container" style="margin-top: 20px;">
+                <table class="detalhe-table">
+                    <thead>
+                        <tr>
+                            <th style="background-color: var(--primary); color: white;">Lote</th>
+                            <th style="background-color: var(--primary); color: white;">Data</th>
+                            <th style="background-color: var(--primary); color: white;">Hora</th>
+                            <th style="background-color: var(--primary); color: white;">Turno</th>
+                            <th style="background-color: var(--primary); color: white;">Máquina</th>
+                            <th style="background-color: var(--primary); color: white;">Operador</th>
+                            <th style="background-color: var(--primary); color: white;">Peça</th>
+                            <th style="background-color: var(--primary); color: white;">Qtd</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-busca-lote">
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
     <footer class="site-footer">
         &copy; 2026 Todos os direitos reservados a <span>L7 Studio</span>.
     </footer>
@@ -682,7 +744,7 @@
 
         // ------------------ ESTADO GLOBAL ------------------
         let instanciasGraficos = {};
-        window.dadosGeraisModal = {}; // <-- Guarda dados para exibir no modal
+        window.dadosGeraisModal = {}; // Guarda dados para exibir no modal de máquina
 
         function limparGraficosAnteriores() {
             Object.values(instanciasGraficos).forEach(chart => {
@@ -691,7 +753,100 @@
             instanciasGraficos = {};
         }
 
-        // ------------------ FUNÇÕES DO MODAL ------------------
+        // ------------------ BUSCA GLOBAL DE LOTE ------------------
+        window.buscarLoteHist = async function () {
+            const termoBusca = document.getElementById('inputBuscaLote').value.trim().toUpperCase();
+            if (!termoBusca) {
+                alert('Digite o número de um lote para realizar a busca.');
+                return;
+            }
+
+            document.getElementById("loading").style.display = "block";
+            document.getElementById("loading").innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Vasculhando histórico do banco de dados...';
+
+            try {
+                // Puxa toda a raiz relatorios_pcp para vasculhar o histórico
+                const snap = await get(ref(db, "relatorios_pcp"));
+                const resultados = [];
+
+                if (snap.exists()) {
+                    const todoHistorico = snap.val();
+
+                    // Vasculha: Dias -> Máquinas -> Relatórios -> Produção
+                    for (const data in todoHistorico) {
+                        for (const maquina in todoHistorico[data]) {
+                            for (const idRelatorio in todoHistorico[data][maquina]) {
+                                const relatorio = todoHistorico[data][maquina][idRelatorio];
+
+                                if (relatorio.producao) {
+                                    relatorio.producao.forEach(p => {
+                                        // Verifica se o lote atual contém o termo buscado
+                                        if (p.lote && p.lote.toUpperCase().includes(termoBusca)) {
+                                            resultados.push({
+                                                data: relatorio.data || data,
+                                                turno: relatorio.turno || "-",
+                                                maquina: maquina.replace("Maquina_", "Máquina "),
+                                                operador: relatorio.operador || "-",
+                                                peca: p.peca || "-",
+                                                qtd: p.quantidade || 0,
+                                                hora: p.horario || "-",
+                                                lote: p.lote
+                                            });
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // Popula a tabela do modal de busca
+                const tbodyBusca = document.getElementById('tbody-busca-lote');
+                tbodyBusca.innerHTML = '';
+
+                if (resultados.length === 0) {
+                    tbodyBusca.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:20px; color:var(--text-muted);">Nenhum registro encontrado para este lote no histórico.</td></tr>';
+                } else {
+                    // Ordena do mais recente pro mais antigo (baseado na data)
+                    resultados.sort((a, b) => new Date(b.data) - new Date(a.data));
+
+                    resultados.forEach(r => {
+                        const dataFormatada = r.data.split('-').reverse().join('/');
+                        tbodyBusca.innerHTML += `
+                                <tr>
+                                    <td><strong><i class="fa-solid fa-box text-muted"></i> ${r.lote}</strong></td>
+                                    <td>${dataFormatada}</td>
+                                    <td>${r.hora}</td>
+                                    <td>${r.turno}º Turno</td>
+                                    <td>${r.maquina}</td>
+                                    <td><span class="pecas-list operador-badge"><i class="fa-solid fa-user"></i> ${r.operador}</span></td>
+                                    <td>${r.peca}</td>
+                                    <td><strong>${r.qtd}</strong> peças</td>
+                                </tr>
+                            `;
+                    });
+                }
+
+                // Abre o Modal de Busca
+                document.getElementById('modalBuscaLote').style.display = 'flex';
+
+            } catch (e) {
+                console.error(e);
+                alert("Erro ao realizar a busca de lote no banco de dados.");
+            } finally {
+                document.getElementById("loading").style.display = "none";
+            }
+        }
+
+        // Configuração do botão de busca e "Enter" no input
+        document.getElementById('btnBuscarLote').addEventListener('click', window.buscarLoteHist);
+        document.getElementById('inputBuscaLote').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                window.buscarLoteHist();
+            }
+        });
+
+        // ------------------ FUNÇÕES DO MODAL DE DETALHES ------------------
         window.abrirModalDetalhes = function (maquinaKey) {
             const dados = window.dadosGeraisModal[maquinaKey];
             if (!dados) return;
@@ -742,17 +897,23 @@
             document.getElementById('modalDetalhes').style.display = 'none';
         }
 
-        // Fechar ao clicar fora do modal
+        // Fechar qualquer modal ao clicar fora dele
         window.onclick = function (event) {
-            const modal = document.getElementById('modalDetalhes');
-            if (event.target == modal) {
+            const modalDet = document.getElementById('modalDetalhes');
+            const modalBusca = document.getElementById('modalBuscaLote');
+
+            if (event.target == modalDet) {
                 fecharModalDetalhes();
+            }
+            if (event.target == modalBusca) {
+                modalBusca.style.display = 'none';
             }
         }
 
-        // ------------------ FUNÇÃO PRINCIPAL DE BUSCA ------------------
+        // ------------------ FUNÇÃO PRINCIPAL DE GRÁFICOS ------------------
         async function carregarDados(dataEscolhida, turnoEscolhido) {
             document.getElementById("loading").style.display = "block";
+            document.getElementById("loading").innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processando dados gráficos...';
             window.dadosGeraisModal = {}; // Reseta os dados do modal
 
             try {
@@ -774,7 +935,6 @@
                         pecasPorMaquina[maquina] = {};
                         operadoresPorMaquina[maquina] = new Set();
 
-                        // Estrutura para o Modal
                         window.dadosGeraisModal[maquina] = {
                             nomeFormatado: maquina.replace("Maquina_", "Máquina "),
                             operadores: [],
@@ -813,7 +973,6 @@
                                         if (!isNaN(hora)) prodHoraArray[hora] += qtd;
                                     }
 
-                                    // Salva pro modal
                                     window.dadosGeraisModal[maquina].logsProducao.push({
                                         hora: p.horario || "-",
                                         peca: nomePeca,
@@ -836,7 +995,6 @@
                                         const motivo = p.motivo || "Outros";
                                         motivosParadaTotal[motivo] = (motivosParadaTotal[motivo] || 0) + diferenca;
 
-                                        // Salva pro modal
                                         window.dadosGeraisModal[maquina].logsParada.push({
                                             inicio: p.inicio,
                                             fim: p.fim,
@@ -854,10 +1012,8 @@
                             relMaquina[maquina] = rel;
                             prodTotal += prod;
                             paradaTotal += parada;
-                            // Converte o Set de operadores em array para o Modal
                             window.dadosGeraisModal[maquina].operadores = Array.from(operadoresPorMaquina[maquina]);
                         } else {
-                            // Se não teve nada no filtro, deleta da memória do modal
                             delete window.dadosGeraisModal[maquina];
                         }
                     }
@@ -891,7 +1047,7 @@
                 tabela.innerHTML = "";
 
                 if (maquinas.length === 0) {
-                    tabela.innerHTML = `<tr><td colspan="8" style="text-align:center; padding: 30px; color: var(--text-muted);">Nenhum lançamento encontrado.</td></tr>`;
+                    tabela.innerHTML = `<tr><td colspan="8" style="text-align:center; padding: 30px; color: var(--text-muted);">Nenhum lançamento encontrado para a data/turno.</td></tr>`;
                 } else {
                     maquinas.forEach(m => {
                         const nomeFormatado = m.replace("Maquina_", "Máquina ");
