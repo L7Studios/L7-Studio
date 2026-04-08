@@ -5,10 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PCP - AMC Hidráulica</title>
 
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="PCP AMC">
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="manifest" href="manifest.json">
+
     <link rel="icon" href="https://amchidraulica.com.br/wp/wp-content/uploads/2025/04/1-2.webp" type="image/webp">
 
     <style>
-        /* OTIMIZAÇÃO: Box-sizing para evitar que elementos quebrem a largura da tela */
         * {
             box-sizing: border-box;
         }
@@ -27,7 +32,7 @@
             color: var(--text-color);
             margin: 0;
             padding: 0;
-            display: flex; /* Adicionado flex para o footer ficar no fundo */
+            display: flex;
             flex-direction: column;
             min-height: 100vh;
         }
@@ -52,7 +57,7 @@
             padding: 2rem;
             max-width: 1200px;
             margin: auto;
-            flex: 1; /* Faz o container empurrar o footer para baixo */
+            flex: 1;
         }
 
         h1 {
@@ -63,7 +68,6 @@
 
         .machines-grid {
             display: grid;
-            /* OTIMIZAÇÃO: Reduzido o minmax para caber melhor 2 ou 1 coluna no mobile */
             grid-template-columns: repeat(auto-fit,minmax(140px,1fr));
             gap: 1.5rem;
         }
@@ -72,13 +76,13 @@
             background: white;
             border: 2px solid var(--primary-color);
             border-radius: var(--border-radius);
-            padding: 2rem 1rem; /* OTIMIZAÇÃO: Ajuste de padding para não estourar lateralmente */
+            padding: 2rem 1rem;
             font-size: 1.2rem;
             font-weight: bold;
             color: var(--primary-color);
             cursor: pointer;
             transition: .3s;
-            min-height: 80px; /* OTIMIZAÇÃO: Garantir boa área de toque */
+            min-height: 80px;
         }
 
             .machine-btn:hover {
@@ -96,7 +100,7 @@
             background: rgba(0,0,0,.6);
             justify-content: center;
             align-items: center;
-            z-index: 1000; /* OTIMIZAÇÃO: Garantir que fique acima de tudo */
+            z-index: 1000;
         }
 
         .modal-content {
@@ -114,12 +118,12 @@
             position: absolute;
             right: 15px;
             top: 15px;
-            font-size: 2rem; /* OTIMIZAÇÃO: Ícone um pouco maior */
+            font-size: 2rem;
             border: none;
             background: none;
             cursor: pointer;
             line-height: 1;
-            padding: 5px 15px; /* OTIMIZAÇÃO: Maior área de toque para os dedos */
+            padding: 5px 15px;
         }
 
         .top-fields {
@@ -127,7 +131,7 @@
             grid-template-columns: repeat(auto-fit,minmax(200px,1fr));
             gap: 1rem;
             margin-bottom: 2rem;
-            margin-top: 1rem; /* OTIMIZAÇÃO: Espaço extra por causa do botão X */
+            margin-top: 1rem;
         }
 
         .form-group label {
@@ -144,8 +148,8 @@
             padding: .6rem;
             border: 1px solid #ccc;
             border-radius: 4px;
-            font-size: 16px; /* OTIMIZAÇÃO: 16px evita o auto-zoom em iPhones */
-            min-height: 44px; /* OTIMIZAÇÃO: Altura mínima recomendada para toque no celular */
+            font-size: 16px;
+            min-height: 44px;
         }
 
         .panels-container {
@@ -158,7 +162,7 @@
             background: #f8fafc;
             padding: 1.5rem;
             border-radius: var(--border-radius);
-            width: 100%; /* OTIMIZAÇÃO: Evita transbordo */
+            width: 100%;
         }
 
         .panel-header {
@@ -174,18 +178,17 @@
         }
 
         .btn-add {
-            width: 44px; /* OTIMIZAÇÃO: Área de toque mais larga */
-            height: 44px; /* OTIMIZAÇÃO: Área de toque mais alta */
+            width: 44px;
+            height: 44px;
             border: none;
-            border-radius: 4px; /* OTIMIZAÇÃO: Arredondado para design consistente */
+            border-radius: 4px;
             background: var(--primary-color);
             color: white;
             font-size: 1.4rem;
             cursor: pointer;
-            flex-shrink: 0; /* OTIMIZAÇÃO: Impede o botão de ser esmagado */
+            flex-shrink: 0;
         }
 
-        /* OTIMIZAÇÃO: Envolver a tabela visualmente para mobile */
         .table-responsive {
             width: 100%;
             overflow-x: auto;
@@ -197,13 +200,13 @@
             border-collapse: collapse;
             font-size: .85rem;
             background: white;
-            min-width: 300px; /* OTIMIZAÇÃO: Impede a tabela de amassar as colunas */
+            min-width: 300px;
         }
 
         th, td {
             border: 1px solid #cbd5e1;
             padding: 8px;
-            text-align: left; /* OTIMIZAÇÃO: Melhor legibilidade */
+            text-align: left;
         }
 
         th {
@@ -216,18 +219,15 @@
             margin-top: 2rem;
             padding: 1rem;
             border: none;
-            border-radius: var(--border-radius); /* OTIMIZAÇÃO: Arredondado */
+            border-radius: var(--border-radius);
             background: var(--success);
             color: white;
             font-size: 1.2rem;
             font-weight: bold;
             cursor: pointer;
-            min-height: 54px; /* OTIMIZAÇÃO: Botão principal bem grande no mobile */
+            min-height: 54px;
         }
 
-        /* ========================================= */
-        /* MEDIA QUERIES PARA DISPOSITIVOS MÓVEIS    */
-        /* ========================================= */
         @media (max-width: 768px) {
             header {
                 flex-direction: column;
@@ -244,39 +244,38 @@
                 width: 100%;
                 height: 100%;
                 max-height: 100vh;
-                border-radius: 0; /* Parece um app abrindo em tela cheia */
+                border-radius: 0;
                 padding: 1.5rem 1rem;
             }
 
             .panels-container {
-                grid-template-columns: 1fr; /* Coloca os painéis um embaixo do outro */
+                grid-template-columns: 1fr;
                 gap: 1.5rem;
             }
 
             .top-fields {
-                grid-template-columns: 1fr; /* Campos do topo um embaixo do outro */
+                grid-template-columns: 1fr;
                 gap: 0.8rem;
             }
 
             .input-row {
-                flex-wrap: wrap; /* Permite que os inputs desçam se não couberem */
+                flex-wrap: wrap;
             }
 
                 .input-row .form-group {
-                    flex: 1 1 100%; /* Força os inputs a ocuparem a largura total na linha */
+                    flex: 1 1 100%;
                 }
 
             .btn-add {
-                width: 100%; /* O botão de + vira um botão de largura total no celular */
+                width: 100%;
                 margin-top: 5px;
             }
 
             table th, table td {
-                white-space: nowrap; /* Evita quebra de linha estranha no celular, permitindo o scroll */
+                white-space: nowrap;
             }
         }
 
-        /* Footer L7 Studio */
         .site-footer {
             text-align: center;
             padding: 25px 20px 20px 20px;
@@ -306,11 +305,8 @@
     </header>
 
     <div class="container">
-
         <h1>Controle de Produção</h1>
-
         <div class="machines-grid">
-
             <button class="machine-btn" onclick="abrirModal(1)">Máquina 1</button>
             <button class="machine-btn" onclick="abrirModal(2)">Máquina 2</button>
             <button class="machine-btn" onclick="abrirModal(3)">Máquina 3</button>
@@ -319,30 +315,22 @@
             <button class="machine-btn" onclick="abrirModal(6)">Máquina 6</button>
             <button class="machine-btn" onclick="abrirModal(7)">Máquina 7</button>
             <button class="machine-btn" onclick="abrirModal(8)">Máquina 8</button>
-
         </div>
     </div>
 
     <div class="modal-overlay" id="modal">
-
         <div class="modal-content">
-
             <button class="close-modal" onclick="fecharModal()">×</button>
-
             <h2 id="modal-title"></h2>
-
             <div class="top-fields">
-
                 <div class="form-group">
                     <label>Operador</label>
                     <input id="cod-operador">
                 </div>
-
                 <div class="form-group">
                     <label>Data</label>
                     <input type="date" id="data-registro">
                 </div>
-
                 <div class="form-group">
                     <label>Turno</label>
                     <select id="turno">
@@ -351,17 +339,12 @@
                         <option value="3">3º Turno</option>
                     </select>
                 </div>
-
             </div>
 
             <div class="panels-container">
-
                 <div class="panel">
-
                     <div class="panel-header"><h3>Produção</h3></div>
-
                     <div class="input-row">
-
                         <div class="form-group">
                             <label>Peça</label>
                             <select id="prod-peca">
@@ -370,38 +353,25 @@
                                 <option>Espiga</option>
                             </select>
                         </div>
-
                         <div class="form-group">
                             <label>Qtd</label>
                             <input type="number" id="prod-qtd">
                         </div>
-
                         <button class="btn-add" onclick="addProducao()">+</button>
-
                     </div>
-
                     <div class="table-responsive">
                         <table>
                             <thead>
-                                <tr>
-                                    <th>Peça</th>
-                                    <th>Qtd</th>
-                                    <th>Hora</th>
-                                    <th>Lote</th>
-                                </tr>
+                                <tr><th>Peça</th><th>Qtd</th><th>Hora</th><th>Lote</th></tr>
                             </thead>
                             <tbody id="tbody-producao"></tbody>
                         </table>
                     </div>
-
                 </div>
 
                 <div class="panel">
-
                     <div class="panel-header"><h3>Parada</h3></div>
-
                     <div class="input-row">
-
                         <div class="form-group">
                             <label>Motivo</label>
                             <select id="parada-motivo">
@@ -411,45 +381,32 @@
                                 <option>Banheiro</option>
                             </select>
                         </div>
-
                         <div class="form-group">
                             <label>Início</label>
                             <input type="time" id="parada-inicio">
                         </div>
-
                         <div class="form-group">
                             <label>Fim</label>
                             <input type="time" id="parada-fim">
                         </div>
-
                         <button class="btn-add" onclick="addParada()">+</button>
-
                     </div>
-
                     <div class="table-responsive">
                         <table>
                             <thead>
-                                <tr>
-                                    <th>Motivo</th>
-                                    <th>Início</th>
-                                    <th>Fim</th>
-                                </tr>
+                                <tr><th>Motivo</th><th>Início</th><th>Fim</th></tr>
                             </thead>
                             <tbody id="tbody-parada"></tbody>
                         </table>
                     </div>
-
                 </div>
-
             </div>
 
             <div class="form-group" style="margin-top:20px">
                 <label>Observações</label>
                 <textarea id="observacoes"></textarea>
             </div>
-
             <button class="submit-btn" id="btn-enviar" onclick="prepararEnvio()">Enviar Relatório</button>
-
         </div>
     </div>
 
@@ -458,7 +415,6 @@
     </footer>
 
     <script type="module">
-
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
         import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
@@ -482,130 +438,92 @@
         document.getElementById("data-registro").value = new Date().toISOString().split("T")[0];
 
         window.abrirModal = function (num) {
-
             maquinaAtual = "Maquina_" + num;
-
             document.getElementById("modal-title").innerText = "Lançamento - Máquina " + num;
-
             document.getElementById("modal").style.display = "flex";
-
             listaProducao = [];
             listaParada = [];
-
             atualizarTabelas();
-
         }
 
         window.fecharModal = function () {
-
             document.getElementById("modal").style.display = "none";
-
         }
 
         window.addProducao = function () {
-
             const peca = document.getElementById("prod-peca").value;
             const qtd = parseInt(document.getElementById("prod-qtd").value);
-
             if (!qtd) { alert("Digite quantidade"); return; }
-
             const hora = new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
             const lote = "LT-" + Math.floor(Math.random() * 90000 + 10000);
-
             listaProducao.push({ peca, quantidade: qtd, horario: hora, lote });
-
             document.getElementById("prod-qtd").value = "";
-
             atualizarTabelas();
-
         }
 
         window.addParada = function () {
-
             const motivo = document.getElementById("parada-motivo").value;
             const inicio = document.getElementById("parada-inicio").value;
             const fim = document.getElementById("parada-fim").value;
-
             if (!inicio || !fim) { alert("Preencha horário"); return; }
-
             if (fim < inicio) { alert("Fim menor que início"); return; }
-
             listaParada.push({ motivo, inicio, fim });
-
             document.getElementById("parada-inicio").value = "";
             document.getElementById("parada-fim").value = "";
-
             atualizarTabelas();
-
         }
 
         window.atualizarTabelas = function () {
-
             const tbProd = document.getElementById("tbody-producao");
             const tbParada = document.getElementById("tbody-parada");
-
             tbProd.innerHTML = "";
             tbParada.innerHTML = "";
-
             listaProducao.forEach(p => {
                 tbProd.innerHTML += `<tr><td>${p.peca}</td><td>${p.quantidade}</td><td>${p.horario}</td><td>${p.lote}</td></tr>`;
             });
-
             listaParada.forEach(p => {
                 tbParada.innerHTML += `<tr><td>${p.motivo}</td><td>${p.inicio}</td><td>${p.fim}</td></tr>`;
             });
-
         }
 
         window.prepararEnvio = async function () {
-
             const operador = document.getElementById("cod-operador").value;
             const data = document.getElementById("data-registro").value;
             const turno = document.getElementById("turno").value;
             const obs = document.getElementById("observacoes").value;
-
             const btn = document.getElementById("btn-enviar");
-
             if (!operador) { alert("Digite operador"); return; }
-
             if (listaProducao.length === 0 && listaParada.length === 0) {
                 alert("Adicione produção ou parada");
                 return;
             }
-
             btn.disabled = true;
             btn.innerText = "Enviando...";
-
             try {
-
                 await push(ref(database, `relatorios_pcp/${data}/${maquinaAtual}`), {
-
-                    operador,
-                    turno,
-                    data,
+                    operador, turno, data,
                     producao: listaProducao,
                     paradas: listaParada,
                     observacoes: obs,
                     timestamp: Date.now()
-
                 });
-
                 alert("Relatório enviado");
-
                 fecharModal();
-
             } catch (e) {
-
                 console.error(e);
                 alert("Erro ao enviar");
-
             }
-
             btn.disabled = false;
             btn.innerText = "Enviar Relatório";
-
         }
+    </script>
 
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js').catch(err => console.log('Erro SW:', err));
+            });
+        }
     </script>
 
 </body>
