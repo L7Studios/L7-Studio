@@ -1,0 +1,17 @@
+{
+  "name": "PCP - AMC Hidráulica",
+  "short_name": "PCP AMC",
+  "description": "Sistema de Controle de Produção",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#f1f5f9",
+  "theme_color": "#ec3237",
+  "icons": [
+    {
+      "src": "https://amchidraulica.com.br/wp/wp-content/uploads/2025/04/1-2.webp",
+      "sizes": "512x512",
+      "type": "image/webp",
+      "purpose": "any maskable"
+    }
+  ]
+}
