@@ -394,6 +394,11 @@
                 color: #991b1b;
             }
 
+            .badge.bg-primary {
+                background: #dbeafe;
+                color: #1e3a8a;
+            }
+
         /* Loading */
         #loading {
             text-align: center;
@@ -517,6 +522,7 @@
             color: #92400e;
         }
 
+        /* Formulários dentro do Modal */
         .form-group-modal {
             margin-bottom: 15px;
         }
@@ -537,7 +543,7 @@
                 font-family: inherit;
             }
 
-        /* Footer */
+        /* Footer L7 Studio */
         .site-footer {
             text-align: center;
             padding: 25px 20px 10px 20px;
@@ -722,7 +728,7 @@
         <div class="section-header">
             <div>
                 <h2>Resumo Operacional por Máquina</h2>
-                <small style="color:var(--text-muted);"><i class="fa-solid fa-circle-info"></i> Dados consolidados do período selecionado.</small>
+                <small style="color:var(--text-muted);"><i class="fa-solid fa-circle-info"></i> Dados consolidados do período selecionado. <strong>Clique no nome da máquina para detalhes.</strong></small>
             </div>
             <button onclick="exportarExcel('tabela-principal', 'Resumo_Producao_PCP')" class="btn-export">
                 <i class="fa-solid fa-file-excel"></i> Exportar
@@ -898,7 +904,7 @@
 
                 <div class="modal-panel" style="margin-top: 10px; background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                        <h3 style="margin-bottom: 0;">Pedidos Pendentes</h3>
+                        <h3 style="margin-bottom: 0;">Pedidos Pendentes na Fábrica</h3>
                         <button onclick="exportarExcel('tabela-pedidos-ativos', 'Pedidos_Pendentes')" class="btn-export" style="padding: 5px 10px; font-size: 12px;">
                             <i class="fa-solid fa-file-excel"></i> Exportar
                         </button>
@@ -1034,6 +1040,54 @@
             document.body.classList.remove('print-mode');
         }
 
+        // ------------------ FUNÇÕES DO MODAL DE DETALHES DA MÁQUINA (CORRIGIDO) ------------------
+        window.abrirModalDetalhes = function (maquinaKey) {
+            const dados = window.dadosGeraisModal[maquinaKey];
+            if (!dados) return;
+
+            document.getElementById('modal-titulo').innerText = "Detalhes - " + dados.nomeFormatado;
+            document.getElementById('modal-subtitulo').innerText = `Operador(es): ${dados.operadores.join(', ')} | Relatórios lançados: ${dados.relatoriosCount}`;
+
+            const tbProd = document.getElementById('modal-body-producao');
+            tbProd.innerHTML = "";
+            if (dados.logsProducao.length === 0) {
+                tbProd.innerHTML = "<tr><td colspan='4' style='text-align:center;'>Nenhuma produção registrada.</td></tr>";
+            } else {
+                dados.logsProducao.sort((a, b) => (a.hora > b.hora) ? 1 : -1);
+                dados.logsProducao.forEach(p => {
+                    tbProd.innerHTML += `<tr><td>${p.hora}</td><td>${p.peca}</td><td>${p.lote}</td><td><strong>${p.qtd}</strong></td></tr>`;
+                });
+            }
+
+            const tbParadas = document.getElementById('modal-body-paradas');
+            tbParadas.innerHTML = "";
+            if (dados.logsParada.length === 0) {
+                tbParadas.innerHTML = "<tr><td colspan='4' style='text-align:center;'>Nenhuma parada registrada.</td></tr>";
+            } else {
+                dados.logsParada.sort((a, b) => (a.inicio > b.inicio) ? 1 : -1);
+                dados.logsParada.forEach(p => {
+                    tbParadas.innerHTML += `<tr><td>${p.inicio}</td><td>${p.fim}</td><td>${p.motivo}</td><td style="color:var(--danger); font-weight:bold;">${p.duracao} min</td></tr>`;
+                });
+            }
+
+            const divObs = document.getElementById('modal-body-obs');
+            divObs.innerHTML = "";
+            if (dados.observacoes.length === 0) {
+                divObs.innerHTML = "<p style='color:var(--text-muted); font-size:13px; margin:0;'>Nenhuma observação registrada.</p>";
+            } else {
+                dados.observacoes.forEach(obs => {
+                    divObs.innerHTML += `<div class="obs-box"><i class="fa-solid fa-quote-left" style="opacity:0.3; margin-right:5px;"></i> ${obs}</div>`;
+                });
+            }
+
+            document.getElementById('modalDetalhes').style.display = 'flex';
+        }
+
+        window.fecharModalDetalhes = function () {
+            document.getElementById('modalDetalhes').style.display = 'none';
+        }
+
+
         // ------------------ FIREBASE ------------------
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
         import { getDatabase, ref, get, push, remove } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
@@ -1072,7 +1126,7 @@
         }
 
         window.verificarSenha = function () {
-            if (document.getElementById('inputSenhaAdmin').value === '1999') {
+            if (document.getElementById('inputSenhaAdmin').value === '0000') {
                 document.getElementById('modalSenha').style.display = 'none';
                 document.getElementById('modalPedidosAdmin').style.display = 'flex';
             } else alert('Senha incorreta! Tente novamente.');
@@ -1081,6 +1135,7 @@
 
         window.carregarPedidos = async function () {
             try {
+                // 1. Carrega Histórico de Despachos (Saídas do Estoque)
                 const snapDespachos = await get(ref(db, "pedidos_despachados"));
                 window.pedidosDespachadosGlobais = [];
                 let totalDespachadoPorPeca = {};
@@ -1094,6 +1149,7 @@
                     }
                 }
 
+                // 2. Carrega Toda a Produção (Entradas no Estoque)
                 const snapHist = await get(ref(db, "relatorios_pcp"));
                 window.producaoDetalhadaGlobal = [];
 
@@ -1107,10 +1163,14 @@
                                 if (rel.producao) {
                                     rel.producao.forEach(p => {
                                         window.producaoDetalhadaGlobal.push({
-                                            data: dataHist, maquina: maq.replace("Maquina_", "M "),
-                                            operador: rel.operador || "-", peca: p.peca,
-                                            lote: p.lote || "S/N", qtd_original: Number(p.quantidade),
-                                            qtd_disponivel: Number(p.quantidade), timestamp: relTime
+                                            data: dataHist,
+                                            maquina: maq.replace("Maquina_", "M "),
+                                            operador: rel.operador || "-",
+                                            peca: p.peca,
+                                            lote: p.lote || "S/N",
+                                            qtd_original: Number(p.quantidade),
+                                            qtd_disponivel: Number(p.quantidade),
+                                            timestamp: relTime
                                         });
                                     });
                                 }
@@ -1119,27 +1179,34 @@
                     }
                 }
 
+                // Ordena produção da mais velha para a mais nova (FIFO)
                 window.producaoDetalhadaGlobal.sort((a, b) => a.timestamp - b.timestamp);
 
+                // 3. Aplica a Regra FIFO: Dá baixa na produção usando os despachos antigos
                 for (let peca in totalDespachadoPorPeca) {
                     let faltaBaixar = totalDespachadoPorPeca[peca];
                     for (let i = 0; i < window.producaoDetalhadaGlobal.length; i++) {
                         let p = window.producaoDetalhadaGlobal[i];
                         if (p.peca === peca && p.qtd_disponivel > 0) {
                             if (faltaBaixar >= p.qtd_disponivel) {
-                                faltaBaixar -= p.qtd_disponivel; p.qtd_disponivel = 0;
+                                faltaBaixar -= p.qtd_disponivel;
+                                p.qtd_disponivel = 0;
                             } else {
-                                p.qtd_disponivel -= faltaBaixar; faltaBaixar = 0; break;
+                                p.qtd_disponivel -= faltaBaixar;
+                                faltaBaixar = 0;
+                                break;
                             }
                         }
                     }
                 }
 
+                // 4. Calcula Saldo Atual do Estoque
                 window.estoqueAtualGlobal = {};
                 window.producaoDetalhadaGlobal.forEach(p => {
                     window.estoqueAtualGlobal[p.peca] = (window.estoqueAtualGlobal[p.peca] || 0) + p.qtd_disponivel;
                 });
 
+                // 5. Carrega Pedidos Ativos
                 const snapPedidos = await get(ref(db, "pedidos_ativos"));
                 window.pedidosAtivosGlobais = [];
                 if (snapPedidos.exists()) {
@@ -1151,20 +1218,36 @@
                     }
                 }
 
-                renderizarEstoqueAdmin(); renderizarPedidosNoDashboard();
-                renderizarTabelaPedidosAdmin(); renderizarHistoricoDespachos();
-            } catch (e) { console.error("Erro ao carregar dados do sistema de pedidos e estoque", e); }
+                renderizarEstoqueAdmin();
+                renderizarPedidosNoDashboard();
+                renderizarTabelaPedidosAdmin();
+                renderizarHistoricoDespachos();
+
+            } catch (e) {
+                console.error("Erro ao carregar dados do sistema de pedidos e estoque", e);
+            }
         }
 
+        // Renderiza os cards de Estoque
         function renderizarEstoqueAdmin() {
-            const container = document.getElementById('grid-estoque-atual'); container.innerHTML = '';
+            const container = document.getElementById('grid-estoque-atual');
+            container.innerHTML = '';
+
             const pecas = Object.keys(window.estoqueAtualGlobal);
-            if (pecas.length === 0) { container.innerHTML = '<p style="color:var(--text-muted); font-size:13px; width:100%; text-align:center;">O estoque está vazio no momento.</p>'; return; }
+            if (pecas.length === 0) {
+                container.innerHTML = '<p style="color:var(--text-muted); font-size:13px; width:100%; text-align:center;">O estoque está vazio no momento.</p>';
+                return;
+            }
 
             pecas.forEach(peca => {
                 const qtd = window.estoqueAtualGlobal[peca] || 0;
                 let corQtd = qtd > 0 ? 'var(--success)' : 'var(--danger)';
-                container.innerHTML += `<div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; flex: 1; min-width: 130px; text-align: center; box-shadow: 0 1px 2px rgba(0,0,0,0.02);"><div style="font-size: 12px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">${peca}</div><div style="font-size: 24px; font-weight: 700; color: ${corQtd};">${qtd} <span style="font-size:12px; color:var(--text-muted); font-weight:normal;">un.</span></div></div>`;
+                container.innerHTML += `
+                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; flex: 1; min-width: 130px; text-align: center; box-shadow: 0 1px 2px rgba(0,0,0,0.02);">
+                            <div style="font-size: 12px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">${peca}</div>
+                            <div style="font-size: 24px; font-weight: 700; color: ${corQtd};">${qtd} <span style="font-size:12px; color:var(--text-muted); font-weight:normal;">un.</span></div>
+                        </div>
+                    `;
             });
         }
 
@@ -1187,7 +1270,9 @@
 
                 await window.carregarPedidos();
                 alert("✅ Pedido Lançado!\nSe houver peças no estoque em saldo, elas já serão alocadas para este pedido.");
-            } catch (e) { console.error(e); alert("Erro ao adicionar pedido."); } finally { document.getElementById("loading").style.display = "none"; }
+            } catch (e) {
+                console.error(e); alert("Erro ao adicionar pedido.");
+            } finally { document.getElementById("loading").style.display = "none"; }
         }
 
         window.despacharPedido = async function (id) {
@@ -1198,7 +1283,10 @@
             const qtdRequerida = Number(pedido.qtd);
             const qtdParaDespachar = Math.min(estoqueLivre, qtdRequerida);
 
-            if (qtdParaDespachar <= 0) { alert(`⚠️ Atenção: Não há peças [${pedido.peca}] no estoque para realizar o despacho.`); return; }
+            if (qtdParaDespachar <= 0) {
+                alert(`⚠️ Atenção: Não há peças [${pedido.peca}] no estoque para realizar o despacho.\nProduza mais peças e tente novamente.`);
+                return;
+            }
 
             let msg = `Tem certeza que deseja DESPACHAR este pedido?\n\n`;
             if (qtdParaDespachar < qtdRequerida) msg += `⚠️ ALERTA DE PEDIDO INCOMPLETO!\nO cliente pediu ${qtdRequerida} un, mas há apenas ${qtdParaDespachar} un no estoque. O pedido será encerrado mesmo incompleto.\n`;
@@ -1210,14 +1298,20 @@
                     document.getElementById("loading").innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Rastreando sublotes e gerando expedição...';
 
                     const loteGerado = "LT-EXP-" + Math.floor(Math.random() * 90000 + 10000);
-                    let sublotesRastreio = []; let faltaSeparar = qtdParaDespachar;
+
+                    let sublotesRastreio = [];
+                    let faltaSeparar = qtdParaDespachar;
 
                     for (let i = 0; i < window.producaoDetalhadaGlobal.length; i++) {
                         let p = window.producaoDetalhadaGlobal[i];
                         if (p.peca === pedido.peca && p.qtd_disponivel > 0) {
                             let usar = Math.min(p.qtd_disponivel, faltaSeparar);
-                            sublotesRastreio.push({ dataProd: p.data, maquina: p.maquina, operador: p.operador, lote_fabrica: p.lote, qtd: usar });
-                            faltaSeparar -= usar; if (faltaSeparar <= 0) break;
+                            sublotesRastreio.push({
+                                dataProd: p.data, maquina: p.maquina, operador: p.operador,
+                                lote_fabrica: p.lote, qtd: usar
+                            });
+                            faltaSeparar -= usar;
+                            if (faltaSeparar <= 0) break;
                         }
                     }
 
@@ -1233,7 +1327,6 @@
                     await window.carregarPedidos();
                     alert(`✅ Pedido Finalizado e Despachado com Sucesso!\n\n📦 A etiqueta será gerada a seguir.`);
 
-                    // NOVO: Chama a impressão da etiqueta automaticamente após o despacho
                     const ultimoSnap = await get(ref(db, "pedidos_despachados"));
                     if (ultimoSnap.exists()) {
                         const vals = ultimoSnap.val();
@@ -1248,8 +1341,11 @@
         }
 
         window.removerPedido = async function (id) {
-            if (confirm("Tem certeza que deseja cancelar e excluir este pedido? As peças voltarão a ficar disponíveis no estoque.")) {
-                try { await remove(ref(db, `pedidos_ativos/${id}`)); await window.carregarPedidos(); } catch (e) { console.error(e); alert("Erro ao excluir."); }
+            if (confirm("Tem certeza que deseja cancelar e excluir este pedido? As peças voltarão a ficar disponíveis no estoque para outros pedidos.")) {
+                try {
+                    await remove(ref(db, `pedidos_ativos/${id}`));
+                    await window.carregarPedidos();
+                } catch (e) { console.error(e); alert("Erro ao excluir."); }
             }
         }
 
@@ -1265,7 +1361,14 @@
             } else {
                 despacho.sublotes.forEach(sub => {
                     const dataF = sub.dataProd.split('-').reverse().join('/');
-                    tbody.innerHTML += `<tr><td>${dataF}</td><td><strong>${sub.maquina}</strong></td><td><span class="pecas-list operador-badge"><i class="fa-solid fa-user"></i> ${sub.operador}</span></td><td><i class="fa-solid fa-barcode text-muted"></i> ${sub.lote_fabrica}</td><td><strong>${sub.qtd}</strong> un.</td></tr>`;
+                    tbody.innerHTML += `
+                            <tr>
+                                <td>${dataF}</td><td><strong>${sub.maquina}</strong></td>
+                                <td><span class="pecas-list operador-badge"><i class="fa-solid fa-user"></i> ${sub.operador}</span></td>
+                                <td><i class="fa-solid fa-barcode text-muted"></i> ${sub.lote_fabrica}</td>
+                                <td><strong>${sub.qtd}</strong> un.</td>
+                            </tr>
+                        `;
                 });
             }
             document.getElementById('modalSublotes').style.display = 'flex';
@@ -1382,7 +1485,13 @@
                                 if (relatorio.producao) {
                                     relatorio.producao.forEach(p => {
                                         if (p.lote && p.lote.toUpperCase().includes(termoBusca)) {
-                                            resultados.push({ data: relatorio.data || data, turno: relatorio.turno || "-", maquina: maquina.replace("Maquina_", "Máquina "), operador: relatorio.operador || "-", peca: p.peca || "-", qtd: p.quantidade || 0, hora: p.horario || "-", lote: p.lote, isDespacho: false });
+                                            resultados.push({
+                                                data: relatorio.data || data, turno: relatorio.turno || "-",
+                                                maquina: maquina.replace("Maquina_", "Máquina "),
+                                                operador: relatorio.operador || "-", peca: p.peca || "-",
+                                                qtd: p.quantidade || 0, hora: p.horario || "-", lote: p.lote,
+                                                isDespacho: false
+                                            });
                                         }
                                     });
                                 }
@@ -1399,21 +1508,38 @@
                         if (d.lote_despacho && d.lote_despacho.toUpperCase().includes(termoBusca)) {
                             let horaF = "-";
                             if (d.timestamp) { const dt = new Date(d.timestamp); horaF = dt.toLocaleTimeString("pt-BR", { hour: '2-digit', minute: '2-digit' }); }
-                            resultados.push({ data: d.data_despacho, turno: "Expedição", maquina: "Destino: " + d.cliente, operador: "Sistema/Admin", peca: d.peca || "-", qtd: d.qtd_despachada || d.total_produzido || 0, hora: horaF, lote: d.lote_despacho, isDespacho: true });
+                            resultados.push({
+                                data: d.data_despacho, turno: "Expedição",
+                                maquina: "Destino: " + d.cliente,
+                                operador: "Sistema/Admin", peca: d.peca || "-",
+                                qtd: d.qtd_despachada || d.total_produzido || 0,
+                                hora: horaF, lote: d.lote_despacho,
+                                isDespacho: true
+                            });
                         }
                     }
                 }
 
                 const tbodyBusca = document.getElementById('tbody-busca-lote'); tbodyBusca.innerHTML = '';
-                if (resultados.length === 0) tbodyBusca.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:20px; color:var(--text-muted);">Nenhum registro encontrado.</td></tr>';
-                else {
+                if (resultados.length === 0) {
+                    tbodyBusca.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:20px; color:var(--text-muted);">Nenhum registro encontrado.</td></tr>';
+                } else {
                     resultados.sort((a, b) => new Date(b.data) - new Date(a.data));
                     resultados.forEach(r => {
                         const dataFormatada = r.data.split('-').reverse().join('/');
                         const icone = r.isDespacho ? '<i class="fa-solid fa-truck-fast" style="color:var(--success)"></i>' : '<i class="fa-solid fa-box text-muted"></i>';
                         const corTurno = r.isDespacho ? '<span class="badge bg-success">Expedição</span>' : `${r.turno}º Turno`;
                         const corLinha = r.isDespacho ? 'background-color: #f0fdf4;' : '';
-                        tbodyBusca.innerHTML += `<tr style="${corLinha}"><td><strong>${icone} ${r.lote}</strong></td><td>${dataFormatada}</td><td>${r.hora}</td><td>${corTurno}</td><td>${r.maquina}</td><td><span class="pecas-list operador-badge"><i class="fa-solid fa-user"></i> ${r.operador}</span></td><td>${r.peca}</td><td><strong>${r.qtd}</strong> peças</td></tr>`;
+
+                        tbodyBusca.innerHTML += `
+                                <tr style="${corLinha}">
+                                    <td><strong>${icone} ${r.lote}</strong></td>
+                                    <td>${dataFormatada}</td><td>${r.hora}</td><td>${corTurno}</td>
+                                    <td>${r.maquina}</td>
+                                    <td><span class="pecas-list operador-badge"><i class="fa-solid fa-user"></i> ${r.operador}</span></td>
+                                    <td>${r.peca}</td><td><strong>${r.qtd}</strong> peças</td>
+                                </tr>
+                            `;
                     });
                 }
                 document.getElementById('modalBuscaLote').style.display = 'flex';
@@ -1428,6 +1554,7 @@
             const modalDet = document.getElementById('modalDetalhes'); const modalBusca = document.getElementById('modalBuscaLote');
             const modalSenha = document.getElementById('modalSenha'); const modalAdmin = document.getElementById('modalPedidosAdmin');
             const modalSublotes = document.getElementById('modalSublotes');
+
             if (event.target == modalDet) fecharModalDetalhes(); if (event.target == modalBusca) modalBusca.style.display = 'none';
             if (event.target == modalSenha) modalSenha.style.display = 'none'; if (event.target == modalAdmin) modalAdmin.style.display = 'none';
             if (event.target == modalSublotes) modalSublotes.style.display = 'none';
@@ -1452,12 +1579,9 @@
                 if (snap.exists()) {
                     const historicoCompleto = snap.val();
 
-                    // Loop por todas as datas registradas no banco
                     for (const dataHist in historicoCompleto) {
 
-                        // Verifica se a data atual do banco está dentro do período selecionado
                         if (dataHist >= dataInicio && dataHist <= dataFim) {
-
                             const dadosDoDia = historicoCompleto[dataHist];
 
                             for (const maquina in dadosDoDia) {
@@ -1475,7 +1599,7 @@
                                     const r = registros[id];
                                     if (turnoEscolhido !== 'todos' && r.turno !== turnoEscolhido) continue;
 
-                                    validouTurnoNoDia = true; // Se achou um relatório no turno desejado, a máquina operou
+                                    validouTurnoNoDia = true;
 
                                     relatorios++; window.dadosGeraisModal[maquina].relatoriosCount++;
                                     if (r.operador) operadoresPorMaquina[maquina].add(r.operador);
@@ -1493,7 +1617,7 @@
 
                                             if (p.horario) { const hora = parseInt(p.horario.split(":")[0]); if (!isNaN(hora)) prodHoraArray[hora] += qtd; }
 
-                                            const dataF = r.data ? r.data.split('-').reverse().join('/') : dataHist;
+                                            const dataF = r.data ? r.data.split('-').reverse().join('/') : dataHist.split('-').reverse().join('/');
                                             window.dadosGeraisModal[maquina].logsProducao.push({ hora: dataF + " " + (p.horario || "-"), peca: nomePeca, lote: p.lote || "-", qtd: qtd });
                                         });
                                     }
@@ -1510,15 +1634,15 @@
 
                                                 const motivo = p.motivo || "Outros"; motivosParadaTotal[motivo] = (motivosParadaTotal[motivo] || 0) + diferenca;
 
-                                                const dataF = r.data ? r.data.split('-').reverse().join('/') : dataHist;
-                                                window.dadosGeraisModal[maquina].logsParada.push({ inicio: dataF, fim: p.fim, motivo: motivo, duracao: diferenca });
+                                                const dataF = r.data ? r.data.split('-').reverse().join('/') : dataHist.split('-').reverse().join('/');
+                                                window.dadosGeraisModal[maquina].logsParada.push({ inicio: dataF + " " + p.inicio, fim: p.fim, motivo: motivo, duracao: diferenca });
                                             }
                                         });
                                     }
                                 }
 
                                 if (validouTurnoNoDia) {
-                                    turnosTrabalhadosPorMaquina[maquina] += 1; // Soma +1 turno para esta máquina calcular eficiência depois
+                                    turnosTrabalhadosPorMaquina[maquina] += 1;
                                     relMaquina[maquina] = (relMaquina[maquina] || 0) + 1;
                                     window.dadosGeraisModal[maquina].operadores = Array.from(operadoresPorMaquina[maquina]);
                                 }
