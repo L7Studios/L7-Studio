@@ -1,9 +1,7 @@
-const CACHE_NAME = 'pcp-amc-v1';
-
-// Arquivos para carregar mais rápido
+const CACHE_NAME = 'hidrauserv-v1';
 const assets = [
   './',
-  './index.html'
+  './Hidrauserv.html'
 ];
 
 self.addEventListener('install', (event) => {
@@ -12,6 +10,7 @@ self.addEventListener('install', (event) => {
       return cache.addAll(assets);
     })
   );
+  self.skipWaiting();
 });
 
 self.addEventListener('fetch', (event) => {

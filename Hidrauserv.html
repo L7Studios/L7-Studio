@@ -7,7 +7,7 @@
 
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="PCP AMC">
+    <meta name="apple-mobile-web-app-title" content="Hidrauserv">
     <meta name="mobile-web-app-capable" content="yes">
     <link rel="manifest" href="manifest.json">
 
@@ -141,9 +141,7 @@
             margin-bottom: .4rem;
         }
 
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
+        .form-group input, .form-group select, .form-group textarea {
             width: 100%;
             padding: .6rem;
             border: 1px solid #ccc;
@@ -294,7 +292,6 @@
             }
     </style>
 </head>
-
 <body>
 
     <header>
@@ -323,14 +320,8 @@
             <button class="close-modal" onclick="fecharModal()">×</button>
             <h2 id="modal-title"></h2>
             <div class="top-fields">
-                <div class="form-group">
-                    <label>Operador</label>
-                    <input id="cod-operador">
-                </div>
-                <div class="form-group">
-                    <label>Data</label>
-                    <input type="date" id="data-registro">
-                </div>
+                <div class="form-group"><label>Operador</label><input id="cod-operador"></div>
+                <div class="form-group"><label>Data</label><input type="date" id="data-registro"></div>
                 <div class="form-group">
                     <label>Turno</label>
                     <select id="turno">
@@ -353,17 +344,12 @@
                                 <option>Espiga</option>
                             </select>
                         </div>
-                        <div class="form-group">
-                            <label>Qtd</label>
-                            <input type="number" id="prod-qtd">
-                        </div>
+                        <div class="form-group"><label>Qtd</label><input type="number" id="prod-qtd"></div>
                         <button class="btn-add" onclick="addProducao()">+</button>
                     </div>
                     <div class="table-responsive">
                         <table>
-                            <thead>
-                                <tr><th>Peça</th><th>Qtd</th><th>Hora</th><th>Lote</th></tr>
-                            </thead>
+                            <thead><tr><th>Peça</th><th>Qtd</th><th>Hora</th><th>Lote</th></tr></thead>
                             <tbody id="tbody-producao"></tbody>
                         </table>
                     </div>
@@ -381,38 +367,25 @@
                                 <option>Banheiro</option>
                             </select>
                         </div>
-                        <div class="form-group">
-                            <label>Início</label>
-                            <input type="time" id="parada-inicio">
-                        </div>
-                        <div class="form-group">
-                            <label>Fim</label>
-                            <input type="time" id="parada-fim">
-                        </div>
+                        <div class="form-group"><label>Início</label><input type="time" id="parada-inicio"></div>
+                        <div class="form-group"><label>Fim</label><input type="time" id="parada-fim"></div>
                         <button class="btn-add" onclick="addParada()">+</button>
                     </div>
                     <div class="table-responsive">
                         <table>
-                            <thead>
-                                <tr><th>Motivo</th><th>Início</th><th>Fim</th></tr>
-                            </thead>
+                            <thead><tr><th>Motivo</th><th>Início</th><th>Fim</th></tr></thead>
                             <tbody id="tbody-parada"></tbody>
                         </table>
                     </div>
                 </div>
             </div>
 
-            <div class="form-group" style="margin-top:20px">
-                <label>Observações</label>
-                <textarea id="observacoes"></textarea>
-            </div>
+            <div class="form-group" style="margin-top:20px"><label>Observações</label><textarea id="observacoes"></textarea></div>
             <button class="submit-btn" id="btn-enviar" onclick="prepararEnvio()">Enviar Relatório</button>
         </div>
     </div>
 
-    <footer class="site-footer">
-        &copy; 2026 Todos os direitos reservados a <span>L7 Studio</span>.
-    </footer>
+    <footer class="site-footer">&copy; 2026 Todos os direitos reservados a <span>L7 Studio</span>.</footer>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -441,14 +414,10 @@
             maquinaAtual = "Maquina_" + num;
             document.getElementById("modal-title").innerText = "Lançamento - Máquina " + num;
             document.getElementById("modal").style.display = "flex";
-            listaProducao = [];
-            listaParada = [];
-            atualizarTabelas();
+            listaProducao = []; listaParada = []; atualizarTabelas();
         }
 
-        window.fecharModal = function () {
-            document.getElementById("modal").style.display = "none";
-        }
+        window.fecharModal = function () { document.getElementById("modal").style.display = "none"; }
 
         window.addProducao = function () {
             const peca = document.getElementById("prod-peca").value;
@@ -476,8 +445,7 @@
         window.atualizarTabelas = function () {
             const tbProd = document.getElementById("tbody-producao");
             const tbParada = document.getElementById("tbody-parada");
-            tbProd.innerHTML = "";
-            tbParada.innerHTML = "";
+            tbProd.innerHTML = ""; tbParada.innerHTML = "";
             listaProducao.forEach(p => {
                 tbProd.innerHTML += `<tr><td>${p.peca}</td><td>${p.quantidade}</td><td>${p.horario}</td><td>${p.lote}</td></tr>`;
             });
@@ -493,28 +461,15 @@
             const obs = document.getElementById("observacoes").value;
             const btn = document.getElementById("btn-enviar");
             if (!operador) { alert("Digite operador"); return; }
-            if (listaProducao.length === 0 && listaParada.length === 0) {
-                alert("Adicione produção ou parada");
-                return;
-            }
-            btn.disabled = true;
-            btn.innerText = "Enviando...";
+            if (listaProducao.length === 0 && listaParada.length === 0) { alert("Adicione produção ou parada"); return; }
+            btn.disabled = true; btn.innerText = "Enviando...";
             try {
                 await push(ref(database, `relatorios_pcp/${data}/${maquinaAtual}`), {
-                    operador, turno, data,
-                    producao: listaProducao,
-                    paradas: listaParada,
-                    observacoes: obs,
-                    timestamp: Date.now()
+                    operador, turno, data, producao: listaProducao, paradas: listaParada, observacoes: obs, timestamp: Date.now()
                 });
-                alert("Relatório enviado");
-                fecharModal();
-            } catch (e) {
-                console.error(e);
-                alert("Erro ao enviar");
-            }
-            btn.disabled = false;
-            btn.innerText = "Enviar Relatório";
+                alert("Relatório enviado"); fecharModal();
+            } catch (e) { console.error(e); alert("Erro ao enviar"); }
+            btn.disabled = false; btn.innerText = "Enviar Relatório";
         }
     </script>
 
@@ -525,6 +480,5 @@
             });
         }
     </script>
-
 </body>
 </html>
