@@ -14,10 +14,7 @@
     <link rel="icon" href="https://amchidraulica.com.br/wp/wp-content/uploads/2025/04/1-2.webp" type="image/webp">
 
     <style>
-        * {
-            box-sizing: border-box;
-        }
-
+        * { box-sizing: border-box; }
         :root {
             --primary-color: #ec3237;
             --secondary-color: #f1f5f9;
@@ -25,7 +22,6 @@
             --text-color: #333;
             --border-radius: 8px;
         }
-
         body {
             font-family: 'Segoe UI',Tahoma,Verdana,sans-serif;
             background-color: var(--secondary-color);
@@ -36,7 +32,6 @@
             flex-direction: column;
             min-height: 100vh;
         }
-
         header {
             background-color: var(--primary-color);
             color: white;
@@ -45,33 +40,24 @@
             align-items: center;
             justify-content: space-between;
         }
-
         .logo-container img {
             max-height: 50px;
             background: white;
             padding: 5px;
             border-radius: 4px;
         }
-
         .container {
             padding: 2rem;
             max-width: 1200px;
             margin: auto;
             flex: 1;
         }
-
-        h1 {
-            text-align: center;
-            color: var(--primary-color);
-            margin-bottom: 2rem;
-        }
-
+        h1 { text-align: center; color: var(--primary-color); margin-bottom: 2rem; }
         .machines-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit,minmax(140px,1fr));
             gap: 1.5rem;
         }
-
         .machine-btn {
             background: white;
             border: 2px solid var(--primary-color);
@@ -84,12 +70,7 @@
             transition: .3s;
             min-height: 80px;
         }
-
-            .machine-btn:hover {
-                background: var(--primary-color);
-                color: white;
-            }
-
+        .machine-btn:hover { background: var(--primary-color); color: white; }
         .modal-overlay {
             display: none;
             position: fixed;
@@ -102,7 +83,6 @@
             align-items: center;
             z-index: 1000;
         }
-
         .modal-content {
             background: white;
             width: 95%;
@@ -113,7 +93,6 @@
             overflow: auto;
             position: relative;
         }
-
         .close-modal {
             position: absolute;
             right: 15px;
@@ -125,7 +104,6 @@
             line-height: 1;
             padding: 5px 15px;
         }
-
         .top-fields {
             display: grid;
             grid-template-columns: repeat(auto-fit,minmax(200px,1fr));
@@ -133,163 +111,37 @@
             margin-bottom: 2rem;
             margin-top: 1rem;
         }
-
-        .form-group label {
-            font-weight: 600;
-            font-size: .9rem;
-            display: block;
-            margin-bottom: .4rem;
-        }
-
+        .form-group label { font-weight: 600; font-size: .9rem; display: block; margin-bottom: .4rem; }
         .form-group input, .form-group select, .form-group textarea {
-            width: 100%;
-            padding: .6rem;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 16px;
-            min-height: 44px;
+            width: 100%; padding: .6rem; border: 1px solid #ccc; border-radius: 4px; font-size: 16px; min-height: 44px;
         }
-
-        .panels-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-        }
-
-        .panel {
-            background: #f8fafc;
-            padding: 1.5rem;
-            border-radius: var(--border-radius);
-            width: 100%;
-        }
-
-        .panel-header {
-            border-bottom: 2px solid var(--primary-color);
-            margin-bottom: 1rem;
-        }
-
-        .input-row {
-            display: flex;
-            gap: .5rem;
-            margin-bottom: 1rem;
-            align-items: end;
-        }
-
-        .btn-add {
-            width: 44px;
-            height: 44px;
-            border: none;
-            border-radius: 4px;
-            background: var(--primary-color);
-            color: white;
-            font-size: 1.4rem;
-            cursor: pointer;
-            flex-shrink: 0;
-        }
-
-        .table-responsive {
-            width: 100%;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: .85rem;
-            background: white;
-            min-width: 300px;
-        }
-
-        th, td {
-            border: 1px solid #cbd5e1;
-            padding: 8px;
-            text-align: left;
-        }
-
-        th {
-            background: var(--primary-color);
-            color: white;
-        }
-
-        .submit-btn {
-            width: 100%;
-            margin-top: 2rem;
-            padding: 1rem;
-            border: none;
-            border-radius: var(--border-radius);
-            background: var(--success);
-            color: white;
-            font-size: 1.2rem;
-            font-weight: bold;
-            cursor: pointer;
-            min-height: 54px;
-        }
+        .panels-container { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+        .panel { background: #f8fafc; padding: 1.5rem; border-radius: var(--border-radius); width: 100%; }
+        .panel-header { border-bottom: 2px solid var(--primary-color); margin-bottom: 1rem; }
+        .input-row { display: flex; gap: .5rem; margin-bottom: 1rem; align-items: end; }
+        .btn-add { width: 44px; height: 44px; border: none; border-radius: 4px; background: var(--primary-color); color: white; font-size: 1.4rem; cursor: pointer; flex-shrink: 0; }
+        .table-responsive { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        table { width: 100%; border-collapse: collapse; font-size: .85rem; background: white; min-width: 300px; }
+        th, td { border: 1px solid #cbd5e1; padding: 8px; text-align: left; }
+        th { background: var(--primary-color); color: white; }
+        .submit-btn { width: 100%; margin-top: 2rem; padding: 1rem; border: none; border-radius: var(--border-radius); background: var(--success); color: white; font-size: 1.2rem; font-weight: bold; cursor: pointer; min-height: 54px; }
 
         @media (max-width: 768px) {
-            header {
-                flex-direction: column;
-                gap: 10px;
-                text-align: center;
-                padding: 1rem;
-            }
-
-            .container {
-                padding: 1rem;
-            }
-
-            .modal-content {
-                width: 100%;
-                height: 100%;
-                max-height: 100vh;
-                border-radius: 0;
-                padding: 1.5rem 1rem;
-            }
-
-            .panels-container {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
-            }
-
-            .top-fields {
-                grid-template-columns: 1fr;
-                gap: 0.8rem;
-            }
-
-            .input-row {
-                flex-wrap: wrap;
-            }
-
-                .input-row .form-group {
-                    flex: 1 1 100%;
-                }
-
-            .btn-add {
-                width: 100%;
-                margin-top: 5px;
-            }
-
-            table th, table td {
-                white-space: nowrap;
-            }
+            header { flex-direction: column; gap: 10px; text-align: center; padding: 1rem; }
+            .container { padding: 1rem; }
+            .modal-content { width: 100%; height: 100%; max-height: 100vh; border-radius: 0; padding: 1.5rem 1rem; }
+            .panels-container { grid-template-columns: 1fr; gap: 1.5rem; }
+            .top-fields { grid-template-columns: 1fr; gap: 0.8rem; }
+            .input-row { flex-wrap: wrap; }
+            .input-row .form-group { flex: 1 1 100%; }
+            .btn-add { width: 100%; margin-top: 5px; }
+            table th, table td { white-space: nowrap; }
         }
 
         .site-footer {
-            text-align: center;
-            padding: 25px 20px 20px 20px;
-            margin-top: auto;
-            font-size: 13px;
-            font-weight: 500;
-            color: #64748b;
-            border-top: 1px solid #cbd5e1;
-            width: 100%;
-            background-color: var(--secondary-color);
+            text-align: center; padding: 25px 20px 20px 20px; margin-top: auto; font-size: 13px; font-weight: 500; color: #64748b; border-top: 1px solid #cbd5e1; width: 100%; background-color: var(--secondary-color);
         }
-
-            .site-footer span {
-                color: var(--primary-color);
-                font-weight: 700;
-            }
+        .site-footer span { color: var(--primary-color); font-weight: 700; }
     </style>
 </head>
 <body>
@@ -322,8 +174,7 @@
             <div class="top-fields">
                 <div class="form-group"><label>Operador</label><input id="cod-operador"></div>
                 <div class="form-group"><label>Data</label><input type="date" id="data-registro"></div>
-                <div class="form-group">
-                    <label>Turno</label>
+                <div class="form-group"><label>Turno</label>
                     <select id="turno">
                         <option value="1">1º Turno</option>
                         <option value="2">2º Turno</option>
@@ -339,9 +190,7 @@
                         <div class="form-group">
                             <label>Peça</label>
                             <select id="prod-peca">
-                                <option>Memmo</option>
-                                <option>Sugar</option>
-                                <option>Espiga</option>
+                                <option>Memmo</option><option>Sugar</option><option>Espiga</option>
                             </select>
                         </div>
                         <div class="form-group"><label>Qtd</label><input type="number" id="prod-qtd"></div>
@@ -361,10 +210,8 @@
                         <div class="form-group">
                             <label>Motivo</label>
                             <select id="parada-motivo">
-                                <option>Troca de Ferramenta</option>
-                                <option>Falta de Material</option>
-                                <option>Manutenção da Máquina</option>
-                                <option>Banheiro</option>
+                                <option>Troca de Ferramenta</option><option>Falta de Material</option>
+                                <option>Manutenção da Máquina</option><option>Banheiro</option>
                             </select>
                         </div>
                         <div class="form-group"><label>Início</label><input type="time" id="parada-inicio"></div>
@@ -474,11 +321,11 @@
     </script>
 
     <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js').catch(err => console.log('Erro SW:', err));
-            });
-        }
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('sw.js').catch(err => console.log('Erro SW:', err));
+        });
+      }
     </script>
 </body>
 </html>

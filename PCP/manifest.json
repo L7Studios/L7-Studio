@@ -1,8 +1,8 @@
 {
-  "name": "Hidrauserv - PCP AMC",
-  "short_name": "Hidrauserv",
-  "description": "Controle de Produção Hidrauserv",
-  "start_url": "Hidrauserv.html",
+  "name": "PCP - AMC Hidráulica",
+  "short_name": "PCP AMC",
+  "description": "Sistema de Controle de Produção",
+  "start_url": "index.html",
   "display": "standalone",
   "background_color": "#f1f5f9",
   "theme_color": "#ec3237",
