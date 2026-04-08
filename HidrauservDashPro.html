@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
 
     <link rel="icon" href="https://amchidraulica.com.br/wp/wp-content/uploads/2025/04/1-2.webp" type="image/webp">
 
@@ -25,6 +27,7 @@
             --warning: #f59e0b;
             --danger: #ef4444;
             --border: #e2e8f0;
+            --excel: #10b981;
         }
 
         * {
@@ -102,6 +105,25 @@
             .btn-header-pedidos:hover {
                 transform: translateY(-2px);
                 background-color: #d97706;
+            }
+
+        .btn-export {
+            background-color: var(--excel);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+            .btn-export:hover {
+                background-color: #059669;
             }
 
         /* Filtros e Busca */
@@ -258,6 +280,8 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
         }
 
         .section h2 {
@@ -268,7 +292,7 @@
             padding-left: 10px;
         }
 
-        /* Charts */
+        /* Charts & Table */
         .charts-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
@@ -285,7 +309,6 @@
             background: #fafafa;
         }
 
-        /* Table */
         .table-container {
             overflow-x: auto;
         }
@@ -347,7 +370,6 @@
             border: 1px solid #bfdbfe;
         }
 
-        /* Status Badges */
         .badge {
             padding: 6px 12px;
             border-radius: 20px;
@@ -495,7 +517,6 @@
             color: #92400e;
         }
 
-        /* Formulários dentro do Modal */
         .form-group-modal {
             margin-bottom: 15px;
         }
@@ -516,7 +537,7 @@
                 font-family: inherit;
             }
 
-        /* Footer L7 Studio */
+        /* Footer */
         .site-footer {
             text-align: center;
             padding: 25px 20px 10px 20px;
@@ -532,6 +553,83 @@
                 color: var(--primary);
                 font-weight: 700;
             }
+
+        /* ETIQUETA E IMPRESSÃO */
+        #print-label {
+            display: none;
+        }
+
+        @media print {
+            body.print-mode > *:not(#print-label) {
+                display: none !important;
+            }
+
+            body.print-mode {
+                background: white;
+                margin: 0;
+                padding: 0;
+            }
+
+                body.print-mode #print-label {
+                    display: block !important;
+                    width: 10cm;
+                    height: 15cm; /* Tamanho padrão de etiqueta térmica */
+                    padding: 20px;
+                    border: 2px solid #000;
+                    font-family: Arial, sans-serif;
+                    color: #000;
+                    box-sizing: border-box;
+                    margin: 0 auto;
+                }
+
+            .lbl-header {
+                text-align: center;
+                border-bottom: 2px solid #000;
+                padding-bottom: 10px;
+                margin-bottom: 20px;
+            }
+
+                .lbl-header h2 {
+                    margin: 0;
+                    font-size: 20px;
+                    text-transform: uppercase;
+                    font-weight: 900;
+                }
+
+                .lbl-header p {
+                    margin: 5px 0 0 0;
+                    font-size: 12px;
+                }
+
+            .lbl-row {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 12px;
+                border-bottom: 1px dashed #ccc;
+                padding-bottom: 5px;
+            }
+
+            .lbl-title {
+                font-size: 12px;
+                font-weight: bold;
+                text-transform: uppercase;
+            }
+
+            .lbl-value {
+                font-size: 16px;
+                font-weight: 900;
+            }
+
+            .lbl-barcode-container {
+                text-align: center;
+                margin-top: 30px;
+            }
+
+                .lbl-barcode-container svg {
+                    max-width: 100%;
+                    height: auto;
+                }
+        }
     </style>
 </head>
 
@@ -556,22 +654,25 @@
     </header>
 
     <div class="filter-section">
-        <label for="filtroData">Data:</label>
-        <input type="date" id="filtroData">
+        <label for="filtroDataInicio">De:</label>
+        <input type="date" id="filtroDataInicio">
+
+        <label for="filtroDataFim">Até:</label>
+        <input type="date" id="filtroDataFim">
 
         <label for="filtroTurno" style="margin-left: 10px;">Turno:</label>
         <select id="filtroTurno">
-            <option value="todos">Todos os Turnos</option>
-            <option value="1">1º Turno (07:00 às 17:00)</option>
+            <option value="todos">Todos</option>
+            <option value="1">1º Turno</option>
             <option value="2">2º Turno</option>
             <option value="3">3º Turno</option>
         </select>
 
-        <button id="btnFiltrar"><i class="fa-solid fa-filter"></i> Filtrar Gráficos</button>
+        <button id="btnFiltrar"><i class="fa-solid fa-filter"></i> Analisar Período</button>
 
         <div class="search-group">
-            <label for="inputBuscaLote">Buscar Lote:</label>
-            <input type="text" id="inputBuscaLote" placeholder="Ex: LT-12345" style="width: 130px;">
+            <label for="inputBuscaLote">Rastrear Lote:</label>
+            <input type="text" id="inputBuscaLote" placeholder="Ex: LT-EXP-12345" style="width: 150px;">
             <button id="btnBuscarLote" style="background-color: var(--success);"><i class="fa-solid fa-magnifying-glass"></i> Buscar</button>
         </div>
     </div>
@@ -606,7 +707,7 @@
     </div>
 
     <div class="section">
-        <div class="section-header"><h2>Análise Gráfica de Produção e Paradas</h2></div>
+        <div class="section-header"><h2>Análise Gráfica do Período</h2></div>
         <div class="charts-grid">
             <div class="chart-container"><canvas id="graficoProducao"></canvas></div>
             <div class="chart-container"><canvas id="graficoHora"></canvas></div>
@@ -619,21 +720,25 @@
 
     <div class="section">
         <div class="section-header">
-            <h2>Resumo Operacional por Máquina</h2>
-            <small style="color:var(--text-muted);"><i class="fa-solid fa-circle-info"></i> Clique no nome da máquina para ver detalhes</small>
+            <div>
+                <h2>Resumo Operacional por Máquina</h2>
+                <small style="color:var(--text-muted);"><i class="fa-solid fa-circle-info"></i> Dados consolidados do período selecionado.</small>
+            </div>
+            <button onclick="exportarExcel('tabela-principal', 'Resumo_Producao_PCP')" class="btn-export">
+                <i class="fa-solid fa-file-excel"></i> Exportar
+            </button>
         </div>
         <div class="table-container">
-            <table>
+            <table id="tabela-principal">
                 <thead>
                     <tr>
                         <th>Máquina</th>
-                        <th>Operador(es)</th>
+                        <th>Operador(es) no Período</th>
                         <th>Produção Total</th>
                         <th>Peças Fabricadas (Qtd)</th>
                         <th>Tempo Parado</th>
                         <th>Relatórios</th>
-                        <th>Eficiência (%)</th>
-                        <th>Status</th>
+                        <th>Eficiência Média</th>
                     </tr>
                 </thead>
                 <tbody id="tabela"></tbody>
@@ -644,9 +749,25 @@
     <div class="section" id="section-pedidos" style="display:none;">
         <div class="section-header">
             <h2><i class="fa-solid fa-bars-progress" style="color: var(--primary);"></i> Estoque de Peças & Pedidos Pendentes</h2>
-            <small style="color:var(--text-muted);">As peças em estoque acumulam e sobram para o próximo pedido, zerando o saldo apenas da quantia despachada (Regra FIFO).</small>
+            <small style="color:var(--text-muted);">As peças em estoque acumulam automaticamente (Regra FIFO).</small>
         </div>
         <div class="kpi-grid" id="grid-pedidos-progress">
+        </div>
+    </div>
+
+    <div id="print-label">
+        <div class="lbl-header">
+            <h2>Expedição AMC</h2>
+            <p>Controle de Qualidade & PCP</p>
+        </div>
+        <div class="lbl-row"><span class="lbl-title">Cliente / Destino</span><span class="lbl-value" id="lbl-cliente"></span></div>
+        <div class="lbl-row"><span class="lbl-title">Peça</span><span class="lbl-value" id="lbl-peca"></span></div>
+        <div class="lbl-row"><span class="lbl-title">Quantidade</span><span class="lbl-value" id="lbl-qtd"></span></div>
+        <div class="lbl-row"><span class="lbl-title">Data Despacho</span><span class="lbl-value" id="lbl-data"></span></div>
+
+        <div class="lbl-barcode-container">
+            <svg id="lbl-barcode"></svg>
+            <p style="font-size: 10px; margin-top: 5px; color: #555;">Rastreabilidade Garantida pelo Sistema L7 Studio</p>
         </div>
     </div>
 
@@ -655,26 +776,26 @@
             <button class="close-modal" onclick="fecharModalDetalhes()"><i class="fa-solid fa-xmark"></i></button>
             <div class="modal-header">
                 <h2 id="modal-titulo">Detalhes da Máquina</h2>
-                <div class="modal-subtitle" id="modal-subtitulo">Data: 00/00/0000 | Turno: -</div>
+                <div class="modal-subtitle" id="modal-subtitulo">Período Selecionado</div>
             </div>
             <div class="modal-grid">
                 <div class="modal-panel">
-                    <h3><i class="fa-solid fa-boxes-stacked" style="color:var(--primary)"></i> Histórico de Produção</h3>
+                    <h3><i class="fa-solid fa-boxes-stacked" style="color:var(--primary)"></i> Produção</h3>
                     <table class="detalhe-table">
-                        <thead><tr><th>Horário</th><th>Peça</th><th>Lote</th><th>Qtd</th></tr></thead>
+                        <thead><tr><th>Data/Hora</th><th>Peça</th><th>Lote</th><th>Qtd</th></tr></thead>
                         <tbody id="modal-body-producao"></tbody>
                     </table>
                 </div>
                 <div class="modal-panel">
-                    <h3><i class="fa-solid fa-clock-rotate-left" style="color:var(--danger)"></i> Histórico de Paradas</h3>
+                    <h3><i class="fa-solid fa-clock-rotate-left" style="color:var(--danger)"></i> Paradas</h3>
                     <table class="detalhe-table">
-                        <thead><tr><th>Início</th><th>Fim</th><th>Motivo</th><th>Duração</th></tr></thead>
+                        <thead><tr><th>Data</th><th>Motivo</th><th>Duração</th></tr></thead>
                         <tbody id="modal-body-paradas"></tbody>
                     </table>
                 </div>
             </div>
             <div class="modal-panel" style="margin-top:20px;">
-                <h3><i class="fa-solid fa-comments" style="color:var(--warning)"></i> Observações do(s) Operador(es)</h3>
+                <h3><i class="fa-solid fa-comments" style="color:var(--warning)"></i> Observações Registradas</h3>
                 <div id="modal-body-obs"></div>
             </div>
         </div>
@@ -723,7 +844,7 @@
 
             <div class="modal-header">
                 <h2><i class="fa-solid fa-clipboard-list" style="color:var(--warning)"></i> Gestão de Pedidos & Estoque</h2>
-                <div class="modal-subtitle">Controle de Produção, Metas e Histórico de Despachos com Lógica FIFO (Estoque Acumulado)</div>
+                <div class="modal-subtitle">Controle de Produção, Metas, Expedição e Impressão de Etiquetas</div>
             </div>
 
             <div class="modal-grid" style="grid-template-columns: 1fr;">
@@ -776,9 +897,14 @@
                 </div>
 
                 <div class="modal-panel" style="margin-top: 10px; background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-                    <h3>Pedidos Pendentes na Fábrica</h3>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <h3 style="margin-bottom: 0;">Pedidos Pendentes</h3>
+                        <button onclick="exportarExcel('tabela-pedidos-ativos', 'Pedidos_Pendentes')" class="btn-export" style="padding: 5px 10px; font-size: 12px;">
+                            <i class="fa-solid fa-file-excel"></i> Exportar
+                        </button>
+                    </div>
                     <div class="table-container">
-                        <table class="detalhe-table">
+                        <table class="detalhe-table" id="tabela-pedidos-ativos">
                             <thead>
                                 <tr>
                                     <th>Cliente / Ref</th>
@@ -796,9 +922,14 @@
                 </div>
 
                 <div class="modal-panel" style="margin-top: 10px; background: white; border-color: #cbd5e1;">
-                    <h3><i class="fa-solid fa-truck-moving" style="color:var(--success)"></i> Histórico de Pedidos Despachados</h3>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <h3 style="margin-bottom: 0;"><i class="fa-solid fa-truck-moving" style="color:var(--success)"></i> Histórico de Pedidos Despachados</h3>
+                        <button onclick="exportarExcel('tabela-historico-despachos', 'Historico_Despachos')" class="btn-export" style="padding: 5px 10px; font-size: 12px;">
+                            <i class="fa-solid fa-file-excel"></i> Exportar
+                        </button>
+                    </div>
                     <div class="table-container">
-                        <table class="detalhe-table">
+                        <table class="detalhe-table" id="tabela-historico-despachos">
                             <thead>
                                 <tr>
                                     <th>Data Despacho</th>
@@ -806,7 +937,7 @@
                                     <th>Peça</th>
                                     <th>Qtd. Enviada</th>
                                     <th>Lote Expedição</th>
-                                    <th style="text-align: center;">Rastreio (Sublotes)</th>
+                                    <th style="text-align: center;">Ações do Lote</th>
                                 </tr>
                             </thead>
                             <tbody id="tbody-historico-despachos"></tbody>
@@ -846,6 +977,7 @@
     </footer>
 
     <script type="module">
+        // ------------------ RELÓGIO ------------------
         function atualizarRelogio() {
             const agora = new Date();
             document.getElementById('dataAtual').innerText = agora.toLocaleDateString('pt-BR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
@@ -854,6 +986,55 @@
         setInterval(atualizarRelogio, 1000);
         atualizarRelogio();
 
+        // ------------------ EXPORTAR EXCEL (SHEETJS) ------------------
+        window.exportarExcel = function (tabelaId, nomeBase) {
+            const table = document.getElementById(tabelaId);
+            if (!table) return;
+
+            const cloneTable = table.cloneNode(true);
+            const ths = cloneTable.querySelectorAll('th');
+            let colunasRemover = [];
+
+            ths.forEach((th, index) => {
+                const texto = th.innerText.toLowerCase();
+                if (texto.includes('ações') || texto.includes('rastreio') || texto.includes('status')) {
+                    colunasRemover.push(index);
+                }
+            });
+
+            const rows = cloneTable.querySelectorAll('tr');
+            rows.forEach(row => {
+                const cells = row.querySelectorAll('th, td');
+                for (let i = colunasRemover.length - 1; i >= 0; i--) {
+                    if (cells[colunasRemover[i]]) cells[colunasRemover[i]].remove();
+                }
+            });
+
+            const wb = XLSX.utils.table_to_book(cloneTable, { sheet: "Relatório" });
+            const dataHj = new Date().toISOString().split("T")[0];
+            XLSX.writeFile(wb, `${nomeBase}_${dataHj}.xlsx`);
+        }
+
+        // ------------------ IMPRESSÃO DE ETIQUETA (JSBARCODE) ------------------
+        window.imprimirEtiquetaDespacho = function (idDespacho) {
+            const d = window.pedidosDespachadosGlobais.find(x => x.id === idDespacho);
+            if (!d) return;
+
+            document.getElementById('lbl-cliente').innerText = d.cliente;
+            document.getElementById('lbl-peca').innerText = d.peca;
+            document.getElementById('lbl-qtd').innerText = d.qtd_despachada || d.total_produzido;
+            document.getElementById('lbl-data').innerText = d.data_despacho.split('-').reverse().join('/');
+
+            JsBarcode("#lbl-barcode", d.lote_despacho, {
+                format: "CODE128", width: 2, height: 60, displayValue: true, fontSize: 16
+            });
+
+            document.body.classList.add('print-mode');
+            window.print();
+            document.body.classList.remove('print-mode');
+        }
+
+        // ------------------ FIREBASE ------------------
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
         import { getDatabase, ref, get, push, remove } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
@@ -872,7 +1053,6 @@
 
         let instanciasGraficos = {};
         window.dadosGeraisModal = {};
-
         window.pedidosAtivosGlobais = [];
         window.pedidosDespachadosGlobais = [];
         window.estoqueAtualGlobal = {};
@@ -892,7 +1072,7 @@
         }
 
         window.verificarSenha = function () {
-            if (document.getElementById('inputSenhaAdmin').value === '0000') {
+            if (document.getElementById('inputSenhaAdmin').value === '1999') {
                 document.getElementById('modalSenha').style.display = 'none';
                 document.getElementById('modalPedidosAdmin').style.display = 'flex';
             } else alert('Senha incorreta! Tente novamente.');
@@ -901,7 +1081,6 @@
 
         window.carregarPedidos = async function () {
             try {
-                // 1. Carrega Histórico de Despachos (Saídas do Estoque)
                 const snapDespachos = await get(ref(db, "pedidos_despachados"));
                 window.pedidosDespachadosGlobais = [];
                 let totalDespachadoPorPeca = {};
@@ -915,7 +1094,6 @@
                     }
                 }
 
-                // 2. Carrega Toda a Produção (Entradas no Estoque)
                 const snapHist = await get(ref(db, "relatorios_pcp"));
                 window.producaoDetalhadaGlobal = [];
 
@@ -929,14 +1107,10 @@
                                 if (rel.producao) {
                                     rel.producao.forEach(p => {
                                         window.producaoDetalhadaGlobal.push({
-                                            data: dataHist,
-                                            maquina: maq.replace("Maquina_", "M "),
-                                            operador: rel.operador || "-",
-                                            peca: p.peca,
-                                            lote: p.lote || "S/N",
-                                            qtd_original: Number(p.quantidade),
-                                            qtd_disponivel: Number(p.quantidade),
-                                            timestamp: relTime
+                                            data: dataHist, maquina: maq.replace("Maquina_", "M "),
+                                            operador: rel.operador || "-", peca: p.peca,
+                                            lote: p.lote || "S/N", qtd_original: Number(p.quantidade),
+                                            qtd_disponivel: Number(p.quantidade), timestamp: relTime
                                         });
                                     });
                                 }
@@ -945,34 +1119,27 @@
                     }
                 }
 
-                // Ordena produção da mais velha para a mais nova (FIFO)
                 window.producaoDetalhadaGlobal.sort((a, b) => a.timestamp - b.timestamp);
 
-                // 3. Aplica a Regra FIFO: Dá baixa na produção usando os despachos antigos
                 for (let peca in totalDespachadoPorPeca) {
                     let faltaBaixar = totalDespachadoPorPeca[peca];
                     for (let i = 0; i < window.producaoDetalhadaGlobal.length; i++) {
                         let p = window.producaoDetalhadaGlobal[i];
                         if (p.peca === peca && p.qtd_disponivel > 0) {
                             if (faltaBaixar >= p.qtd_disponivel) {
-                                faltaBaixar -= p.qtd_disponivel;
-                                p.qtd_disponivel = 0;
+                                faltaBaixar -= p.qtd_disponivel; p.qtd_disponivel = 0;
                             } else {
-                                p.qtd_disponivel -= faltaBaixar;
-                                faltaBaixar = 0;
-                                break;
+                                p.qtd_disponivel -= faltaBaixar; faltaBaixar = 0; break;
                             }
                         }
                     }
                 }
 
-                // 4. Calcula Saldo Atual do Estoque
                 window.estoqueAtualGlobal = {};
                 window.producaoDetalhadaGlobal.forEach(p => {
                     window.estoqueAtualGlobal[p.peca] = (window.estoqueAtualGlobal[p.peca] || 0) + p.qtd_disponivel;
                 });
 
-                // 5. Carrega Pedidos Ativos
                 const snapPedidos = await get(ref(db, "pedidos_ativos"));
                 window.pedidosAtivosGlobais = [];
                 if (snapPedidos.exists()) {
@@ -984,36 +1151,20 @@
                     }
                 }
 
-                renderizarEstoqueAdmin();
-                renderizarPedidosNoDashboard();
-                renderizarTabelaPedidosAdmin();
-                renderizarHistoricoDespachos();
-
-            } catch (e) {
-                console.error("Erro ao carregar dados do sistema de pedidos e estoque", e);
-            }
+                renderizarEstoqueAdmin(); renderizarPedidosNoDashboard();
+                renderizarTabelaPedidosAdmin(); renderizarHistoricoDespachos();
+            } catch (e) { console.error("Erro ao carregar dados do sistema de pedidos e estoque", e); }
         }
 
-        // Renderiza os cards de Estoque
         function renderizarEstoqueAdmin() {
-            const container = document.getElementById('grid-estoque-atual');
-            container.innerHTML = '';
-
+            const container = document.getElementById('grid-estoque-atual'); container.innerHTML = '';
             const pecas = Object.keys(window.estoqueAtualGlobal);
-            if (pecas.length === 0) {
-                container.innerHTML = '<p style="color:var(--text-muted); font-size:13px; width:100%; text-align:center;">O estoque está vazio no momento.</p>';
-                return;
-            }
+            if (pecas.length === 0) { container.innerHTML = '<p style="color:var(--text-muted); font-size:13px; width:100%; text-align:center;">O estoque está vazio no momento.</p>'; return; }
 
             pecas.forEach(peca => {
                 const qtd = window.estoqueAtualGlobal[peca] || 0;
                 let corQtd = qtd > 0 ? 'var(--success)' : 'var(--danger)';
-                container.innerHTML += `
-                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; flex: 1; min-width: 130px; text-align: center; box-shadow: 0 1px 2px rgba(0,0,0,0.02);">
-                            <div style="font-size: 12px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">${peca}</div>
-                            <div style="font-size: 24px; font-weight: 700; color: ${corQtd};">${qtd} <span style="font-size:12px; color:var(--text-muted); font-weight:normal;">un.</span></div>
-                        </div>
-                    `;
+                container.innerHTML += `<div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; flex: 1; min-width: 130px; text-align: center; box-shadow: 0 1px 2px rgba(0,0,0,0.02);"><div style="font-size: 12px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">${peca}</div><div style="font-size: 24px; font-weight: 700; color: ${corQtd};">${qtd} <span style="font-size:12px; color:var(--text-muted); font-weight:normal;">un.</span></div></div>`;
             });
         }
 
@@ -1036,9 +1187,7 @@
 
                 await window.carregarPedidos();
                 alert("✅ Pedido Lançado!\nSe houver peças no estoque em saldo, elas já serão alocadas para este pedido.");
-            } catch (e) {
-                console.error(e); alert("Erro ao adicionar pedido.");
-            } finally { document.getElementById("loading").style.display = "none"; }
+            } catch (e) { console.error(e); alert("Erro ao adicionar pedido."); } finally { document.getElementById("loading").style.display = "none"; }
         }
 
         window.despacharPedido = async function (id) {
@@ -1049,10 +1198,7 @@
             const qtdRequerida = Number(pedido.qtd);
             const qtdParaDespachar = Math.min(estoqueLivre, qtdRequerida);
 
-            if (qtdParaDespachar <= 0) {
-                alert(`⚠️ Atenção: Não há peças [${pedido.peca}] no estoque para realizar o despacho.\nProduza mais peças e tente novamente.`);
-                return;
-            }
+            if (qtdParaDespachar <= 0) { alert(`⚠️ Atenção: Não há peças [${pedido.peca}] no estoque para realizar o despacho.`); return; }
 
             let msg = `Tem certeza que deseja DESPACHAR este pedido?\n\n`;
             if (qtdParaDespachar < qtdRequerida) msg += `⚠️ ALERTA DE PEDIDO INCOMPLETO!\nO cliente pediu ${qtdRequerida} un, mas há apenas ${qtdParaDespachar} un no estoque. O pedido será encerrado mesmo incompleto.\n`;
@@ -1064,20 +1210,14 @@
                     document.getElementById("loading").innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Rastreando sublotes e gerando expedição...';
 
                     const loteGerado = "LT-EXP-" + Math.floor(Math.random() * 90000 + 10000);
-
-                    let sublotesRastreio = [];
-                    let faltaSeparar = qtdParaDespachar;
+                    let sublotesRastreio = []; let faltaSeparar = qtdParaDespachar;
 
                     for (let i = 0; i < window.producaoDetalhadaGlobal.length; i++) {
                         let p = window.producaoDetalhadaGlobal[i];
                         if (p.peca === pedido.peca && p.qtd_disponivel > 0) {
                             let usar = Math.min(p.qtd_disponivel, faltaSeparar);
-                            sublotesRastreio.push({
-                                dataProd: p.data, maquina: p.maquina, operador: p.operador,
-                                lote_fabrica: p.lote, qtd: usar
-                            });
-                            faltaSeparar -= usar;
-                            if (faltaSeparar <= 0) break;
+                            sublotesRastreio.push({ dataProd: p.data, maquina: p.maquina, operador: p.operador, lote_fabrica: p.lote, qtd: usar });
+                            faltaSeparar -= usar; if (faltaSeparar <= 0) break;
                         }
                     }
 
@@ -1091,7 +1231,16 @@
                     await remove(ref(db, `pedidos_ativos/${id}`));
 
                     await window.carregarPedidos();
-                    alert(`✅ Pedido Finalizado e Despachado com Sucesso!\n\n📦 Lote de Expedição: ${loteGerado}\n\nO saldo do estoque foi atualizado.`);
+                    alert(`✅ Pedido Finalizado e Despachado com Sucesso!\n\n📦 A etiqueta será gerada a seguir.`);
+
+                    // NOVO: Chama a impressão da etiqueta automaticamente após o despacho
+                    const ultimoSnap = await get(ref(db, "pedidos_despachados"));
+                    if (ultimoSnap.exists()) {
+                        const vals = ultimoSnap.val();
+                        const idDoNovoDespacho = Object.keys(vals).find(key => vals[key].lote_despacho === loteGerado);
+                        if (idDoNovoDespacho) window.imprimirEtiquetaDespacho(idDoNovoDespacho);
+                    }
+
                 } catch (e) {
                     console.error(e); alert("Erro ao despachar o pedido.");
                 } finally { document.getElementById("loading").style.display = "none"; document.getElementById("loading").innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processando dados...'; }
@@ -1099,11 +1248,8 @@
         }
 
         window.removerPedido = async function (id) {
-            if (confirm("Tem certeza que deseja cancelar e excluir este pedido? As peças voltarão a ficar disponíveis no estoque para outros pedidos.")) {
-                try {
-                    await remove(ref(db, `pedidos_ativos/${id}`));
-                    await window.carregarPedidos();
-                } catch (e) { console.error(e); alert("Erro ao excluir."); }
+            if (confirm("Tem certeza que deseja cancelar e excluir este pedido? As peças voltarão a ficar disponíveis no estoque.")) {
+                try { await remove(ref(db, `pedidos_ativos/${id}`)); await window.carregarPedidos(); } catch (e) { console.error(e); alert("Erro ao excluir."); }
             }
         }
 
@@ -1119,14 +1265,7 @@
             } else {
                 despacho.sublotes.forEach(sub => {
                     const dataF = sub.dataProd.split('-').reverse().join('/');
-                    tbody.innerHTML += `
-                            <tr>
-                                <td>${dataF}</td><td><strong>${sub.maquina}</strong></td>
-                                <td><span class="pecas-list operador-badge"><i class="fa-solid fa-user"></i> ${sub.operador}</span></td>
-                                <td><i class="fa-solid fa-barcode text-muted"></i> ${sub.lote_fabrica}</td>
-                                <td><strong>${sub.qtd}</strong> un.</td>
-                            </tr>
-                        `;
+                    tbody.innerHTML += `<tr><td>${dataF}</td><td><strong>${sub.maquina}</strong></td><td><span class="pecas-list operador-badge"><i class="fa-solid fa-user"></i> ${sub.operador}</span></td><td><i class="fa-solid fa-barcode text-muted"></i> ${sub.lote_fabrica}</td><td><strong>${sub.qtd}</strong> un.</td></tr>`;
                 });
             }
             document.getElementById('modalSublotes').style.display = 'flex';
@@ -1172,30 +1311,25 @@
                             <td><strong>${dataF}</strong></td><td>${d.cliente}</td><td>${d.peca}</td>
                             <td style="color:var(--success); font-weight:bold;">${d.qtd_despachada} / ${d.meta_original || d.meta || d.qtd_despachada}</td>
                             <td><i class="fa-solid fa-box-open text-muted"></i> ${d.lote_despacho}</td>
-                            <td style="text-align: center;"><button onclick="verSublotesDespacho('${d.id}')" style="background:var(--primary); color:white; border:none; padding:6px 12px; border-radius:4px; cursor:pointer; font-size:12px; font-weight:bold;"><i class="fa-solid fa-list-check"></i> Sublotes</button></td>
+                            <td style="text-align: center;">
+                                <button onclick="verSublotesDespacho('${d.id}')" style="background:var(--primary); color:white; border:none; padding:6px 10px; border-radius:4px; cursor:pointer; font-size:12px; font-weight:bold; margin-right:5px;" title="Ver Sublotes de Produção"><i class="fa-solid fa-list-check"></i></button>
+                                <button onclick="imprimirEtiquetaDespacho('${d.id}')" style="background:var(--warning); color:white; border:none; padding:6px 10px; border-radius:4px; cursor:pointer; font-size:12px; font-weight:bold;" title="Re-imprimir Etiqueta"><i class="fa-solid fa-print"></i></button>
+                            </td>
                         </tr>
                     `;
             });
         }
 
         function renderizarPedidosNoDashboard() {
-            const container = document.getElementById('grid-pedidos-progress');
-            const section = document.getElementById('section-pedidos');
-
+            const container = document.getElementById('grid-pedidos-progress'); const section = document.getElementById('section-pedidos');
             if (window.pedidosAtivosGlobais.length === 0) { section.style.display = 'none'; return; }
 
             section.style.display = 'block'; container.innerHTML = '';
 
             window.pedidosAtivosGlobais.forEach(pedido => {
-                const produzido = pedido.produzidoAcumulado;
-                const meta = parseInt(pedido.qtd) || 1;
-
-                let porcentagem = (produzido / meta) * 100;
-                if (porcentagem > 100) porcentagem = 100;
-
-                let corBarra = 'var(--primary)';
-                if (porcentagem >= 100) corBarra = 'var(--success)';
-                else if (porcentagem > 50) corBarra = 'var(--warning)';
+                const produzido = pedido.produzidoAcumulado; const meta = parseInt(pedido.qtd) || 1;
+                let porcentagem = (produzido / meta) * 100; if (porcentagem > 100) porcentagem = 100;
+                let corBarra = 'var(--primary)'; if (porcentagem >= 100) corBarra = 'var(--success)'; else if (porcentagem > 50) corBarra = 'var(--warning)';
 
                 let corPrio = "var(--text-muted)";
                 if (pedido.prioridade === "Alta") corPrio = "var(--warning)";
@@ -1238,8 +1372,6 @@
 
             try {
                 const resultados = [];
-
-                // 1. Busca na Produção
                 const snapP = await get(ref(db, "relatorios_pcp"));
                 if (snapP.exists()) {
                     const todoHistorico = snapP.val();
@@ -1250,13 +1382,7 @@
                                 if (relatorio.producao) {
                                     relatorio.producao.forEach(p => {
                                         if (p.lote && p.lote.toUpperCase().includes(termoBusca)) {
-                                            resultados.push({
-                                                data: relatorio.data || data, turno: relatorio.turno || "-",
-                                                maquina: maquina.replace("Maquina_", "Máquina "),
-                                                operador: relatorio.operador || "-", peca: p.peca || "-",
-                                                qtd: p.quantidade || 0, hora: p.horario || "-", lote: p.lote,
-                                                isDespacho: false
-                                            });
+                                            resultados.push({ data: relatorio.data || data, turno: relatorio.turno || "-", maquina: maquina.replace("Maquina_", "Máquina "), operador: relatorio.operador || "-", peca: p.peca || "-", qtd: p.quantidade || 0, hora: p.horario || "-", lote: p.lote, isDespacho: false });
                                         }
                                     });
                                 }
@@ -1265,7 +1391,6 @@
                     }
                 }
 
-                // 2. Busca na Expedição
                 const snapD = await get(ref(db, "pedidos_despachados"));
                 if (snapD.exists()) {
                     const despachos = snapD.val();
@@ -1273,42 +1398,22 @@
                         const d = despachos[key];
                         if (d.lote_despacho && d.lote_despacho.toUpperCase().includes(termoBusca)) {
                             let horaF = "-";
-                            if (d.timestamp) {
-                                const dt = new Date(d.timestamp);
-                                horaF = dt.toLocaleTimeString("pt-BR", { hour: '2-digit', minute: '2-digit' });
-                            }
-                            resultados.push({
-                                data: d.data_despacho, turno: "Expedição",
-                                maquina: "Destino: " + d.cliente,
-                                operador: "Sistema/Admin", peca: d.peca || "-",
-                                qtd: d.qtd_despachada || d.total_produzido || 0,
-                                hora: horaF, lote: d.lote_despacho,
-                                isDespacho: true
-                            });
+                            if (d.timestamp) { const dt = new Date(d.timestamp); horaF = dt.toLocaleTimeString("pt-BR", { hour: '2-digit', minute: '2-digit' }); }
+                            resultados.push({ data: d.data_despacho, turno: "Expedição", maquina: "Destino: " + d.cliente, operador: "Sistema/Admin", peca: d.peca || "-", qtd: d.qtd_despachada || d.total_produzido || 0, hora: horaF, lote: d.lote_despacho, isDespacho: true });
                         }
                     }
                 }
 
                 const tbodyBusca = document.getElementById('tbody-busca-lote'); tbodyBusca.innerHTML = '';
-                if (resultados.length === 0) {
-                    tbodyBusca.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:20px; color:var(--text-muted);">Nenhum registro encontrado.</td></tr>';
-                } else {
+                if (resultados.length === 0) tbodyBusca.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:20px; color:var(--text-muted);">Nenhum registro encontrado.</td></tr>';
+                else {
                     resultados.sort((a, b) => new Date(b.data) - new Date(a.data));
                     resultados.forEach(r => {
                         const dataFormatada = r.data.split('-').reverse().join('/');
                         const icone = r.isDespacho ? '<i class="fa-solid fa-truck-fast" style="color:var(--success)"></i>' : '<i class="fa-solid fa-box text-muted"></i>';
                         const corTurno = r.isDespacho ? '<span class="badge bg-success">Expedição</span>' : `${r.turno}º Turno`;
                         const corLinha = r.isDespacho ? 'background-color: #f0fdf4;' : '';
-
-                        tbodyBusca.innerHTML += `
-                                <tr style="${corLinha}">
-                                    <td><strong>${icone} ${r.lote}</strong></td>
-                                    <td>${dataFormatada}</td><td>${r.hora}</td><td>${corTurno}</td>
-                                    <td>${r.maquina}</td>
-                                    <td><span class="pecas-list operador-badge"><i class="fa-solid fa-user"></i> ${r.operador}</span></td>
-                                    <td>${r.peca}</td><td><strong>${r.qtd}</strong> peças</td>
-                                </tr>
-                            `;
+                        tbodyBusca.innerHTML += `<tr style="${corLinha}"><td><strong>${icone} ${r.lote}</strong></td><td>${dataFormatada}</td><td>${r.hora}</td><td>${corTurno}</td><td>${r.maquina}</td><td><span class="pecas-list operador-badge"><i class="fa-solid fa-user"></i> ${r.operador}</span></td><td>${r.peca}</td><td><strong>${r.qtd}</strong> peças</td></tr>`;
                     });
                 }
                 document.getElementById('modalBuscaLote').style.display = 'flex';
@@ -1328,89 +1433,144 @@
             if (event.target == modalSublotes) modalSublotes.style.display = 'none';
         }
 
-        // ------------------ CARREGAR DASHBOARD PRINCIPAL ------------------
-        async function carregarDados(dataEscolhida, turnoEscolhido) {
+        // ------------------ CARREGAR DASHBOARD PRINCIPAL (AGORA COM PERÍODO) ------------------
+        async function carregarDados(dataInicio, dataFim, turnoEscolhido) {
             document.getElementById("loading").style.display = "block";
             window.dadosGeraisModal = {};
 
             try {
-                const snap = await get(ref(db, "relatorios_pcp/" + dataEscolhida));
+                // Ao invés de pegar 1 dia, pega TUDO e filtra no FrontEnd para o Período Escolhido
+                const snap = await get(ref(db, "relatorios_pcp"));
 
                 let prodTotal = 0; let paradaTotal = 0; let relatorios = 0; let prodHoraArray = new Array(24).fill(0);
                 const prodMaquina = {}; const paradaMaquina = {}; const relMaquina = {};
                 const operadoresPorMaquina = {}; const pecasTotalGeral = {}; const pecasPorMaquina = {}; const motivosParadaTotal = {};
 
+                // Precisamos saber quantos turnos cada máquina trabalhou neste período para calcular o OEE
+                const turnosTrabalhadosPorMaquina = {};
+
                 if (snap.exists()) {
-                    const dados = snap.val();
-                    for (const maquina in dados) {
-                        let prod = 0; let parada = 0; let rel = 0;
-                        pecasPorMaquina[maquina] = {}; operadoresPorMaquina[maquina] = new Set();
-                        window.dadosGeraisModal[maquina] = { nomeFormatado: maquina.replace("Maquina_", "Máquina "), operadores: [], logsProducao: [], logsParada: [], observacoes: [], relatoriosCount: 0 };
+                    const historicoCompleto = snap.val();
 
-                        const registros = dados[maquina];
-                        for (const id in registros) {
-                            const r = registros[id];
-                            if (turnoEscolhido !== 'todos' && r.turno !== turnoEscolhido) continue;
+                    // Loop por todas as datas registradas no banco
+                    for (const dataHist in historicoCompleto) {
 
-                            relatorios++; rel++; window.dadosGeraisModal[maquina].relatoriosCount++;
-                            if (r.operador) operadoresPorMaquina[maquina].add(r.operador);
-                            if (r.observacoes && r.observacoes.trim() !== "") window.dadosGeraisModal[maquina].observacoes.push(r.observacoes);
+                        // Verifica se a data atual do banco está dentro do período selecionado
+                        if (dataHist >= dataInicio && dataHist <= dataFim) {
 
-                            if (r.producao) {
-                                r.producao.forEach(p => {
-                                    const qtd = Number(p.quantidade); prod += qtd;
-                                    const nomePeca = p.peca || "Não Informada";
-                                    pecasTotalGeral[nomePeca] = (pecasTotalGeral[nomePeca] || 0) + qtd; pecasPorMaquina[maquina][nomePeca] = (pecasPorMaquina[maquina][nomePeca] || 0) + qtd;
-                                    if (p.horario) { const hora = parseInt(p.horario.split(":")[0]); if (!isNaN(hora)) prodHoraArray[hora] += qtd; }
-                                    window.dadosGeraisModal[maquina].logsProducao.push({ hora: p.horario || "-", peca: nomePeca, lote: p.lote || "-", qtd: qtd });
-                                });
-                            }
+                            const dadosDoDia = historicoCompleto[dataHist];
 
-                            if (r.paradas) {
-                                r.paradas.forEach(p => {
-                                    if (p.inicio && p.fim) {
-                                        const i = p.inicio.split(":"); const f = p.fim.split(":");
-                                        const mi = parseInt(i[0]) * 60 + parseInt(i[1]); const mf = parseInt(f[0]) * 60 + parseInt(f[1]);
-                                        let diferenca = mf - mi; if (diferenca < 0) diferenca += (24 * 60);
-                                        parada += diferenca;
-                                        const motivo = p.motivo || "Outros"; motivosParadaTotal[motivo] = (motivosParadaTotal[motivo] || 0) + diferenca;
-                                        window.dadosGeraisModal[maquina].logsParada.push({ inicio: p.inicio, fim: p.fim, motivo: motivo, duracao: diferenca });
+                            for (const maquina in dadosDoDia) {
+
+                                if (!window.dadosGeraisModal[maquina]) {
+                                    pecasPorMaquina[maquina] = {}; operadoresPorMaquina[maquina] = new Set();
+                                    turnosTrabalhadosPorMaquina[maquina] = 0;
+                                    window.dadosGeraisModal[maquina] = { nomeFormatado: maquina.replace("Maquina_", "Máquina "), operadores: [], logsProducao: [], logsParada: [], observacoes: [], relatoriosCount: 0 };
+                                }
+
+                                let validouTurnoNoDia = false;
+                                const registros = dadosDoDia[maquina];
+
+                                for (const id in registros) {
+                                    const r = registros[id];
+                                    if (turnoEscolhido !== 'todos' && r.turno !== turnoEscolhido) continue;
+
+                                    validouTurnoNoDia = true; // Se achou um relatório no turno desejado, a máquina operou
+
+                                    relatorios++; window.dadosGeraisModal[maquina].relatoriosCount++;
+                                    if (r.operador) operadoresPorMaquina[maquina].add(r.operador);
+                                    if (r.observacoes && r.observacoes.trim() !== "") window.dadosGeraisModal[maquina].observacoes.push(r.data + ": " + r.observacoes);
+
+                                    if (r.producao) {
+                                        r.producao.forEach(p => {
+                                            const qtd = Number(p.quantidade);
+                                            prodMaquina[maquina] = (prodMaquina[maquina] || 0) + qtd;
+                                            prodTotal += qtd;
+
+                                            const nomePeca = p.peca || "Não Informada";
+                                            pecasTotalGeral[nomePeca] = (pecasTotalGeral[nomePeca] || 0) + qtd;
+                                            pecasPorMaquina[maquina][nomePeca] = (pecasPorMaquina[maquina][nomePeca] || 0) + qtd;
+
+                                            if (p.horario) { const hora = parseInt(p.horario.split(":")[0]); if (!isNaN(hora)) prodHoraArray[hora] += qtd; }
+
+                                            const dataF = r.data ? r.data.split('-').reverse().join('/') : dataHist;
+                                            window.dadosGeraisModal[maquina].logsProducao.push({ hora: dataF + " " + (p.horario || "-"), peca: nomePeca, lote: p.lote || "-", qtd: qtd });
+                                        });
                                     }
-                                });
+
+                                    if (r.paradas) {
+                                        r.paradas.forEach(p => {
+                                            if (p.inicio && p.fim) {
+                                                const i = p.inicio.split(":"); const f = p.fim.split(":");
+                                                const mi = parseInt(i[0]) * 60 + parseInt(i[1]); const mf = parseInt(f[0]) * 60 + parseInt(f[1]);
+                                                let diferenca = mf - mi; if (diferenca < 0) diferenca += (24 * 60);
+
+                                                paradaMaquina[maquina] = (paradaMaquina[maquina] || 0) + diferenca;
+                                                paradaTotal += diferenca;
+
+                                                const motivo = p.motivo || "Outros"; motivosParadaTotal[motivo] = (motivosParadaTotal[motivo] || 0) + diferenca;
+
+                                                const dataF = r.data ? r.data.split('-').reverse().join('/') : dataHist;
+                                                window.dadosGeraisModal[maquina].logsParada.push({ inicio: dataF, fim: p.fim, motivo: motivo, duracao: diferenca });
+                                            }
+                                        });
+                                    }
+                                }
+
+                                if (validouTurnoNoDia) {
+                                    turnosTrabalhadosPorMaquina[maquina] += 1; // Soma +1 turno para esta máquina calcular eficiência depois
+                                    relMaquina[maquina] = (relMaquina[maquina] || 0) + 1;
+                                    window.dadosGeraisModal[maquina].operadores = Array.from(operadoresPorMaquina[maquina]);
+                                }
                             }
                         }
-
-                        if (prod > 0 || parada > 0 || rel > 0) {
-                            prodMaquina[maquina] = prod; paradaMaquina[maquina] = parada; relMaquina[maquina] = rel;
-                            prodTotal += prod; paradaTotal += parada; window.dadosGeraisModal[maquina].operadores = Array.from(operadoresPorMaquina[maquina]);
-                        } else delete window.dadosGeraisModal[maquina];
                     }
                 }
 
+                // Limpa máquinas vazias (que não operaram no período)
                 const maquinas = Object.keys(prodMaquina);
+                for (let key in window.dadosGeraisModal) {
+                    if (!maquinas.includes(key)) delete window.dadosGeraisModal[key];
+                }
+
                 const minutosPorTurno = (turnoEscolhido === '1') ? 600 : 480;
 
-                document.getElementById("prodTotal").innerText = prodTotal.toLocaleString('pt-BR'); document.getElementById("tempoParado").innerText = paradaTotal.toLocaleString('pt-BR'); document.getElementById("maquinasAtivas").innerText = maquinas.length; document.getElementById("relatorios").innerText = relatorios; document.getElementById("mediaProd").innerText = Math.round(prodTotal / (maquinas.length || 1)).toLocaleString('pt-BR'); document.getElementById("mediaParada").innerText = Math.round(paradaTotal / (maquinas.length || 1)).toLocaleString('pt-BR');
+                // Total de Tempo Disponível = soma de todos os turnos de todas as máquinas
+                let tempoDisponivelTotalMulti = 0;
+                for (let m in turnosTrabalhadosPorMaquina) {
+                    tempoDisponivelTotalMulti += turnosTrabalhadosPorMaquina[m] * minutosPorTurno;
+                }
 
-                const tempoDisponivelTotal = (maquinas.length || 1) * minutosPorTurno;
-                const eficiencia = maquinas.length === 0 ? 0 : Math.max(0, 100 - (paradaTotal / tempoDisponivelTotal) * 100);
+                document.getElementById("prodTotal").innerText = prodTotal.toLocaleString('pt-BR');
+                document.getElementById("tempoParado").innerText = paradaTotal.toLocaleString('pt-BR');
+                document.getElementById("maquinasAtivas").innerText = maquinas.length;
+                document.getElementById("relatorios").innerText = relatorios;
+                document.getElementById("mediaProd").innerText = Math.round(prodTotal / (maquinas.length || 1)).toLocaleString('pt-BR');
+                document.getElementById("mediaParada").innerText = Math.round(paradaTotal / (maquinas.length || 1)).toLocaleString('pt-BR');
+
+                const eficiencia = tempoDisponivelTotalMulti === 0 ? 0 : Math.max(0, 100 - (paradaTotal / tempoDisponivelTotalMulti) * 100);
                 const elementEficiencia = document.getElementById("eficiencia"); elementEficiencia.innerText = Math.round(eficiencia) + "%";
                 if (eficiencia >= 85) elementEficiencia.style.color = 'var(--success)'; else if (eficiencia >= 70 || maquinas.length === 0) elementEficiencia.style.color = 'var(--warning)'; else elementEficiencia.style.color = 'var(--danger)';
 
-                const horasNoTurno = (turnoEscolhido === '1') ? 10 : 8; document.getElementById("prodHora").innerText = Math.round(prodTotal / horasNoTurno).toLocaleString('pt-BR');
+                // Prod Hora: Se for mais de 1 dia, é a média por hora. Se for 1 dia, é o total / horas do turno
+                const diffDias = Math.floor((new Date(dataFim) - new Date(dataInicio)) / (1000 * 60 * 60 * 24)) + 1;
+                const horasNoTurno = (turnoEscolhido === '1') ? 10 : 8;
+                document.getElementById("prodHora").innerText = Math.round(prodTotal / (horasNoTurno * diffDias)).toLocaleString('pt-BR');
+
                 const tabela = document.getElementById("tabela"); tabela.innerHTML = "";
 
-                if (maquinas.length === 0) tabela.innerHTML = `<tr><td colspan="8" style="text-align:center; padding: 30px; color: var(--text-muted);">Nenhum lançamento para a data/turno.</td></tr>`;
+                if (maquinas.length === 0) tabela.innerHTML = `<tr><td colspan="7" style="text-align:center; padding: 30px; color: var(--text-muted);">Nenhum lançamento no período e turno selecionados.</td></tr>`;
                 else {
                     maquinas.forEach(m => {
-                        const nomeFormatado = m.replace("Maquina_", "Máquina "); const eficienciaM = Math.max(0, 100 - (paradaMaquina[m] / minutosPorTurno) * 100);
-                        let statusClass = 'bg-danger'; let statusText = 'Crítico';
-                        if (eficienciaM >= 85) { statusClass = 'bg-success'; statusText = 'Excelente'; } else if (eficienciaM >= 70) { statusClass = 'bg-warning'; statusText = 'Atenção'; }
+                        const nomeFormatado = m.replace("Maquina_", "Máquina ");
+                        const tempoDisponivelDestaMaquina = turnosTrabalhadosPorMaquina[m] * minutosPorTurno;
+                        const pMaquina = paradaMaquina[m] || 0;
+                        const eficienciaM = Math.max(0, 100 - (pMaquina / tempoDisponivelDestaMaquina) * 100);
 
                         let pecasHTML = ""; if (Object.keys(pecasPorMaquina[m]).length > 0) { for (const [peca, qtd] of Object.entries(pecasPorMaquina[m])) pecasHTML += `<span class="pecas-list"><strong>${peca}:</strong> ${qtd}</span>`; } else pecasHTML = `<span class="pecas-list" style="background:transparent">-</span>`;
                         let operadoresHTML = ""; if (operadoresPorMaquina[m] && operadoresPorMaquina[m].size > 0) { operadoresHTML = Array.from(operadoresPorMaquina[m]).map(op => `<span class="pecas-list operador-badge"><i class="fa-solid fa-user-gear"></i> ${op}</span>`).join(' '); } else operadoresHTML = `<span class="pecas-list" style="background:transparent">-</span>`;
 
-                        tabela.innerHTML += `<tr><td class="clickable-machine" onclick="abrirModalDetalhes('${m}')"><strong><i class="fa-solid fa-microchip" style="margin-right:5px;"></i> ${nomeFormatado} <i class="fa-solid fa-magnifying-glass-plus text-muted" style="font-size:12px; margin-left:5px;"></i></strong></td><td style="max-width: 180px; white-space: normal;">${operadoresHTML}</td><td>${prodMaquina[m].toLocaleString('pt-BR')} peças</td><td style="max-width: 200px; white-space: normal;">${pecasHTML}</td><td style="color: var(--danger); font-weight: bold;">${paradaMaquina[m]} min</td><td>${relMaquina[m]}</td><td><div style="display:flex; align-items:center; gap:10px;"><progress value="${eficienciaM}" max="100" style="width: 60px;"></progress>${Math.round(eficienciaM)}%</div></td><td><span class="badge ${statusClass}">${statusText}</span></td></tr>`;
+                        tabela.innerHTML += `<tr><td class="clickable-machine" onclick="abrirModalDetalhes('${m}')"><strong><i class="fa-solid fa-microchip" style="margin-right:5px;"></i> ${nomeFormatado} <i class="fa-solid fa-magnifying-glass-plus text-muted" style="font-size:12px; margin-left:5px;"></i></strong></td><td style="max-width: 180px; white-space: normal;">${operadoresHTML}</td><td>${prodMaquina[m].toLocaleString('pt-BR')} peças</td><td style="max-width: 200px; white-space: normal;">${pecasHTML}</td><td style="color: var(--danger); font-weight: bold;">${pMaquina} min</td><td>${relMaquina[m]}</td><td><div style="display:flex; align-items:center; gap:10px;"><progress value="${eficienciaM}" max="100" style="width: 60px;"></progress>${Math.round(eficienciaM)}%</div></td></tr>`;
                     });
                 }
 
@@ -1425,7 +1585,7 @@
                 instanciasGraficos.prod = new Chart(document.getElementById('graficoProducao'), { type: "bar", data: { labels: maquinas.map(m => m.replace("Maquina_", "M ")), datasets: [{ label: "Produção (Peças)", data: Object.values(prodMaquina), backgroundColor: 'rgba(11, 74, 143, 0.8)', borderRadius: 6 }] }, options: { ...commonOptions, plugins: { title: { display: true, text: 'Produção por Máquina' }, legend: { display: false } } } });
                 let horasLabels = []; let horasDados = [];
                 if (turnoEscolhido === '1') { horasLabels = [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17].map(h => `${h}h`); horasDados = prodHoraArray.slice(7, 18); } else { horasLabels = [...Array(24).keys()].map(h => `${h}h`); horasDados = prodHoraArray; }
-                instanciasGraficos.hora = new Chart(document.getElementById('graficoHora'), { type: "line", data: { labels: horasLabels, datasets: [{ label: "Peças Produzidas", data: horasDados, borderColor: '#198754', backgroundColor: 'rgba(25, 135, 84, 0.2)', borderWidth: 2, fill: true, tension: 0.3, pointBackgroundColor: '#198754' }] }, options: { ...commonOptions, plugins: { title: { display: true, text: (turnoEscolhido === '1' ? 'Curva de Produção (07:00 às 17:00)' : 'Curva de Produção (24h)') }, legend: { display: false } } } });
+                instanciasGraficos.hora = new Chart(document.getElementById('graficoHora'), { type: "line", data: { labels: horasLabels, datasets: [{ label: "Soma de Peças", data: horasDados, borderColor: '#198754', backgroundColor: 'rgba(25, 135, 84, 0.2)', borderWidth: 2, fill: true, tension: 0.3, pointBackgroundColor: '#198754' }] }, options: { ...commonOptions, plugins: { title: { display: true, text: 'Soma de Produção Hora a Hora (Período)' }, legend: { display: false } } } });
                 instanciasGraficos.pecas = new Chart(document.getElementById('graficoPecas'), { type: "doughnut", data: { labels: Object.keys(pecasTotalGeral), datasets: [{ data: Object.values(pecasTotalGeral), backgroundColor: paletaCores, borderWidth: 0 }] }, options: { responsive: true, maintainAspectRatio: false, cutout: '50%', plugins: { legend: { position: 'right' }, title: { display: true, text: 'Mix de Produção (Peças)' } } } });
                 instanciasGraficos.paradas = new Chart(document.getElementById('graficoParadas'), { type: "bar", data: { labels: maquinas.map(m => m.replace("Maquina_", "M ")), datasets: [{ label: "Minutos Parados", data: Object.values(paradaMaquina), backgroundColor: 'rgba(239, 68, 68, 0.8)', borderRadius: 6 }] }, options: { ...commonOptions, plugins: { title: { display: true, text: 'Tempo Parado por Máquina' }, legend: { display: false } } } });
                 instanciasGraficos.motivos = new Chart(document.getElementById('graficoMotivosParada'), { type: "pie", data: { labels: Object.keys(motivosParadaTotal), datasets: [{ data: Object.values(motivosParadaTotal), backgroundColor: ['#ef4444', '#f97316', '#f59e0b', '#64748b', '#8b5cf6'], borderWidth: 1, borderColor: '#fff' }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right' }, title: { display: true, text: 'Motivos de Parada (Minutos)' } } } });
@@ -1437,16 +1597,21 @@
         }
 
         const hoje = new Date().toISOString().split("T")[0];
-        document.getElementById("filtroData").value = hoje;
+        document.getElementById("filtroDataInicio").value = hoje;
+        document.getElementById("filtroDataFim").value = hoje;
 
         document.getElementById("btnFiltrar").addEventListener("click", () => {
-            const dataSelecionada = document.getElementById("filtroData").value;
+            const dtInicio = document.getElementById("filtroDataInicio").value;
+            const dtFim = document.getElementById("filtroDataFim").value;
             const turnoSelecionado = document.getElementById("filtroTurno").value;
-            if (dataSelecionada) carregarDados(dataSelecionada, turnoSelecionado);
-            else alert("Por favor, selecione uma data válida.");
+
+            if (!dtInicio || !dtFim) { alert("Por favor, selecione as datas de Início e Fim."); return; }
+            if (dtInicio > dtFim) { alert("A Data Inicial não pode ser maior que a Data Final."); return; }
+
+            carregarDados(dtInicio, dtFim, turnoSelecionado);
         });
 
-        carregarDados(hoje, "todos");
+        carregarDados(hoje, hoje, "todos");
     </script>
 </body>
 </html>
